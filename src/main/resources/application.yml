@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/qipai_dapaomajiang
+      uri: mongodb://localhost:27017/qipai_fangpaomajiang
   cloud:
     stream:
       kafka:
@@ -12,7 +12,7 @@ spring:
           autoCreateTopics: true
           autoAddPartitions: false
         bindings:
-          dapaoMajiangGame:
+          fangpaoMajiangGame:
             producer:
               configuration:
                 request:
@@ -22,7 +22,7 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
-          dapaoMajiangJuResult:
+          fangpaoMajiangJuResult:
             producer:
               configuration:
                 request:
@@ -33,13 +33,13 @@ spring:
                 batch:
                   size: 16384
       bindings:
-        dapaoMajiangGame:
-          destination: dapaoMajiangGame
+        fangpaoMajiangGame:
+          destination: fangpaoMajiangGame
           contentType: application/json
           producer:
             partitionCount: 1
-        dapaoMajiangJuResult:
-          destination: dapaoMajiangJuResult
+        fangpaoMajiangJuResult:
+          destination: fangpaoMajiangJuResult
           contentType: application/json
           producer:
             partitionCount: 1
