@@ -21,4 +21,10 @@ public class CaizipaiListener
 
 	}
 
+	@Override
+	public void updateForNextPan() {
+		// TODO Auto-generated method stub
+
+	}
+
 }
