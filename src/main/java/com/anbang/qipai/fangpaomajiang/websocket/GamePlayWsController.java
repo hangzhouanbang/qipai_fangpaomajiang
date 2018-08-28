@@ -1,7 +1,6 @@
 package com.anbang.qipai.fangpaomajiang.websocket;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,14 +12,13 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameState;
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.GameCmdService;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.PlayerAuthService;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameDbo;
-import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGamePlayerDbo;
-import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameState;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.service.MajiangGameQueryService;
 import com.anbang.qipai.fangpaomajiang.msg.service.FangpaoMajiangGameMsgService;
-import com.dml.mpgame.game.GameValueObject;
 import com.google.gson.Gson;
 
 @Component
@@ -73,15 +71,12 @@ public class GamePlayWsController extends TextWebSocketHandler {
 		// TODO 测试代码
 		System.out.println("连接断了 <" + closedPlayerId + "> (" + System.currentTimeMillis() + ")");
 		wsNotifier.removeSession(session.getId());
-		GameValueObject gameValueObject = gameCmdService.leaveGame(closedPlayerId);
-		if (gameValueObject != null) {
-			majiangGameQueryService.leaveGame(gameValueObject);
-			gameMsgService.gamePlayerLeave(gameValueObject, closedPlayerId);
+		MajiangGameValueObject majiangGameValueObject = gameCmdService.leaveGame(closedPlayerId);
+		if (majiangGameValueObject != null) {
+			majiangGameQueryService.leaveGame(majiangGameValueObject);
+			gameMsgService.gamePlayerLeave(majiangGameValueObject, closedPlayerId);
 			// 通知其他玩家
-			List<MajiangGamePlayerDbo> gamePlayerDboList = majiangGameQueryService
-					.findGamePlayerDbosForGame(gameValueObject.getId());
-			gamePlayerDboList.forEach((gamePlayerDbo) -> {
-				String playerId = gamePlayerDbo.getPlayerId();
+			majiangGameValueObject.allPlayerIds().forEach((playerId) -> {
 				if (!playerId.equals(closedPlayerId)) {
 					wsNotifier.notifyToQuery(playerId, QueryScope.gameInfo.name());
 					// TODO 测试代码

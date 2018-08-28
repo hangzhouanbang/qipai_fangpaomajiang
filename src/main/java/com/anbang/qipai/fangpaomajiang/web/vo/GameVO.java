@@ -3,8 +3,8 @@ package com.anbang.qipai.fangpaomajiang.web.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameState;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameDbo;
-import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGamePlayerDbo;
 
 public class GameVO {
 	private String id;// 就是gameid
@@ -14,8 +14,9 @@ public class GameVO {
 	private int renshu;
 	private boolean dapao;
 	private List<MajiangGamePlayerVO> playerList;
+	private MajiangGameState state;
 
-	public GameVO(MajiangGameDbo majiangGameDbo, List<MajiangGamePlayerDbo> gamePlayerDboListForGame) {
+	public GameVO(MajiangGameDbo majiangGameDbo) {
 		id = majiangGameDbo.getId();
 		difen = majiangGameDbo.getDifen();
 		taishu = majiangGameDbo.getTaishu();
@@ -23,7 +24,8 @@ public class GameVO {
 		renshu = majiangGameDbo.getRenshu();
 		dapao = majiangGameDbo.isDapao();
 		playerList = new ArrayList<>();
-		gamePlayerDboListForGame.forEach((dbo) -> playerList.add(new MajiangGamePlayerVO(dbo)));
+		majiangGameDbo.getPlayers().forEach((dbo) -> playerList.add(new MajiangGamePlayerVO(dbo)));
+		state = majiangGameDbo.getState();
 	}
 
 	public String getId() {
@@ -80,6 +82,14 @@ public class GameVO {
 
 	public void setPlayerList(List<MajiangGamePlayerVO> playerList) {
 		this.playerList = playerList;
+	}
+
+	public MajiangGameState getState() {
+		return state;
+	}
+
+	public void setState(MajiangGameState state) {
+		this.state = state;
 	}
 
 }

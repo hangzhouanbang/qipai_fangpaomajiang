@@ -1,4 +1,4 @@
-package com.anbang.qipai.fangpaomajiang.cqrs.q.dbo;
+package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 public enum MajiangGamePlayerState {
 	joined, readyToStart, playing, panFinished, finished

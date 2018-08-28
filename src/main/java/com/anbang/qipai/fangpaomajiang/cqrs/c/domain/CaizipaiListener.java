@@ -6,6 +6,12 @@ import com.dml.majiang.player.action.listener.da.MajiangPlayerDaActionStatistics
 import com.dml.majiang.player.action.listener.peng.MajiangPlayerPengActionStatisticsListener;
 import com.dml.majiang.player.action.peng.MajiangPengAction;
 
+/**
+ * 统计拆字牌
+ * 
+ * @author Neo
+ *
+ */
 public class CaizipaiListener
 		implements MajiangPlayerDaActionStatisticsListener, MajiangPlayerPengActionStatisticsListener {
 

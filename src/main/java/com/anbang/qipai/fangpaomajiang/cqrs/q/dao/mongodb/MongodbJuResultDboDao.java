@@ -17,12 +17,13 @@ public class MongodbJuResultDboDao implements JuResultDboDao {
 
 	@Override
 	public void save(JuResultDbo juResultDbo) {
-		mongoTemplate.insert(juResultDbo);
+		mongoTemplate.save(juResultDbo);
 	}
 
 	@Override
 	public JuResultDbo findByGameId(String gameId) {
-		return mongoTemplate.findOne(new Query(Criteria.where("gameId").is(gameId)), JuResultDbo.class);
+		Query query = new Query(Criteria.where("gameId").is(gameId));
+		return mongoTemplate.findOne(query, JuResultDbo.class);
 	}
 
 }

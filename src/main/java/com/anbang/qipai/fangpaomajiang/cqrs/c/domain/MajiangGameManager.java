@@ -10,7 +10,9 @@ public class MajiangGameManager {
 
 	private Map<String, MajiangGame> gameIdMajiangGameMap = new HashMap<>();
 
-	public void newMajiangGame(String gameId, int difen, int taishu, int panshu, int renshu, boolean dapao) {
+	public MajiangGameValueObject newMajiangGame(GameValueObject gameValueObject, int difen, int taishu, int panshu,
+			int renshu, boolean dapao) {
+		String gameId = gameValueObject.getId();
 		MajiangGame majiangGame = new MajiangGame();
 		majiangGame.setDapao(dapao);
 		majiangGame.setDifen(difen);
@@ -18,7 +20,9 @@ public class MajiangGameManager {
 		majiangGame.setRenshu(renshu);
 		majiangGame.setTaishu(taishu);
 		majiangGame.setGameId(gameId);
+		majiangGame.updateByGame(gameValueObject);
 		gameIdMajiangGameMap.put(gameId, majiangGame);
+		return new MajiangGameValueObject(majiangGame);
 	}
 
 	public PanActionFrame createJuAndStartFirstPan(GameValueObject game, long currentTime) throws Exception {
@@ -26,8 +30,21 @@ public class MajiangGameManager {
 		return majiangGame.createJuAndStartFirstPan(game, currentTime);
 	}
 
+	public MajiangGame findGameById(String gameId) {
+		return gameIdMajiangGameMap.get(gameId);
+	}
+
+	public MajiangGameValueObject updateMajiangGameByGame(GameValueObject game) {
+		MajiangGame majiangGame = gameIdMajiangGameMap.get(game.getId());
+		return majiangGame.updateByGame(game);
+	}
+
 	public FangpaoMajiangJuResult finishMajiangGame(String gameId) {
-		MajiangGame majiangGame = gameIdMajiangGameMap.get(gameId);
-		return (FangpaoMajiangJuResult) majiangGame.finishJu();
+		MajiangGame game = gameIdMajiangGameMap.remove(gameId);
+		if (game.getJu() != null) {
+			return (FangpaoMajiangJuResult) game.finishJu();
+		} else {
+			return null;
+		}
 	}
 }

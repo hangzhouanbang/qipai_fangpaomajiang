@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.support.MessageBuilder;
 
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.msg.channel.FangpaoMajiangGameSource;
 import com.anbang.qipai.fangpaomajiang.msg.msjobj.CommonMO;
-import com.dml.mpgame.game.GamePlayer;
-import com.dml.mpgame.game.GameValueObject;
+import com.dml.majiang.pan.frame.PanValueObject;
 
 @EnableBinding(FangpaoMajiangGameSource.class)
 public class FangpaoMajiangGameMsgService {
@@ -18,10 +18,10 @@ public class FangpaoMajiangGameMsgService {
 	@Autowired
 	private FangpaoMajiangGameSource fangpaoMajiangGameSource;
 
-	public void gamePlayerLeave(GameValueObject gameValueObject, String playerId) {
+	public void gamePlayerLeave(MajiangGameValueObject majiangGameValueObject, String playerId) {
 		boolean playerIsQuit = true;
-		for (GamePlayer gamePlayer : gameValueObject.getPlayers()) {
-			if (gamePlayer.getId().equals(playerId)) {
+		for (String pid : majiangGameValueObject.allPlayerIds()) {
+			if (pid.equals(playerId)) {
 				playerIsQuit = false;
 				break;
 			}
@@ -30,10 +30,30 @@ public class FangpaoMajiangGameMsgService {
 			CommonMO mo = new CommonMO();
 			mo.setMsg("playerQuit");
 			Map data = new HashMap();
-			data.put("gameId", gameValueObject.getId());
+			data.put("gameId", majiangGameValueObject.getGameId());
 			data.put("playerId", playerId);
 			mo.setData(data);
 			fangpaoMajiangGameSource.fangpaoMajiangGame().send(MessageBuilder.withPayload(mo).build());
 		}
+	}
+
+	public void gameFinished(String gameId) {
+		CommonMO mo = new CommonMO();
+		mo.setMsg("ju finished");
+		Map data = new HashMap();
+		data.put("gameId", gameId);
+		mo.setData(data);
+		fangpaoMajiangGameSource.fangpaoMajiangGame().send(MessageBuilder.withPayload(mo).build());
+	}
+
+	public void panFinished(MajiangGameValueObject majiangGameValueObject, PanValueObject panAfterAction) {
+		CommonMO mo = new CommonMO();
+		mo.setMsg("pan finished");
+		Map data = new HashMap();
+		data.put("gameId", majiangGameValueObject.getGameId());
+		data.put("no", panAfterAction.getNo());
+		data.put("playerIds", majiangGameValueObject.allPlayerIds());
+		mo.setData(data);
+		fangpaoMajiangGameSource.fangpaoMajiangGame().send(MessageBuilder.withPayload(mo).build());
 	}
 }

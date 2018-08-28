@@ -1,5 +1,15 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.q.dbo;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGamePlayerState;
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameState;
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
+import com.anbang.qipai.fangpaomajiang.plan.bean.PlayerInfo;
+import com.dml.mpgame.game.GamePlayerOnlineState;
+
 public class MajiangGameDbo {
 	private String id;// 就是gameid
 	private int difen;
@@ -8,7 +18,49 @@ public class MajiangGameDbo {
 	private int renshu;
 	private boolean dapao;
 	private MajiangGameState state;
-	private byte[] latestPanActionFrameData;
+	private List<MajiangGamePlayerDbo> players;
+	private byte[] latestPanActionFrameData;// TODO 要按规范拆分重构
+
+	public MajiangGameDbo() {
+	}
+
+	public MajiangGameDbo(MajiangGameValueObject majiangGame, Map<String, PlayerInfo> playerInfoMap) {
+		id = majiangGame.getGameId();
+		difen = majiangGame.getDifen();
+		taishu = majiangGame.getTaishu();
+		panshu = majiangGame.getPanshu();
+		renshu = majiangGame.getRenshu();
+		dapao = majiangGame.isDapao();
+		state = majiangGame.getState();
+
+		players = new ArrayList<>();
+		Map<String, MajiangGamePlayerState> playerStateMap = majiangGame.getPlayerStateMap();
+		Map<String, GamePlayerOnlineState> playerOnlineStateMap = majiangGame.getPlayerOnlineStateMap();
+		Map<String, Integer> playeTotalScoreMap = majiangGame.getPlayeTotalScoreMap();
+		majiangGame.allPlayerIds().forEach((playerId) -> {
+			PlayerInfo playerInfo = playerInfoMap.get(playerId);
+			MajiangGamePlayerDbo playerDbo = new MajiangGamePlayerDbo();
+			playerDbo.setHeadimgurl(playerInfo.getHeadimgurl());
+			playerDbo.setNickname(playerInfo.getNickname());
+			playerDbo.setOnlineState(playerOnlineStateMap.get(playerId));
+			playerDbo.setPlayerId(playerId);
+			playerDbo.setState(playerStateMap.get(playerId));
+			if (playeTotalScoreMap.get(playerId) != null) {
+				playerDbo.setTotalScore(playeTotalScoreMap.get(playerId));
+			}
+			players.add(playerDbo);
+		});
+
+	}
+
+	public MajiangGamePlayerDbo findPlayer(String playerId) {
+		for (MajiangGamePlayerDbo player : players) {
+			if (player.getPlayerId().equals(playerId)) {
+				return player;
+			}
+		}
+		return null;
+	}
 
 	public String getId() {
 		return id;
@@ -64,6 +116,14 @@ public class MajiangGameDbo {
 
 	public void setState(MajiangGameState state) {
 		this.state = state;
+	}
+
+	public List<MajiangGamePlayerDbo> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(List<MajiangGamePlayerDbo> players) {
+		this.players = players;
 	}
 
 	public byte[] getLatestPanActionFrameData() {

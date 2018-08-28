@@ -45,7 +45,14 @@ spring:
             partitionCount: 1
         members:
           destination: members
-          group: qipai_members
+          group: qipai_fangpaomajiang
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        fangpaoGameRoom:
+          destination: fangpaoGameRoom
+          group: qipai_fangpaomajiang
           consumer:
             concurrency: 1
             partitioned: false

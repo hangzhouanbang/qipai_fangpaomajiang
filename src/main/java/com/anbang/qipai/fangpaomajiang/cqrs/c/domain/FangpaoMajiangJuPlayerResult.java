@@ -1,12 +1,35 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 public class FangpaoMajiangJuPlayerResult {
+
 	private String playerId;
 	private int huCount;
 	private int caishenCount;
 	private int dapaoCount;
 	private int maxHushu;
 	private int totalScore;
+
+	public void increaseHuCount() {
+		huCount++;
+	}
+
+	public void increaseCaishenCount(int amount) {
+		caishenCount += amount;
+	}
+
+	public void tryAndUpdateMaxHushu(int hushu) {
+		if (hushu > maxHushu) {
+			maxHushu = hushu;
+		}
+	}
+
+	public void increaseDapaoCount(int amount) {
+		dapaoCount += amount;
+	}
+
+	public void increaseTotalScore(int amount) {
+		totalScore += amount;
+	}
 
 	public String getPlayerId() {
 		return playerId;

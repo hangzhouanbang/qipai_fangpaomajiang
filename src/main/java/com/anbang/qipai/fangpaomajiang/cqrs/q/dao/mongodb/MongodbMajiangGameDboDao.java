@@ -7,24 +7,26 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameState;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dao.MajiangGameDboDao;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameDbo;
-import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameState;
+import com.dml.mpgame.game.GamePlayerOnlineState;
 
 @Component
-public class MongodbMajinagGameDboDao implements MajiangGameDboDao {
+public class MongodbMajiangGameDboDao implements MajiangGameDboDao {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
 	@Override
 	public MajiangGameDbo findById(String id) {
-		return mongoTemplate.findById(id, MajiangGameDbo.class);
+		Query query = new Query(Criteria.where("id").is(id));
+		return mongoTemplate.findOne(query, MajiangGameDbo.class);
 	}
 
 	@Override
-	public void insert(MajiangGameDbo majiangGameDbo) {
-		mongoTemplate.insert(majiangGameDbo);
+	public void save(MajiangGameDbo majiangGameDbo) {
+		mongoTemplate.save(majiangGameDbo);
 	}
 
 	@Override
@@ -37,6 +39,18 @@ public class MongodbMajinagGameDboDao implements MajiangGameDboDao {
 	public void update(String id, MajiangGameState state) {
 		mongoTemplate.updateFirst(new Query(Criteria.where("id").is(id)), new Update().set("state", state),
 				MajiangGameDbo.class);
+	}
+
+	@Override
+	public void updatePlayerOnlineState(String id, String playerId, GamePlayerOnlineState onlineState) {
+		Query query = new Query(Criteria.where("id").is(id));
+		MajiangGameDbo majiangGameDbo = mongoTemplate.findOne(query, MajiangGameDbo.class);
+		majiangGameDbo.getPlayers().forEach((player) -> {
+			if (player.getPlayerId().equals(playerId)) {
+				player.setOnlineState(onlineState);
+			}
+		});
+		mongoTemplate.save(majiangGameDbo);
 	}
 
 }

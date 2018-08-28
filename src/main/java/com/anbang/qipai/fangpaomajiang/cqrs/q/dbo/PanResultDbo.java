@@ -1,5 +1,11 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.q.dbo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerResult;
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanResult;
+
 public class PanResultDbo {
 	private String id;
 	private String gameId;
@@ -8,7 +14,22 @@ public class PanResultDbo {
 	private boolean hu;
 	private boolean zimo;
 	private String dianpaoPlayerId;
+	private List<FangpaoMajiangPanPlayerResult> playerResultList;
 	private long finishTime;
+
+	public PanResultDbo() {
+	}
+
+	public PanResultDbo(String gameId, FangpaoMajiangPanResult ruianMajiangPanResult) {
+		this.gameId = gameId;
+		panNo = ruianMajiangPanResult.getPanNo();
+		zhuangPlayerId = ruianMajiangPanResult.getZhuangPlayerId();
+		hu = ruianMajiangPanResult.isHu();
+		zimo = ruianMajiangPanResult.isZimo();
+		dianpaoPlayerId = ruianMajiangPanResult.getDianpaoPlayerId();
+		playerResultList = new ArrayList<>(ruianMajiangPanResult.getPlayerResultList());
+		finishTime = ruianMajiangPanResult.getPanFinishTime();
+	}
 
 	public String getId() {
 		return id;
@@ -64,6 +85,14 @@ public class PanResultDbo {
 
 	public void setDianpaoPlayerId(String dianpaoPlayerId) {
 		this.dianpaoPlayerId = dianpaoPlayerId;
+	}
+
+	public List<FangpaoMajiangPanPlayerResult> getPlayerResultList() {
+		return playerResultList;
+	}
+
+	public void setPlayerResultList(List<FangpaoMajiangPanPlayerResult> playerResultList) {
+		this.playerResultList = playerResultList;
 	}
 
 	public long getFinishTime() {

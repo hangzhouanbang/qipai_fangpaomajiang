@@ -13,18 +13,19 @@ import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.PanResultDbo;
 public class MongodbPanResultDboDao implements PanResultDboDao {
 
 	@Autowired
-	private MongoTemplate mongoTemplate;
+	private MongoTemplate mognoTemplate;
 
 	@Override
 	public void save(PanResultDbo panResultDbo) {
-		mongoTemplate.insert(panResultDbo);
+		mognoTemplate.save(panResultDbo);
 	}
 
 	@Override
 	public PanResultDbo findByGameIdAndPanNo(String gameId, int panNo) {
-		return mongoTemplate.findOne(
-				new Query(Criteria.where("gameId").is(gameId).andOperator(Criteria.where("panNo").is(panNo))),
-				PanResultDbo.class);
+		Query query = new Query();
+		query.addCriteria(Criteria.where("gameId").is(gameId));
+		query.addCriteria(Criteria.where("panNo").is(panNo));
+		return mognoTemplate.findOne(query, PanResultDbo.class);
 	}
 
 }

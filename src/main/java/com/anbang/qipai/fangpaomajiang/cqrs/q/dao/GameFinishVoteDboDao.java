@@ -1,7 +1,7 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.q.dao;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.GameFinishVoteDbo;
-import com.dml.mpgame.game.finish.GameFinishVoteValueObject;
+import com.dml.mpgame.game.finish.vote.GameFinishVoteValueObject;
 
 public interface GameFinishVoteDboDao {
 
@@ -11,4 +11,5 @@ public interface GameFinishVoteDboDao {
 
 	GameFinishVoteDbo findByGameId(String gameId);
 
+	void removeGameFinishVoteDboByGameId(String gameId);
 }

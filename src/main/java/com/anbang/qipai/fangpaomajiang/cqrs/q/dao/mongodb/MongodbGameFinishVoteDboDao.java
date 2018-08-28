@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dao.GameFinishVoteDboDao;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.GameFinishVoteDbo;
-import com.dml.mpgame.game.finish.GameFinishVoteValueObject;
+import com.dml.mpgame.game.finish.vote.GameFinishVoteValueObject;
 
 @Component
 public class MongodbGameFinishVoteDboDao implements GameFinishVoteDboDao {
@@ -19,7 +19,7 @@ public class MongodbGameFinishVoteDboDao implements GameFinishVoteDboDao {
 
 	@Override
 	public void save(GameFinishVoteDbo gameFinishVoteDbo) {
-		mongoTemplate.insert(gameFinishVoteDbo);
+		mongoTemplate.save(gameFinishVoteDbo);
 	}
 
 	@Override
@@ -30,7 +30,13 @@ public class MongodbGameFinishVoteDboDao implements GameFinishVoteDboDao {
 
 	@Override
 	public GameFinishVoteDbo findByGameId(String gameId) {
-		return mongoTemplate.findOne(new Query(Criteria.where("gameId").is(gameId)), GameFinishVoteDbo.class);
+		Query query = new Query(Criteria.where("gameId").is(gameId));
+		return mongoTemplate.findOne(query, GameFinishVoteDbo.class);
+	}
+
+	@Override
+	public void removeGameFinishVoteDboByGameId(String gameId) {
+		mongoTemplate.remove(new Query(Criteria.where("gameId").is(gameId)), GameFinishVoteDbo.class);
 	}
 
 }
