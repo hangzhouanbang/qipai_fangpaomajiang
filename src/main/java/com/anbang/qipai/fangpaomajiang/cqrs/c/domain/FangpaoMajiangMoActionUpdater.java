@@ -1,8 +1,10 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 import com.dml.majiang.ju.Ju;
+import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
+import com.dml.majiang.player.action.hu.MajiangHuAction;
 import com.dml.majiang.player.action.listener.gang.GangCounter;
 import com.dml.majiang.player.action.mo.MajiangMoAction;
 import com.dml.majiang.player.action.mo.MajiangPlayerMoActionUpdater;
@@ -18,9 +20,9 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 			liupai += (4 + (gangCounter.getCount() - 1) * 2);
 		}
 		Pan currentPan = ju.getCurrentPan();
+		boolean baibanIsGuipai = currentPan.getPublicGuipaiSet().contains(MajiangPai.baiban);
 		MajiangPlayer player = currentPan.findPlayerById(moAction.getActionPlayerId());
 		player.clearActionCandidates();
-		int playersCount = currentPan.countPlayers();
 		int avaliablePaiLeft = currentPan.countAvaliablePai();
 		if (avaliablePaiLeft - liupai == 0) {// 没牌了
 			// 当然啥也不干了
@@ -36,17 +38,23 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 			player.tryKezigangshoupaiAndGenerateCandidateAction();
 
 			// 胡
-			FangpaoMajiangPanResultBuilder ruianMajiangPanResultBuilder = (FangpaoMajiangPanResultBuilder) ju
+			FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = (FangpaoMajiangPanResultBuilder) ju
 					.getCurrentPanResultBuilder();
-			int dihu = ruianMajiangPanResultBuilder.getDihu();
 			GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
 
+			// 天胡
 			boolean couldTianhu = false;
 			if (currentPan.getZhuangPlayerId().equals(player.getId())) {
 				if (player.countFangruShoupai() == 0) {
 					couldTianhu = true;
 				}
 			}
+//			FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu, gouXingPanHu,
+//					player, moAction, baibanIsGuipai);
+//			if (bestHu != null) {
+//				bestHu.setZimo(true);
+//				player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));
+//			}
 		}
 
 	}

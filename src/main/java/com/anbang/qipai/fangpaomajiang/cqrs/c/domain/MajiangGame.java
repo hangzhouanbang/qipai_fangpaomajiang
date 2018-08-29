@@ -12,7 +12,6 @@ import com.dml.majiang.ju.firstpan.ClassicStartFirstPanProcess;
 import com.dml.majiang.ju.nextpan.AllPlayersReadyCreateNextPanDeterminer;
 import com.dml.majiang.ju.nextpan.ClassicStartNextPanProcess;
 import com.dml.majiang.ju.result.JuResult;
-import com.dml.majiang.pan.avaliablepai.NoHuapaiRandomAvaliablePaiFiller;
 import com.dml.majiang.pan.frame.PanActionFrame;
 import com.dml.majiang.pan.guipai.RandomGuipaiDeterminer;
 import com.dml.majiang.pan.publicwaitingplayer.WaitDaPlayerPanPublicWaitingPlayerDeterminer;
@@ -25,6 +24,7 @@ import com.dml.majiang.player.action.initial.ZhuangMoPaiInitialActionUpdater;
 import com.dml.majiang.player.action.listener.comprehensive.DianpaoDihuOpportunityDetector;
 import com.dml.majiang.player.action.listener.comprehensive.JuezhangStatisticsListener;
 import com.dml.majiang.player.action.listener.gang.GangCounter;
+import com.dml.majiang.player.action.listener.mo.LastMoActionPlayerRecorder;
 import com.dml.majiang.player.action.listener.mo.MoGuipaiCounter;
 import com.dml.majiang.player.action.peng.HuFirstPengActionProcessor;
 import com.dml.majiang.player.menfeng.RandomMustHasDongPlayersMenFengDeterminer;
@@ -58,9 +58,9 @@ public class MajiangGame {
 		// TODO 每局由胡牌方做庄家，风位不变；一炮多响时，有点炮者做庄家
 		ju.setZhuangDeterminerForNextPan(new DianpaoZhuangDeterminer());
 
-		ju.setAvaliablePaiFiller(new NoHuapaiRandomAvaliablePaiFiller(currentTime + 2));
+		ju.setAvaliablePaiFiller(new OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller(currentTime + 2));
 		ju.setGuipaiDeterminer(new RandomGuipaiDeterminer(currentTime + 3));
-		ju.setFaPaiStrategy(new FangpaoMajiangFaPaiStrategy(14));
+		ju.setFaPaiStrategy(new FangpaoMajiangFaPaiStrategy(13));
 		// TODO 流局计算
 		ju.setCurrentPanFinishiDeterminer(new FangpaoMajiangPanFinishiDeterminer());
 		ju.setGouXingPanHu(new NoDanpaiOneDuiziGouXingPanHu());
@@ -92,6 +92,7 @@ public class MajiangGame {
 		ju.addActionStatisticsListener(new JuezhangStatisticsListener());
 		ju.addActionStatisticsListener(new MoGuipaiCounter());
 		ju.addActionStatisticsListener(new GangCounter());
+		ju.addActionStatisticsListener(new LastMoActionPlayerRecorder());
 		ju.addActionStatisticsListener(new DianpaoDihuOpportunityDetector());
 
 		// 开始第一盘
