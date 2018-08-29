@@ -55,7 +55,6 @@ public class MajiangGame {
 		ju.setPlayersMenFengDeterminerForFirstPan(new RandomMustHasDongPlayersMenFengDeterminer(currentTime));
 		ju.setPlayersMenFengDeterminerForNextPan(new UseFirstPanMenFengPlayersMenFengDeterminer());
 		ju.setZhuangDeterminerForFirstPan(new RandomMustHasZhuangZhuangDeterminer(currentTime + 1));
-		// TODO 每局由胡牌方做庄家，风位不变；一炮多响时，有点炮者做庄家
 		ju.setZhuangDeterminerForNextPan(new DianpaoZhuangDeterminer());
 
 		ju.setAvaliablePaiFiller(new OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller(currentTime + 2));

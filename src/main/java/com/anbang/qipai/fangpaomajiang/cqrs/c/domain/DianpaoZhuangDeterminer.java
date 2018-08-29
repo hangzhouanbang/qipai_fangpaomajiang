@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.dml.majiang.ju.Ju;
 import com.dml.majiang.pan.Pan;
-import com.dml.majiang.player.action.listener.mo.LastMoActionPlayerRecorder;
 import com.dml.majiang.player.zhuang.ZhuangDeterminer;
 
 /**
@@ -32,9 +31,9 @@ public class DianpaoZhuangDeterminer implements ZhuangDeterminer {
 		} else if (huPlayerIds.size() == 1) {
 			currentPan.setZhuangPlayerId(huPlayerIds.get(0));
 		} else {
-			// TODO 最后一个摸牌的人做庄家
-			LastMoActionPlayerRecorder lastMoActionPlayerRecorder = ju.getActionStatisticsListenerManager()
-					.findListener(LastMoActionPlayerRecorder.class);
+			// 最后一个摸牌的人做庄家
+			FangpaoMajiangLastMoActionPlayerRecorder lastMoActionPlayerRecorder = ju
+					.getActionStatisticsListenerManager().findListener(FangpaoMajiangLastMoActionPlayerRecorder.class);
 			currentPan.setZhuangPlayerId(lastMoActionPlayerRecorder.getLastMoActionPlayerId());
 		}
 	}

@@ -14,6 +14,10 @@ public class FangpaoMajiangPao {
 		value = pao;
 	}
 
+	public int jiesuan() {
+		return value;
+	}
+
 	public int getValue() {
 		return value;
 	}

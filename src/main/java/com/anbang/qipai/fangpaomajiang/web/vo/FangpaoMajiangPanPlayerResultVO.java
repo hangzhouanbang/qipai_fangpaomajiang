@@ -45,8 +45,6 @@ public class FangpaoMajiangPanPlayerResultVO {
 	 */
 	private int hushu;
 
-	private FangpaoMajiangTaishuVO taishu;
-
 	/**
 	 * 这个是结算分
 	 */
@@ -67,9 +65,6 @@ public class FangpaoMajiangPanPlayerResultVO {
 		if (ruianMajiangPao != null) {
 			pao = ruianMajiangPao.getValue();
 		}
-		hushu = ruianMajiangPanPlayerScore.getHushu().quzhengValue();
-		taishu = new FangpaoMajiangTaishuVO(ruianMajiangPanPlayerScore.getHushu().getTaishu());
-		score = ruianMajiangPanPlayerScore.quzhengJiesuanScore() / 10;
 
 		List<ChichuPaiZu> chichuPaiZuList = panPlayerResult.getChichupaiZuList();
 		for (ChichuPaiZu chichuPaiZu : chichuPaiZuList) {
@@ -204,10 +199,6 @@ public class FangpaoMajiangPanPlayerResultVO {
 
 	public int getHushu() {
 		return hushu;
-	}
-
-	public FangpaoMajiangTaishuVO getTaishu() {
-		return taishu;
 	}
 
 	public int getScore() {

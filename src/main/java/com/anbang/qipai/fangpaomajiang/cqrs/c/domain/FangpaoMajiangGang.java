@@ -5,12 +5,12 @@ public class FangpaoMajiangGang {
 	private int fangGangShu;
 	private int mingGangShu;
 	private int anGangShu;
-	private int bieRenAnGang;
+	private int bieRenAnGangShu;
 	private int value;
 
 	public void calculate() {
 		int gang = 0;
-		gang = pengShu + mingGangShu - fangGangShu * 2 - bieRenAnGang * 2;
+		gang = pengShu + mingGangShu - fangGangShu * 2 - bieRenAnGangShu * 2;
 		value = gang;
 	}
 
@@ -50,12 +50,12 @@ public class FangpaoMajiangGang {
 		this.anGangShu = anGangShu;
 	}
 
-	public int getBieRenAnGang() {
-		return bieRenAnGang;
+	public int getBieRenAnGangShu() {
+		return bieRenAnGangShu;
 	}
 
-	public void setBieRenAnGang(int bieRenAnGang) {
-		this.bieRenAnGang = bieRenAnGang;
+	public void setBieRenAnGangShu(int bieRenAnGangShu) {
+		this.bieRenAnGangShu = bieRenAnGangShu;
 	}
 
 	public int getValue() {
