@@ -7,6 +7,9 @@ package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
  *
  */
 public class FangpaoMajiangHushu {
+	private boolean hu;
+	private boolean zimoHu;// 每人输2分；
+	private boolean qiangganghu;// 抢杠胡：2分；
 	private boolean qiduihu;// 七对：4分；
 	private boolean pengpenghu;// 碰碰胡：4分；
 	private boolean qingyise;// 清一色：4分；
@@ -25,6 +28,12 @@ public class FangpaoMajiangHushu {
 
 	public void calculate() {
 		int hushu = 0;
+		if (zimoHu) {
+			hushu = 2;
+		}
+		if (qiangganghu) {
+			hushu = 2;
+		}
 		if (qiduihu) {
 			hushu = 4;
 		}
@@ -72,6 +81,14 @@ public class FangpaoMajiangHushu {
 
 	public int jiesuan() {
 		return value;
+	}
+
+	public boolean isQiangganghu() {
+		return qiangganghu;
+	}
+
+	public void setQiangganghu(boolean qiangganghu) {
+		this.qiangganghu = qiangganghu;
 	}
 
 	public boolean isQiduihu() {
@@ -193,4 +210,21 @@ public class FangpaoMajiangHushu {
 	public void setValue(int value) {
 		this.value = value;
 	}
+
+	public boolean isZimoHu() {
+		return zimoHu;
+	}
+
+	public void setZimoHu(boolean zimoHu) {
+		this.zimoHu = zimoHu;
+	}
+
+	public boolean isHu() {
+		return hu;
+	}
+
+	public void setHu(boolean hu) {
+		this.hu = hu;
+	}
+
 }

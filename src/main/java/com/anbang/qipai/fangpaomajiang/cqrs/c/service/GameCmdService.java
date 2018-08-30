@@ -6,8 +6,8 @@ import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.ReadyForGameResult;
 
 public interface GameCmdService {
 
-	MajiangGameValueObject newMajiangGame(String gameId, String playerId, Integer difen, Integer taishu, Integer panshu,
-			Integer renshu, Boolean dapao);
+	MajiangGameValueObject newMajiangGame(String gameId, String playerId, Integer panshu, Integer renshu,
+			Boolean hongzhongcaishen, Boolean zhuaniao, Integer niaoshu);
 
 	MajiangGameValueObject joinGame(String playerId, String gameId) throws Exception;
 
@@ -20,6 +20,6 @@ public interface GameCmdService {
 	FinishResult finish(String playerId) throws Exception;
 
 	FinishResult voteToFinish(String playerId, Boolean yes) throws Exception;
-	
+
 	void bindPlayer(String playerId, String gameId);
 }

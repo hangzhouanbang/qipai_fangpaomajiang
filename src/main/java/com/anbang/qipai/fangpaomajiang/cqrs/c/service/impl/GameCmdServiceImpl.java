@@ -25,16 +25,16 @@ import com.dml.mpgame.server.GameServer;
 public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService {
 
 	@Override
-	public MajiangGameValueObject newMajiangGame(String gameId, String playerId, Integer difen, Integer taishu,
-			Integer panshu, Integer renshu, Boolean dapao) {
+	public MajiangGameValueObject newMajiangGame(String gameId, String playerId, Integer panshu, Integer renshu,
+			Boolean hongzhongcaishen, Boolean zhuaniao, Integer niaoshu) {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		GameValueObject gameValueObject = gameServer.playerCreateGame(gameId,
 				new FixedNumberOfPlayersGameJoinStrategy(renshu), new FixedNumberOfPlayersGameReadyStrategy(renshu),
 				new HostGameLeaveStrategy(playerId),
 				new VoteAfterStartedGameFinishStrategy(playerId, new MostPlayersWinVoteCalculator()), playerId);
 		MajiangGameManager majiangGameManager = singletonEntityRepository.getEntity(MajiangGameManager.class);
-		MajiangGameValueObject majiangGameValueObject = majiangGameManager.newMajiangGame(gameValueObject, difen,
-				taishu, panshu, renshu, dapao);
+		MajiangGameValueObject majiangGameValueObject = majiangGameManager.newMajiangGame(gameValueObject, panshu,
+				renshu, hongzhongcaishen, zhuaniao, niaoshu);
 		return majiangGameValueObject;
 	}
 

@@ -18,10 +18,10 @@ public class DisruptorGameCmdService extends DisruptorCmdServiceBase implements 
 	private GameCmdServiceImpl gameCmdServiceImpl;
 
 	@Override
-	public MajiangGameValueObject newMajiangGame(String gameId, String playerId, Integer difen, Integer taishu,
-			Integer panshu, Integer renshu, Boolean dapao) {
+	public MajiangGameValueObject newMajiangGame(String gameId, String playerId, Integer panshu, Integer renshu,
+			Boolean hongzhongcaishen, Boolean zhuaniao, Integer niaoshu) {
 		CommonCommand cmd = new CommonCommand(GameCmdServiceImpl.class.getName(), "newMajiangGame", gameId, playerId,
-				difen, taishu, panshu, renshu, dapao);
+				panshu, renshu, hongzhongcaishen, zhuaniao, niaoshu);
 		DeferredResult<MajiangGameValueObject> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd,
 				() -> {
 					MajiangGameValueObject majiangGameValueObject = gameCmdServiceImpl.newMajiangGame(

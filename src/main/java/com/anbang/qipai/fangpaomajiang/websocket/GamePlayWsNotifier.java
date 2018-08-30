@@ -73,19 +73,12 @@ public class GamePlayWsNotifier {
 
 	public void notifyToQuery(String playerId, String scope) {
 		executorService.submit(() -> {
-			System.out.println("发送worker开始执行" + "=" + playerId + "=" + "=" + scope + "=");
 			CommonMO mo = new CommonMO();
-			System.out.println("通知发送开始1");
 			mo.setMsg("query");
-			System.out.println("通知发送开始2");
 			Map data = new HashMap();
-			System.out.println("通知发送开始3");
 			data.put("scope", scope);
-			System.out.println("通知发送开始4");
 			mo.setData(data);
-			System.out.println("通知发送开始5");
 			String payLoad = gson.toJson(mo);
-			System.out.println("通知发送开始6");
 			String sessionId = playerIdSessionIdMap.get(playerId);
 			if (sessionId == null) {
 				// TODO 测试代码
@@ -93,10 +86,8 @@ public class GamePlayWsNotifier {
 				return;
 			}
 			WebSocketSession session = idSessionMap.get(sessionId);
-			System.out.println("通知发送开始7");
 			if (session != null) {
 				// TODO 测试代码
-				System.out.println("通知发送开始8");
 				System.out.println("通知发送开始{" + session.isOpen() + "}：<" + playerId + "> " + payLoad + " ("
 						+ System.currentTimeMillis() + ")");
 				sendMessage(session, payLoad);

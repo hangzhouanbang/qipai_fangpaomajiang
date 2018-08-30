@@ -8,21 +8,21 @@ import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameDbo;
 
 public class GameVO {
 	private String id;// 就是gameid
-	private int difen;
-	private int taishu;
 	private int panshu;
 	private int renshu;
-	private boolean dapao;
+	private boolean hongzhongcaishen;
+	private boolean zhuaniao;
+	private int niaoshu;
 	private List<MajiangGamePlayerVO> playerList;
 	private MajiangGameState state;
 
 	public GameVO(MajiangGameDbo majiangGameDbo) {
 		id = majiangGameDbo.getId();
-		difen = majiangGameDbo.getDifen();
-		taishu = majiangGameDbo.getTaishu();
 		panshu = majiangGameDbo.getPanshu();
 		renshu = majiangGameDbo.getRenshu();
-		dapao = majiangGameDbo.isDapao();
+		hongzhongcaishen = majiangGameDbo.isHongzhongcaishen();
+		zhuaniao = majiangGameDbo.isZhuaniao();
+		niaoshu = majiangGameDbo.getNiaoshu();
 		playerList = new ArrayList<>();
 		majiangGameDbo.getPlayers().forEach((dbo) -> playerList.add(new MajiangGamePlayerVO(dbo)));
 		state = majiangGameDbo.getState();
@@ -34,22 +34,6 @@ public class GameVO {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public int getDifen() {
-		return difen;
-	}
-
-	public void setDifen(int difen) {
-		this.difen = difen;
-	}
-
-	public int getTaishu() {
-		return taishu;
-	}
-
-	public void setTaishu(int taishu) {
-		this.taishu = taishu;
 	}
 
 	public int getPanshu() {
@@ -68,12 +52,28 @@ public class GameVO {
 		this.renshu = renshu;
 	}
 
-	public boolean isDapao() {
-		return dapao;
+	public boolean isHongzhongcaishen() {
+		return hongzhongcaishen;
 	}
 
-	public void setDapao(boolean dapao) {
-		this.dapao = dapao;
+	public void setHongzhongcaishen(boolean hongzhongcaishen) {
+		this.hongzhongcaishen = hongzhongcaishen;
+	}
+
+	public boolean isZhuaniao() {
+		return zhuaniao;
+	}
+
+	public void setZhuaniao(boolean zhuaniao) {
+		this.zhuaniao = zhuaniao;
+	}
+
+	public int getNiaoshu() {
+		return niaoshu;
+	}
+
+	public void setNiaoshu(int niaoshu) {
+		this.niaoshu = niaoshu;
 	}
 
 	public List<MajiangGamePlayerVO> getPlayerList() {

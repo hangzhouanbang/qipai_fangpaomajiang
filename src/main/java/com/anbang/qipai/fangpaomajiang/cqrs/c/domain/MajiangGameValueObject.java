@@ -10,11 +10,11 @@ import com.dml.mpgame.game.GamePlayerOnlineState;
 public class MajiangGameValueObject {
 
 	private String gameId;
-	private int difen;
-	private int taishu;
 	private int panshu;
 	private int renshu;
-	private boolean dapao;
+	private boolean hongzhongcaishen;
+	private boolean zhuaniao;
+	private int niaoshu;
 	private MajiangGameState state;
 	private Map<String, MajiangGamePlayerState> playerStateMap = new HashMap<>();
 	private Map<String, GamePlayerOnlineState> playerOnlineStateMap = new HashMap<>();
@@ -25,11 +25,11 @@ public class MajiangGameValueObject {
 
 	public MajiangGameValueObject(MajiangGame majiangGame) {
 		gameId = majiangGame.getGameId();
-		difen = majiangGame.getDifen();
-		taishu = majiangGame.getTaishu();
 		panshu = majiangGame.getPanshu();
 		renshu = majiangGame.getRenshu();
-		dapao = majiangGame.isDapao();
+		hongzhongcaishen = majiangGame.isHongzhongcaishen();
+		zhuaniao = majiangGame.isZhuaniao();
+		niaoshu = majiangGame.getNiaoshu();
 		state = majiangGame.getState();
 		playerStateMap.putAll(majiangGame.getPlayerStateMap());
 		playerOnlineStateMap.putAll(majiangGame.getPlayerOnlineStateMap());
@@ -48,22 +48,6 @@ public class MajiangGameValueObject {
 		this.gameId = gameId;
 	}
 
-	public int getDifen() {
-		return difen;
-	}
-
-	public void setDifen(int difen) {
-		this.difen = difen;
-	}
-
-	public int getTaishu() {
-		return taishu;
-	}
-
-	public void setTaishu(int taishu) {
-		this.taishu = taishu;
-	}
-
 	public int getPanshu() {
 		return panshu;
 	}
@@ -80,12 +64,28 @@ public class MajiangGameValueObject {
 		this.renshu = renshu;
 	}
 
-	public boolean isDapao() {
-		return dapao;
+	public boolean isHongzhongcaishen() {
+		return hongzhongcaishen;
 	}
 
-	public void setDapao(boolean dapao) {
-		this.dapao = dapao;
+	public void setHongzhongcaishen(boolean hongzhongcaishen) {
+		this.hongzhongcaishen = hongzhongcaishen;
+	}
+
+	public boolean isZhuaniao() {
+		return zhuaniao;
+	}
+
+	public void setZhuaniao(boolean zhuaniao) {
+		this.zhuaniao = zhuaniao;
+	}
+
+	public int getNiaoshu() {
+		return niaoshu;
+	}
+
+	public void setNiaoshu(int niaoshu) {
+		this.niaoshu = niaoshu;
 	}
 
 	public MajiangGameState getState() {

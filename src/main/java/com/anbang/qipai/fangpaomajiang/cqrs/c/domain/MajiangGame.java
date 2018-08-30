@@ -13,7 +13,6 @@ import com.dml.majiang.ju.nextpan.AllPlayersReadyCreateNextPanDeterminer;
 import com.dml.majiang.ju.nextpan.ClassicStartNextPanProcess;
 import com.dml.majiang.ju.result.JuResult;
 import com.dml.majiang.pan.frame.PanActionFrame;
-import com.dml.majiang.pan.guipai.RandomGuipaiDeterminer;
 import com.dml.majiang.pan.publicwaitingplayer.WaitDaPlayerPanPublicWaitingPlayerDeterminer;
 import com.dml.majiang.player.action.chi.PengganghuFirstChiActionProcessor;
 import com.dml.majiang.player.action.da.DachushoupaiDaActionProcessor;
@@ -22,7 +21,7 @@ import com.dml.majiang.player.action.guo.DoNothingGuoActionProcessor;
 import com.dml.majiang.player.action.hu.PlayerSetHuHuActionProcessor;
 import com.dml.majiang.player.action.initial.ZhuangMoPaiInitialActionUpdater;
 import com.dml.majiang.player.action.listener.comprehensive.DianpaoDihuOpportunityDetector;
-import com.dml.majiang.player.action.listener.comprehensive.JuezhangStatisticsListener;
+import com.dml.majiang.player.action.listener.gang.FangGangCounter;
 import com.dml.majiang.player.action.listener.gang.GangCounter;
 import com.dml.majiang.player.action.listener.mo.LastMoActionPlayerRecorder;
 import com.dml.majiang.player.action.listener.mo.MoGuipaiCounter;
@@ -37,11 +36,11 @@ import com.dml.mpgame.game.GameValueObject;
 
 public class MajiangGame {
 	private String gameId;
-	private int difen;
-	private int taishu;
+	private boolean hongzhongcaishen;
+	private boolean zhuaniao;
+	private int niaoshu;
 	private int panshu;
 	private int renshu;
-	private boolean dapao;
 	private Ju ju;
 	private MajiangGameState state;
 	private Map<String, MajiangGamePlayerState> playerStateMap = new HashMap<>();
@@ -57,15 +56,15 @@ public class MajiangGame {
 		ju.setZhuangDeterminerForFirstPan(new RandomMustHasZhuangZhuangDeterminer(currentTime + 1));
 		ju.setZhuangDeterminerForNextPan(new DianpaoZhuangDeterminer());
 
-		ju.setAvaliablePaiFiller(new OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller(currentTime + 2));
-		ju.setGuipaiDeterminer(new RandomGuipaiDeterminer(currentTime + 3));
+		ju.setAvaliablePaiFiller(
+				new OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller(currentTime + 2, hongzhongcaishen));
+		ju.setGuipaiDeterminer(new HongzhongGuipaiDeterminer());
 		ju.setFaPaiStrategy(new FangpaoMajiangFaPaiStrategy(13));
-		// TODO 流局计算
+
 		ju.setCurrentPanFinishiDeterminer(new FangpaoMajiangPanFinishiDeterminer());
 		ju.setGouXingPanHu(new NoDanpaiOneDuiziGouXingPanHu());
 		ju.setCurrentPanPublicWaitingPlayerDeterminer(new WaitDaPlayerPanPublicWaitingPlayerDeterminer());
 		FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = new FangpaoMajiangPanResultBuilder();
-		// TODO
 		ju.setCurrentPanResultBuilder(fangpaoMajiangPanResultBuilder);
 		AllPlayersReadyCreateNextPanDeterminer createNextPanDeterminer = new AllPlayersReadyCreateNextPanDeterminer();
 		game.allPlayerIds().forEach((pid) -> createNextPanDeterminer.addPlayer(pid));
@@ -88,9 +87,9 @@ public class MajiangGame {
 		ju.setHuActionProcessor(new PlayerSetHuHuActionProcessor());
 
 		ju.addActionStatisticsListener(new CaizipaiListener());
-		ju.addActionStatisticsListener(new JuezhangStatisticsListener());
 		ju.addActionStatisticsListener(new MoGuipaiCounter());
 		ju.addActionStatisticsListener(new GangCounter());
+		ju.addActionStatisticsListener(new FangGangCounter());
 		ju.addActionStatisticsListener(new LastMoActionPlayerRecorder());
 		ju.addActionStatisticsListener(new DianpaoDihuOpportunityDetector());
 
@@ -99,6 +98,43 @@ public class MajiangGame {
 
 		// 必然庄家已经先摸了一张牌了
 		return ju.getCurrentPan().findLatestActionFrame();
+	}
+
+	public MajiangActionResult action(String playerId, int actionId, long actionTime) throws Exception {
+		PanActionFrame panActionFrame = ju.action(playerId, actionId, actionTime);
+		MajiangActionResult result = new MajiangActionResult();
+		result.setPanActionFrame(panActionFrame);
+		if (ju.getCurrentPan() == null) {// 盘结束了
+			state = MajiangGameState.waitingNextPan;
+			playerStateMap.keySet().forEach((pid) -> playerStateMap.put(pid, MajiangGamePlayerState.panFinished));
+			FangpaoMajiangPanResult panResult = (FangpaoMajiangPanResult) ju.findLatestFinishedPanResult();
+			panResult.getPlayerResultList()
+					.forEach((pr) -> playeTotalScoreMap.put(pr.getPlayerId(), pr.getTotalScore()));
+			result.setPanResult(panResult);
+		}
+		if (ju.getJuResult() != null) {// 局结束了
+			state = MajiangGameState.finished;
+			playerStateMap.keySet().forEach((pid) -> playerStateMap.put(pid, MajiangGamePlayerState.finished));
+			result.setJuResult((FangpaoMajiangJuResult) ju.getJuResult());
+		}
+		return result;
+	}
+
+	public PanActionFrame readyToNextPan(String playerId) throws Exception {
+		playerStateMap.put(playerId, MajiangGamePlayerState.readyToStart);
+		AllPlayersReadyCreateNextPanDeterminer createNextPanDeterminer = (AllPlayersReadyCreateNextPanDeterminer) ju
+				.getCreateNextPanDeterminer();
+		createNextPanDeterminer.playerReady(playerId);
+		// 如果可以创建下一盘,那就创建下一盘
+		if (ju.determineToCreateNextPan()) {
+			ju.startNextPan();
+			state = MajiangGameState.playing;
+			playerStateMap.keySet().forEach((pid) -> playerStateMap.put(pid, MajiangGamePlayerState.playing));
+			// 必然庄家已经先摸了一张牌了
+			return ju.getCurrentPan().findLatestActionFrame();
+		} else {
+			return null;
+		}
 	}
 
 	public JuResult finishJu() {
@@ -150,9 +186,7 @@ public class MajiangGame {
 				playeTotalScoreMap.remove(playerId);
 			}
 		});
-
 		return new MajiangGameValueObject(this);
-
 	}
 
 	public String getGameId() {
@@ -163,20 +197,28 @@ public class MajiangGame {
 		this.gameId = gameId;
 	}
 
-	public int getDifen() {
-		return difen;
+	public boolean isHongzhongcaishen() {
+		return hongzhongcaishen;
 	}
 
-	public void setDifen(int difen) {
-		this.difen = difen;
+	public void setHongzhongcaishen(boolean hongzhongcaishen) {
+		this.hongzhongcaishen = hongzhongcaishen;
 	}
 
-	public int getTaishu() {
-		return taishu;
+	public boolean isZhuaniao() {
+		return zhuaniao;
 	}
 
-	public void setTaishu(int taishu) {
-		this.taishu = taishu;
+	public void setZhuaniao(boolean zhuaniao) {
+		this.zhuaniao = zhuaniao;
+	}
+
+	public int getNiaoshu() {
+		return niaoshu;
+	}
+
+	public void setNiaoshu(int niaoshu) {
+		this.niaoshu = niaoshu;
 	}
 
 	public int getPanshu() {
@@ -193,14 +235,6 @@ public class MajiangGame {
 
 	public void setRenshu(int renshu) {
 		this.renshu = renshu;
-	}
-
-	public boolean isDapao() {
-		return dapao;
-	}
-
-	public void setDapao(boolean dapao) {
-		this.dapao = dapao;
 	}
 
 	public Ju getJu() {

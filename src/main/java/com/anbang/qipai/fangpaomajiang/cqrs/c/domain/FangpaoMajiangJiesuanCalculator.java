@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.player.MajiangPlayer;
-import com.dml.majiang.player.action.mo.GanghouBupai;
 import com.dml.majiang.player.action.mo.MajiangMoAction;
 import com.dml.majiang.player.shoupai.GuipaiDangPai;
 import com.dml.majiang.player.shoupai.PaiXing;
@@ -43,9 +42,8 @@ public class FangpaoMajiangJiesuanCalculator {
 			FangpaoMajiangPanPlayerScore bestScore = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(couldTianhu, false,
-						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing, true,
-						moAction.getReason().getName().equals(GanghouBupai.name), true, false);
+				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(true, true, false, couldTianhu,
+						false, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 				if (bestScore == null || bestScore.getValue() < score.getValue()) {
 					bestScore = score;
 					bestHuShoupaiPaiXing = shoupaiPaiXing;
@@ -57,29 +55,132 @@ public class FangpaoMajiangJiesuanCalculator {
 		}
 	}
 
-	private static FangpaoMajiangPanPlayerScore calculateScoreForShoupaiPaiXing(boolean couldTianhu, boolean couldDihu,
-			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu, ShoupaiPaiXing shoupaiPaiXing, boolean hu,
-			boolean gangkaiHu, boolean zimoHu, boolean qianggangHu) {
+	// 抢杠胡
+	public static FangpaoMajiangHu calculateBestQianggangHu(MajiangPai gangPai, GouXingPanHu gouXingPanHu,
+			MajiangPlayer player) {
+		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
+		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
+		shoupaiCalculator.addPai(gangPai);
+		List<ShoupaiPaiXing> huPaiShoupaiPaiXingList = calculateZimoHuPaiShoupaiPaiXingList(guipaiList,
+				shoupaiCalculator, player, gouXingPanHu, player.getGangmoShoupai());
+		shoupaiCalculator.removePai(gangPai);
+		if (!huPaiShoupaiPaiXingList.isEmpty()) {// 有胡牌型
+
+			// 要选出分数最高的牌型
+			// 先计算和手牌型无关的参数
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
+			FangpaoMajiangPanPlayerScore bestScore = null;
+			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
+			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
+				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(true, false, true, false, true,
+						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+				if (bestScore == null || bestScore.getValue() < score.getValue()) {
+					bestScore = score;
+					bestHuShoupaiPaiXing = shoupaiPaiXing;
+				}
+			}
+			return new FangpaoMajiangHu(bestHuShoupaiPaiXing, bestScore);
+		} else {// 不成胡
+			return null;
+		}
+	}
+
+	// 点炮胡
+	public static FangpaoMajiangHu calculateBestDianpaoHu(boolean couldDihu, GouXingPanHu gouXingPanHu,
+			MajiangPlayer player, MajiangPai hupai) {
+		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
+		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
+
+		List<ShoupaiPaiXing> huPaiShoupaiPaiXingList = calculateZimoHuPaiShoupaiPaiXingList(guipaiList,
+				shoupaiCalculator, player, gouXingPanHu, hupai);
+
+		if (!huPaiShoupaiPaiXingList.isEmpty()) {// 有胡牌型
+
+			// 要选出分数最高的牌型
+			// 先计算和手牌型无关的参数
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
+			FangpaoMajiangPanPlayerScore bestScore = null;
+			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
+			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
+				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(true, false, false, false,
+						couldDihu, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+				if (bestScore == null || bestScore.getValue() < score.getValue()) {
+					bestScore = score;
+					bestHuShoupaiPaiXing = shoupaiPaiXing;
+				}
+			}
+			return new FangpaoMajiangHu(bestHuShoupaiPaiXing, bestScore);
+		} else {// 不成胡
+			return null;
+		}
+	}
+
+	public static FangpaoMajiangPanPlayerScore calculateBestScoreForBuhuPlayer(MajiangPlayer player) {
+		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
+		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
+
+		List<ShoupaiPaiXing> shoupaiPaiXingList = calculateBuhuShoupaiPaiXingList(guipaiList, shoupaiCalculator);
+
+		// 要选出分数最高的牌型
+		// 先计算和手牌型无关的参数
+		ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
+		FangpaoMajiangPanPlayerScore bestScore = null;
+		for (ShoupaiPaiXing shoupaiPaiXing : shoupaiPaiXingList) {
+			FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(false, false, false, false, false,
+					shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+			if (bestScore == null || bestScore.getValue() < score.getValue()) {
+				bestScore = score;
+			}
+		}
+		return bestScore;
+	}
+
+	private static FangpaoMajiangPanPlayerScore calculateScoreForShoupaiPaiXing(boolean hu, boolean zimoHu,
+			boolean qianggangHu, boolean couldTianhu, boolean couldDihu,
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu, ShoupaiPaiXing shoupaiPaiXing) {
 		FangpaoMajiangPanPlayerScore score = new FangpaoMajiangPanPlayerScore();
-		FangpaoMajiangHushu hushu = calculateHushu(couldTianhu, couldDihu, hu, gangkaiHu, zimoHu, qianggangHu,
-				shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+		FangpaoMajiangHushu hushu = calculateHushu(hu, zimoHu, qianggangHu, couldTianhu, couldDihu);
 		score.setHushu(hushu);
+		FangpaoMajiangGang gang = calculateGang(shoupaixingWuguanJiesuancanshu);
+		score.setGang(gang);
 		score.calculate();
 		return score;
 	}
 
-	private static FangpaoMajiangHushu calculateHushu(boolean couldTianhu, boolean couldDihu, boolean hu,
-			boolean gangkaiHu, boolean zimoHu, boolean qianggangHu,
-			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu, ShoupaiPaiXing shoupaiPaiXing) {
+	private static FangpaoMajiangHushu calculateHushu(boolean hu, boolean zimoHu, boolean qianggangHu,
+			boolean couldTianhu, boolean couldDihu) {
 		FangpaoMajiangHushu hushu = new FangpaoMajiangHushu();
-		if (couldTianhu) {
-			hushu.setTianhu(couldTianhu);
-		}
-		if (couldDihu) {
-			hushu.setDihu(couldDihu);
+		if (hu) {
+			if (zimoHu) {
+				hushu.setZimoHu(zimoHu);
+			}
+			if (qianggangHu) {
+				hushu.setQiangganghu(qianggangHu);
+			}
+			if (couldTianhu) {
+				hushu.setTianhu(couldTianhu);
+			}
+			if (couldDihu) {
+				hushu.setDihu(couldDihu);
+			}
 		}
 		hushu.calculate();
 		return hushu;
+	}
+
+	private static FangpaoMajiangGang calculateGang(ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu) {
+		FangpaoMajiangGang gang = new FangpaoMajiangGang();
+		int pengShu = shoupaixingWuguanJiesuancanshu.getYijiupengShu()
+				+ shoupaixingWuguanJiesuancanshu.getErbapengShu();
+		int mingGangShu = shoupaixingWuguanJiesuancanshu.getYijiuminggangShu()
+				+ shoupaixingWuguanJiesuancanshu.getErbaminggangShu();
+		int anGangShu = shoupaixingWuguanJiesuancanshu.getYijiuangangCount()
+				+ shoupaixingWuguanJiesuancanshu.getErbaangangCount();
+		gang.setPengShu(pengShu);
+		gang.setMingGangShu(mingGangShu);
+		gang.setAnGangShu(anGangShu);
+		gang.calculate();
+		return gang;
 	}
 
 	// 其实点炮,抢杠胡,也包含自摸的意思，也调用这个
@@ -90,6 +191,15 @@ public class FangpaoMajiangJiesuanCalculator {
 					huPai);
 		} else {// 没财神
 			return calculateHuPaiShoupaiPaiXingListWithoutCaishen(shoupaiCalculator, player, gouXingPanHu, huPai);
+		}
+	}
+
+	private static List<ShoupaiPaiXing> calculateBuhuShoupaiPaiXingList(List<MajiangPai> guipaiList,
+			ShoupaiCalculator shoupaiCalculator) {
+		if (!guipaiList.isEmpty()) {// 有财神
+			return calculateBuhuShoupaiPaiXingListWithCaishen(guipaiList, shoupaiCalculator);
+		} else {// 没财神
+			return calculateBuhuShoupaiPaiXingListWithoutCaishen(shoupaiCalculator);
 		}
 	}
 
@@ -150,6 +260,50 @@ public class FangpaoMajiangJiesuanCalculator {
 					}
 				}
 
+			}
+		}
+		return huPaiShoupaiPaiXingList;
+	}
+
+	private static List<ShoupaiPaiXing> calculateBuhuShoupaiPaiXingListWithoutCaishen(
+			ShoupaiCalculator shoupaiCalculator) {
+		List<ShoupaiPaiXing> buhuShoupaiPaiXingList = new ArrayList<>();
+		// 计算构型
+		List<GouXing> gouXingList = shoupaiCalculator.calculateAllGouXing();
+		for (GouXing gouXing : gouXingList) {
+			// 计算牌型
+			List<PaiXing> paiXingList = shoupaiCalculator.calculateAllPaiXingFromGouXing(gouXing);
+			for (PaiXing paiXing : paiXingList) {
+				ShoupaiPaiXing shoupaiPaiXing = paiXing.generateAllBenPaiShoupaiPaiXing();
+				buhuShoupaiPaiXingList.add(shoupaiPaiXing);
+			}
+		}
+		return buhuShoupaiPaiXingList;
+	}
+
+	private static List<ShoupaiPaiXing> calculateBuhuShoupaiPaiXingListWithCaishen(List<MajiangPai> guipaiList,
+			ShoupaiCalculator shoupaiCalculator) {
+		List<ShoupaiPaiXing> huPaiShoupaiPaiXingList = new ArrayList<>();
+		MajiangPai[] paiTypesForGuipaiAct = calculatePaiTypesForGuipaiAct();// 鬼牌可以扮演的牌类
+		// 开始循环财神各种当法，算构型
+		List<ShoupaiWithGuipaiDangGouXingZu> shoupaiWithGuipaiDangGouXingZuList = calculateShoupaiWithGuipaiDangGouXingZuList(
+				guipaiList, paiTypesForGuipaiAct, shoupaiCalculator);
+		// 对构型计算出所有牌型
+		for (ShoupaiWithGuipaiDangGouXingZu shoupaiWithGuipaiDangGouXingZu : shoupaiWithGuipaiDangGouXingZuList) {
+			GuipaiDangPai[] guipaiDangPaiArray = shoupaiWithGuipaiDangGouXingZu.getGuipaiDangPaiArray();
+			List<GouXing> gouXingList = shoupaiWithGuipaiDangGouXingZu.getGouXingList();
+			for (GouXing gouXing : gouXingList) {
+				// 先把所有当的鬼牌加入计算器
+				for (int i = 0; i < guipaiDangPaiArray.length; i++) {
+					shoupaiCalculator.addPai(guipaiDangPaiArray[i].getDangpai());
+				}
+				// 计算牌型
+				huPaiShoupaiPaiXingList.addAll(calculateAllShoupaiPaiXingForGouXingWithoutHupai(gouXing,
+						shoupaiCalculator, guipaiDangPaiArray));
+				// 再把所有当的鬼牌移出计算器
+				for (int i = 0; i < guipaiDangPaiArray.length; i++) {
+					shoupaiCalculator.removePai(guipaiDangPaiArray[i].getDangpai());
+				}
 			}
 		}
 		return huPaiShoupaiPaiXingList;
@@ -247,6 +401,36 @@ public class FangpaoMajiangJiesuanCalculator {
 				huPaiShoupaiPaiXingList.addAll(shoupaiPaiXingListWithDifftentLastActionPaiInZu);
 			}
 
+		}
+		return huPaiShoupaiPaiXingList;
+	}
+
+	private static List<ShoupaiPaiXing> calculateAllShoupaiPaiXingForGouXingWithoutHupai(GouXing gouXing,
+			ShoupaiCalculator shoupaiCalculator, GuipaiDangPai[] guipaiDangPaiArray) {
+		boolean sancaishen = (guipaiDangPaiArray.length == 3);
+		List<ShoupaiPaiXing> huPaiShoupaiPaiXingList = new ArrayList<>();
+		// 计算牌型
+		List<PaiXing> paiXingList = shoupaiCalculator.calculateAllPaiXingFromGouXing(gouXing);
+		for (PaiXing paiXing : paiXingList) {
+			List<ShoupaiPaiXing> shoupaiPaiXingList = paiXing.generateShoupaiPaiXingByGuipaiDangPai(guipaiDangPaiArray);
+			// 过滤暗杠或暗刻有两个财神当的
+			Iterator<ShoupaiPaiXing> i = shoupaiPaiXingList.iterator();
+			while (i.hasNext()) {
+				ShoupaiPaiXing shoupaiPaiXing = i.next();
+				for (ShoupaiKeziZu shoupaiKeziZu : shoupaiPaiXing.getKeziList()) {
+					if (shoupaiKeziZu.countGuipaiDangQitapai() > (sancaishen ? 2 : 1)) {
+						i.remove();
+						break;
+					}
+				}
+				for (ShoupaiGangziZu shoupaiGangziZu : shoupaiPaiXing.getGangziList()) {
+					if (shoupaiGangziZu.countGuipaiDangQitapai() > (sancaishen ? 2 : 1)) {
+						i.remove();
+						break;
+					}
+				}
+			}
+			huPaiShoupaiPaiXingList.addAll(shoupaiPaiXingList);
 		}
 		return huPaiShoupaiPaiXingList;
 	}

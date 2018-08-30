@@ -15,11 +15,14 @@ public class OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller implements Avaliabl
 
 	private long seed;
 
+	private boolean hongzhongcaishen;
+
 	public OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller() {
 	}
 
-	public OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller(long seed) {
+	public OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller(long seed, boolean hongzhongcaishen) {
 		this.seed = seed;
+		this.hongzhongcaishen = hongzhongcaishen;
 	}
 
 	@Override
@@ -39,6 +42,9 @@ public class OnlyTongTiaoWanAndZhongRandomAvaliablePaiFiller implements Avaliabl
 		notPlaySet.add(MajiangPai.beifeng);
 		notPlaySet.add(MajiangPai.facai);
 		notPlaySet.add(MajiangPai.baiban);
+		if (!hongzhongcaishen) {
+			notPlaySet.add(MajiangPai.hongzhong);
+		}
 		MajiangPai[] allMajiangPaiArray = MajiangPai.values();
 		List<MajiangPai> playPaiTypeList = new ArrayList<>();
 		for (int i = 0; i < allMajiangPaiArray.length; i++) {

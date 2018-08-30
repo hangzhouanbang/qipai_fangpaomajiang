@@ -12,11 +12,11 @@ import com.dml.mpgame.game.GamePlayerOnlineState;
 
 public class MajiangGameDbo {
 	private String id;// 就是gameid
-	private int difen;
-	private int taishu;
 	private int panshu;
 	private int renshu;
-	private boolean dapao;
+	private boolean hongzhongcaishen;
+	private boolean zhuaniao;
+	private int niaoshu;
 	private MajiangGameState state;
 	private List<MajiangGamePlayerDbo> players;
 	private byte[] latestPanActionFrameData;// TODO 要按规范拆分重构
@@ -26,11 +26,11 @@ public class MajiangGameDbo {
 
 	public MajiangGameDbo(MajiangGameValueObject majiangGame, Map<String, PlayerInfo> playerInfoMap) {
 		id = majiangGame.getGameId();
-		difen = majiangGame.getDifen();
-		taishu = majiangGame.getTaishu();
 		panshu = majiangGame.getPanshu();
 		renshu = majiangGame.getRenshu();
-		dapao = majiangGame.isDapao();
+		hongzhongcaishen = majiangGame.isHongzhongcaishen();
+		zhuaniao = majiangGame.isZhuaniao();
+		niaoshu = majiangGame.getNiaoshu();
 		state = majiangGame.getState();
 
 		players = new ArrayList<>();
@@ -70,22 +70,6 @@ public class MajiangGameDbo {
 		this.id = id;
 	}
 
-	public int getDifen() {
-		return difen;
-	}
-
-	public void setDifen(int difen) {
-		this.difen = difen;
-	}
-
-	public int getTaishu() {
-		return taishu;
-	}
-
-	public void setTaishu(int taishu) {
-		this.taishu = taishu;
-	}
-
 	public int getPanshu() {
 		return panshu;
 	}
@@ -102,12 +86,28 @@ public class MajiangGameDbo {
 		this.renshu = renshu;
 	}
 
-	public boolean isDapao() {
-		return dapao;
+	public boolean isHongzhongcaishen() {
+		return hongzhongcaishen;
 	}
 
-	public void setDapao(boolean dapao) {
-		this.dapao = dapao;
+	public void setHongzhongcaishen(boolean hongzhongcaishen) {
+		this.hongzhongcaishen = hongzhongcaishen;
+	}
+
+	public boolean isZhuaniao() {
+		return zhuaniao;
+	}
+
+	public void setZhuaniao(boolean zhuaniao) {
+		this.zhuaniao = zhuaniao;
+	}
+
+	public int getNiaoshu() {
+		return niaoshu;
+	}
+
+	public void setNiaoshu(int niaoshu) {
+		this.niaoshu = niaoshu;
 	}
 
 	public MajiangGameState getState() {
