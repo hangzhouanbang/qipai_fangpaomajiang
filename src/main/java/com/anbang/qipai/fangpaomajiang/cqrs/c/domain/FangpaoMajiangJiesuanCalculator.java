@@ -1,8 +1,11 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.player.MajiangPlayer;
@@ -20,8 +23,8 @@ import com.dml.majiang.player.shoupai.gouxing.GouXingPanHu;
 public class FangpaoMajiangJiesuanCalculator {
 
 	// 自摸胡
-	public static FangpaoMajiangHu calculateBestZimoHu(boolean couldTianhu, GouXingPanHu gouXingPanHu,
-			MajiangPlayer player, MajiangMoAction moAction) {
+	public static FangpaoMajiangHu calculateBestZimoHu(boolean couldTianhu, boolean hongzhongcaishen, boolean zhuaniao,
+			int niaoshu, GouXingPanHu gouXingPanHu, MajiangPlayer player, MajiangMoAction moAction) {
 		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 
@@ -42,8 +45,8 @@ public class FangpaoMajiangJiesuanCalculator {
 			FangpaoMajiangPanPlayerScore bestScore = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(true, true, false, couldTianhu,
-						false, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(hongzhongcaishen, zhuaniao,
+						niaoshu, true, true, false, couldTianhu, false, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 				if (bestScore == null || bestScore.getValue() < score.getValue()) {
 					bestScore = score;
 					bestHuShoupaiPaiXing = shoupaiPaiXing;
@@ -56,8 +59,8 @@ public class FangpaoMajiangJiesuanCalculator {
 	}
 
 	// 抢杠胡
-	public static FangpaoMajiangHu calculateBestQianggangHu(MajiangPai gangPai, GouXingPanHu gouXingPanHu,
-			MajiangPlayer player) {
+	public static FangpaoMajiangHu calculateBestQianggangHu(boolean hongzhongcaishen, boolean zhuaniao, int niaoshu,
+			MajiangPai gangPai, GouXingPanHu gouXingPanHu, MajiangPlayer player) {
 		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 		shoupaiCalculator.addPai(gangPai);
@@ -72,8 +75,8 @@ public class FangpaoMajiangJiesuanCalculator {
 			FangpaoMajiangPanPlayerScore bestScore = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(true, false, true, false, true,
-						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(hongzhongcaishen, zhuaniao,
+						niaoshu, true, false, true, false, true, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 				if (bestScore == null || bestScore.getValue() < score.getValue()) {
 					bestScore = score;
 					bestHuShoupaiPaiXing = shoupaiPaiXing;
@@ -86,8 +89,8 @@ public class FangpaoMajiangJiesuanCalculator {
 	}
 
 	// 点炮胡
-	public static FangpaoMajiangHu calculateBestDianpaoHu(boolean couldDihu, GouXingPanHu gouXingPanHu,
-			MajiangPlayer player, MajiangPai hupai) {
+	public static FangpaoMajiangHu calculateBestDianpaoHu(boolean couldDihu, boolean hongzhongcaishen, boolean zhuaniao,
+			int niaoshu, GouXingPanHu gouXingPanHu, MajiangPlayer player, MajiangPai hupai) {
 		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 
@@ -102,8 +105,8 @@ public class FangpaoMajiangJiesuanCalculator {
 			FangpaoMajiangPanPlayerScore bestScore = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(true, false, false, false,
-						couldDihu, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(hongzhongcaishen, zhuaniao,
+						niaoshu, true, false, false, false, couldDihu, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 				if (bestScore == null || bestScore.getValue() < score.getValue()) {
 					bestScore = score;
 					bestHuShoupaiPaiXing = shoupaiPaiXing;
@@ -115,7 +118,8 @@ public class FangpaoMajiangJiesuanCalculator {
 		}
 	}
 
-	public static FangpaoMajiangPanPlayerScore calculateBestScoreForBuhuPlayer(MajiangPlayer player) {
+	public static FangpaoMajiangPanPlayerScore calculateBestScoreForBuhuPlayer(boolean hongzhongcaishen,
+			boolean zhuaniao, int niaoshu, MajiangPlayer player) {
 		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 
@@ -126,8 +130,8 @@ public class FangpaoMajiangJiesuanCalculator {
 		ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
 		FangpaoMajiangPanPlayerScore bestScore = null;
 		for (ShoupaiPaiXing shoupaiPaiXing : shoupaiPaiXingList) {
-			FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(false, false, false, false, false,
-					shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+			FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(hongzhongcaishen, zhuaniao, niaoshu,
+					false, false, false, false, false, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 			if (bestScore == null || bestScore.getValue() < score.getValue()) {
 				bestScore = score;
 			}
@@ -135,15 +139,23 @@ public class FangpaoMajiangJiesuanCalculator {
 		return bestScore;
 	}
 
-	private static FangpaoMajiangPanPlayerScore calculateScoreForShoupaiPaiXing(boolean hu, boolean zimoHu,
-			boolean qianggangHu, boolean couldTianhu, boolean couldDihu,
-			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu, ShoupaiPaiXing shoupaiPaiXing) {
+	private static FangpaoMajiangPanPlayerScore calculateScoreForShoupaiPaiXing(boolean hongzhongcaishen,
+			boolean zhuaniao, int niaoshu, boolean hu, boolean zimoHu, boolean qianggangHu, boolean couldTianhu,
+			boolean couldDihu, ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu,
+			ShoupaiPaiXing shoupaiPaiXing) {
 		FangpaoMajiangPanPlayerScore score = new FangpaoMajiangPanPlayerScore();
 		FangpaoMajiangHushu hushu = calculateHushu(hu, zimoHu, qianggangHu, couldTianhu, couldDihu);
 		score.setHushu(hushu);
+
 		FangpaoMajiangGang gang = calculateGang(shoupaixingWuguanJiesuancanshu);
 		score.setGang(gang);
-		score.calculate();
+
+		FangpaoMajiangPao pao = calculatePao(hongzhongcaishen, shoupaixingWuguanJiesuancanshu);
+		score.setPao(pao);
+
+		FangpaoMajiangNiao niao = calculateNiao(zhuaniao, niaoshu);
+		score.setNiao(niao);
+
 		return score;
 	}
 
@@ -181,6 +193,134 @@ public class FangpaoMajiangJiesuanCalculator {
 		gang.setAnGangShu(anGangShu);
 		gang.calculate();
 		return gang;
+	}
+
+	private static FangpaoMajiangPao calculatePao(boolean hongzhongcaishen,
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu) {
+		FangpaoMajiangPao pao = new FangpaoMajiangPao();
+		if (hongzhongcaishen) {
+			int hongzhongShu = shoupaixingWuguanJiesuancanshu.getCaishenShu();
+			pao.setHongzhongShu(hongzhongShu);
+		}
+		pao.calculate();
+		return pao;
+	}
+
+	private static FangpaoMajiangNiao calculateNiao(boolean zhuaniao, int niaoshu) {
+		FangpaoMajiangNiao niao = new FangpaoMajiangNiao();
+		if (zhuaniao) {
+			int yiTiaoShu = 0;
+			int yiWanShu = 0;
+			int yiTongShu = 0;
+			int wuTiaoShu = 0;
+			int wuWanShu = 0;
+			int wuTongShu = 0;
+			int jiuTiaoShu = 0;
+			int jiuWanShu = 0;
+			int jiuTongShu = 0;
+			Set<MajiangPai> notPlaySet = new HashSet<>();
+			notPlaySet.add(MajiangPai.chun);
+			notPlaySet.add(MajiangPai.xia);
+			notPlaySet.add(MajiangPai.qiu);
+			notPlaySet.add(MajiangPai.dong);
+			notPlaySet.add(MajiangPai.mei);
+			notPlaySet.add(MajiangPai.lan);
+			notPlaySet.add(MajiangPai.zhu);
+			notPlaySet.add(MajiangPai.ju);
+			MajiangPai[] allMajiangPaiArray = MajiangPai.values();
+			List<MajiangPai> playPaiTypeList = new ArrayList<>();
+			for (int i = 0; i < allMajiangPaiArray.length; i++) {
+				MajiangPai pai = allMajiangPaiArray[i];
+				if (!notPlaySet.contains(pai)) {
+					playPaiTypeList.add(pai);
+				}
+			}
+
+			List<MajiangPai> allPaiList = new ArrayList<>();
+			playPaiTypeList.forEach((paiType) -> {
+				for (int i = 0; i < 4; i++) {
+					allPaiList.add(paiType);
+				}
+			});
+			Random r = new Random();
+			for (int i = 0; i < niaoshu; i++) {
+				MajiangPai majiangPai = allPaiList.get(r.nextInt(allPaiList.size()));
+				if (majiangPai.equals(MajiangPai.yitiao)) {
+					if (yiTiaoShu < 4) {
+						yiTiaoShu++;
+					} else {
+						i--;
+					}
+				}
+				if (majiangPai.equals(MajiangPai.yiwan)) {
+					if (yiWanShu < 4) {
+						yiWanShu++;
+					} else {
+						i--;
+					}
+				}
+				if (majiangPai.equals(MajiangPai.yitong)) {
+					if (yiTongShu < 4) {
+						yiTongShu++;
+					} else {
+						i--;
+					}
+				}
+				if (majiangPai.equals(MajiangPai.wutiao)) {
+					if (wuTiaoShu < 4) {
+						wuTiaoShu++;
+					} else {
+						i--;
+					}
+				}
+				if (majiangPai.equals(MajiangPai.wuwan)) {
+					if (wuWanShu < 4) {
+						wuWanShu++;
+					} else {
+						i--;
+					}
+				}
+				if (majiangPai.equals(MajiangPai.wutong)) {
+					if (wuTongShu < 4) {
+						wuTongShu++;
+					} else {
+						i--;
+					}
+				}
+				if (majiangPai.equals(MajiangPai.jiutiao)) {
+					if (jiuTiaoShu < 4) {
+						jiuTiaoShu++;
+					} else {
+						i--;
+					}
+				}
+				if (majiangPai.equals(MajiangPai.jiuwan)) {
+					if (jiuWanShu < 4) {
+						jiuWanShu++;
+					} else {
+						i--;
+					}
+				}
+				if (majiangPai.equals(MajiangPai.jiutong)) {
+					if (jiuTongShu < 4) {
+						jiuTongShu++;
+					} else {
+						i--;
+					}
+				}
+			}
+			niao.setYiTiaoShu(yiTiaoShu);
+			niao.setYiWanShu(yiWanShu);
+			niao.setYiTongShu(yiTongShu);
+			niao.setWuTiaoShu(wuTiaoShu);
+			niao.setWuWanShu(wuWanShu);
+			niao.setWuTongShu(wuTongShu);
+			niao.setJiuTiaoShu(jiuTiaoShu);
+			niao.setJiuWanShu(jiuWanShu);
+			niao.setJiuTongShu(jiuTongShu);
+		}
+		niao.calculate();
+		return niao;
 	}
 
 	// 其实点炮,抢杠胡,也包含自摸的意思，也调用这个

@@ -11,6 +11,12 @@ import com.dml.majiang.player.action.mo.LundaoMopai;
 import com.dml.majiang.player.action.mo.MajiangMoAction;
 import com.dml.majiang.player.shoupai.gouxing.GouXingPanHu;
 
+/**
+ * 一炮多响的打
+ * 
+ * @author lsc
+ *
+ */
 public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdater {
 
 	@Override
@@ -27,7 +33,11 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 		xiajiaPlayer.clearActionCandidates();
 		// 下家可以吃
 		xiajiaPlayer.tryChiAndGenerateCandidateActions(daAction.getActionPlayerId(), daAction.getPai());
-
+		FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = (FangpaoMajiangPanResultBuilder) ju
+				.getCurrentPanResultBuilder();
+		boolean hongzhongcaishen = fangpaoMajiangPanResultBuilder.isHongzhongcaishen();
+		boolean zhuaniao = fangpaoMajiangPanResultBuilder.isZhuaniao();
+		int niaoshu = fangpaoMajiangPanResultBuilder.getNiaoshu();
 		while (true) {
 			if (!xiajiaPlayer.getId().equals(daAction.getActionPlayerId())) {
 				// 其他的可以碰杠胡
@@ -38,7 +48,7 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 				// 先把这张牌放入计算器
 				xiajiaPlayer.getShoupaiCalculator().addPai(daAction.getPai());
 				FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestDianpaoHu(couldDihu,
-						gouXingPanHu, xiajiaPlayer, daAction.getPai());
+						hongzhongcaishen, zhuaniao, niaoshu, gouXingPanHu, xiajiaPlayer, daAction.getPai());
 				// 再把这张牌拿出计算器
 				xiajiaPlayer.getShoupaiCalculator().removePai(daAction.getPai());
 				if (bestHu != null) {

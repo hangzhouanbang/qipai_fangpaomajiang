@@ -144,4 +144,13 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		gameServer.bindPlayer(playerId, gameId);
 	}
 
+	@Override
+	public GameValueObject finishGameImmediately(String gameId) throws Exception {
+		MajiangGameManager majiangGameManager = singletonEntityRepository.getEntity(MajiangGameManager.class);
+		majiangGameManager.finishMajiangGame(gameId);
+		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
+		GameValueObject gameValueObject = gameServer.finishGameImmediately(gameId);
+		return gameValueObject;
+	}
+
 }

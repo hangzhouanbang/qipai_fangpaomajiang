@@ -8,6 +8,7 @@ import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.ReadyForGameResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.GameCmdService;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.impl.GameCmdServiceImpl;
+import com.dml.mpgame.game.GameValueObject;
 import com.highto.framework.concurrent.DeferredResult;
 import com.highto.framework.ddd.CommonCommand;
 
@@ -138,6 +139,20 @@ public class DisruptorGameCmdService extends DisruptorCmdServiceBase implements 
 			result.getResult();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public GameValueObject finishGameImmediately(String gameId) throws Exception {
+		CommonCommand cmd = new CommonCommand(GameCmdServiceImpl.class.getName(), "finishGameImmediately", gameId);
+		DeferredResult<GameValueObject> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd, () -> {
+			GameValueObject gameValueObject = gameCmdServiceImpl.finishGameImmediately(cmd.getParameter());
+			return gameValueObject;
+		});
+		try {
+			return result.getResult();
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 

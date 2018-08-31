@@ -12,19 +12,19 @@ public class FangpaoMajiangPanPlayerScore {
 	private int value;// 可能是负数
 
 	public void jiesuanHuShu(int delta, int playerCount) {
-		jiesuanHuShu = hushu.getValue() * playerCount + delta;
+		jiesuanHuShu = hushu.jiesuan() * playerCount + delta;
 	}
 
-	public void jiesuanGang() {
-		jiesuanGang = gang.getValue();
+	public void jiesuanGang(int playerCount, int fangGangCount) {
+		jiesuanGang = gang.jiesuan(playerCount, fangGangCount);
 	}
 
 	public void jiesuanPao() {
-		jiesuanPao = pao.getValue();
+		jiesuanPao = pao.jiesuan();
 	}
 
 	public void jiesuanNiao() {
-		jiesuanNiao = niao.getValue();
+		jiesuanNiao = niao.jiesuan();
 	}
 
 	public void calculate() {

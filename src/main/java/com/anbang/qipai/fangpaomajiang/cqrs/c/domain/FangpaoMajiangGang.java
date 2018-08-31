@@ -12,8 +12,8 @@ public class FangpaoMajiangGang {
 		value = gang;
 	}
 
-	public int jiesuan(int playerCount) {
-		return value += 2 * anGangShu * playerCount;
+	public int jiesuan(int playerCount, int fangGangCount) {
+		return value += 2 * anGangShu * playerCount - fangGangCount * 2;
 	}
 
 	public int getPengShu() {

@@ -18,6 +18,14 @@ public class FangpaoMajiangPao {
 		return value;
 	}
 
+	public int getHongzhongShu() {
+		return hongzhongShu;
+	}
+
+	public void setHongzhongShu(int hongzhongShu) {
+		this.hongzhongShu = hongzhongShu;
+	}
+
 	public int getValue() {
 		return value;
 	}
@@ -25,5 +33,4 @@ public class FangpaoMajiangPao {
 	public void setValue(int value) {
 		this.value = value;
 	}
-
 }

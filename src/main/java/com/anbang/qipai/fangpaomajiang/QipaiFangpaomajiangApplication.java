@@ -20,6 +20,7 @@ import com.highto.framework.ddd.SingletonEntityRepository;
 @SpringBootApplication
 @EnableScheduling
 public class QipaiFangpaomajiangApplication {
+	
 	@Autowired
 	private SnapshotJsonUtil snapshotJsonUtil;
 

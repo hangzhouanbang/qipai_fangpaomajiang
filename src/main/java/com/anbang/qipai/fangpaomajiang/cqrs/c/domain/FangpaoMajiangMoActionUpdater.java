@@ -29,7 +29,12 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 
 			// 刻子杠手牌
 			player.tryKezigangshoupaiAndGenerateCandidateAction();
-
+			// 胡
+			FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = (FangpaoMajiangPanResultBuilder) ju
+					.getCurrentPanResultBuilder();
+			boolean hongzhongcaishen = fangpaoMajiangPanResultBuilder.isHongzhongcaishen();
+			boolean zhuaniao = fangpaoMajiangPanResultBuilder.isZhuaniao();
+			int niaoshu = fangpaoMajiangPanResultBuilder.getNiaoshu();
 			GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
 
 			// 天胡
@@ -39,8 +44,8 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 					couldTianhu = true;
 				}
 			}
-			FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu, gouXingPanHu,
-					player, moAction);
+			FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu, hongzhongcaishen,
+					zhuaniao, niaoshu, gouXingPanHu, player, moAction);
 			if (bestHu != null) {
 				bestHu.setZimo(true);
 				player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));

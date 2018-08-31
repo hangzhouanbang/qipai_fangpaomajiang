@@ -64,8 +64,13 @@ public class MajiangGame {
 		ju.setCurrentPanFinishiDeterminer(new FangpaoMajiangPanFinishiDeterminer());
 		ju.setGouXingPanHu(new NoDanpaiOneDuiziGouXingPanHu());
 		ju.setCurrentPanPublicWaitingPlayerDeterminer(new WaitDaPlayerPanPublicWaitingPlayerDeterminer());
+
 		FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = new FangpaoMajiangPanResultBuilder();
+		fangpaoMajiangPanResultBuilder.setHongzhongcaishen(hongzhongcaishen);
+		fangpaoMajiangPanResultBuilder.setZhuaniao(zhuaniao);
+		fangpaoMajiangPanResultBuilder.setNiaoshu(niaoshu);
 		ju.setCurrentPanResultBuilder(fangpaoMajiangPanResultBuilder);
+
 		AllPlayersReadyCreateNextPanDeterminer createNextPanDeterminer = new AllPlayersReadyCreateNextPanDeterminer();
 		game.allPlayerIds().forEach((pid) -> createNextPanDeterminer.addPlayer(pid));
 		ju.setCreateNextPanDeterminer(createNextPanDeterminer);

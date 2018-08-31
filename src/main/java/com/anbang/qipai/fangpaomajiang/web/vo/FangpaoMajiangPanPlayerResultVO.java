@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangGang;
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangNiao;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerScore;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPao;
@@ -35,15 +37,13 @@ public class FangpaoMajiangPanPlayerResultVO {
 	private List<MajiangPai> keziTypeList = new ArrayList<>();
 	private List<GangchuPaiZuVO> gangchuList = new ArrayList<>();
 
-	/**
-	 * 这个是打了几炮
-	 */
-	private int pao;
+	private int gang;// 非结算杠
 
-	/**
-	 * 这个是非结算的胡数
-	 */
-	private int hushu;
+	private int pao;// 非结算炮
+
+	private int niao;// 非结算鸟
+
+	private int hushu;// 非结算胡分
 
 	/**
 	 * 这个是结算分
@@ -60,12 +60,21 @@ public class FangpaoMajiangPanPlayerResultVO {
 		}
 		hu = panPlayerResult.isHu();
 		publicPaiList = new ArrayList<>(panPlayerResult.getPublicPaiList());
-		FangpaoMajiangPanPlayerScore ruianMajiangPanPlayerScore = panPlayerResult.getScore();
-		FangpaoMajiangPao ruianMajiangPao = ruianMajiangPanPlayerScore.getPao();
-		if (ruianMajiangPao != null) {
-			pao = ruianMajiangPao.getValue();
+		FangpaoMajiangPanPlayerScore fangpaoMajiangPanPlayerScore = panPlayerResult.getScore();
+		FangpaoMajiangGang fangpaoMajiangGang = fangpaoMajiangPanPlayerScore.getGang();
+		if (fangpaoMajiangGang != null) {
+			gang = fangpaoMajiangGang.getValue();
 		}
-
+		FangpaoMajiangPao fangpaoMajiangPao = fangpaoMajiangPanPlayerScore.getPao();
+		if (fangpaoMajiangPao != null) {
+			pao = fangpaoMajiangPao.getValue();
+		}
+		FangpaoMajiangNiao fangpaoMajiangNiao = fangpaoMajiangPanPlayerScore.getNiao();
+		if (fangpaoMajiangNiao != null) {
+			niao = fangpaoMajiangNiao.getValue();
+		}
+		hushu = fangpaoMajiangPanPlayerScore.getHushu().getValue();
+		score = fangpaoMajiangPanPlayerScore.getValue();
 		List<ChichuPaiZu> chichuPaiZuList = panPlayerResult.getChichupaiZuList();
 		for (ChichuPaiZu chichuPaiZu : chichuPaiZuList) {
 			shunziList.add(chichuPaiZu.getShunzi());
@@ -145,64 +154,144 @@ public class FangpaoMajiangPanPlayerResultVO {
 		return playerId;
 	}
 
+	public void setPlayerId(String playerId) {
+		this.playerId = playerId;
+	}
+
 	public String getNickname() {
 		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getHeadimgurl() {
 		return headimgurl;
 	}
 
+	public void setHeadimgurl(String headimgurl) {
+		this.headimgurl = headimgurl;
+	}
+
 	public boolean isZhuang() {
 		return zhuang;
+	}
+
+	public void setZhuang(boolean zhuang) {
+		this.zhuang = zhuang;
 	}
 
 	public boolean isHu() {
 		return hu;
 	}
 
+	public void setHu(boolean hu) {
+		this.hu = hu;
+	}
+
 	public boolean isZimo() {
 		return zimo;
+	}
+
+	public void setZimo(boolean zimo) {
+		this.zimo = zimo;
 	}
 
 	public boolean isDianpao() {
 		return dianpao;
 	}
 
+	public void setDianpao(boolean dianpao) {
+		this.dianpao = dianpao;
+	}
+
 	public List<MajiangPai> getPublicPaiList() {
 		return publicPaiList;
+	}
+
+	public void setPublicPaiList(List<MajiangPai> publicPaiList) {
+		this.publicPaiList = publicPaiList;
 	}
 
 	public List<MajiangPai> getCaishenList() {
 		return caishenList;
 	}
 
+	public void setCaishenList(List<MajiangPai> caishenList) {
+		this.caishenList = caishenList;
+	}
+
 	public List<List<ResultShoupaiVO>> getResultShoupaiZuList() {
 		return resultShoupaiZuList;
+	}
+
+	public void setResultShoupaiZuList(List<List<ResultShoupaiVO>> resultShoupaiZuList) {
+		this.resultShoupaiZuList = resultShoupaiZuList;
 	}
 
 	public List<Shunzi> getShunziList() {
 		return shunziList;
 	}
 
+	public void setShunziList(List<Shunzi> shunziList) {
+		this.shunziList = shunziList;
+	}
+
 	public List<MajiangPai> getKeziTypeList() {
 		return keziTypeList;
+	}
+
+	public void setKeziTypeList(List<MajiangPai> keziTypeList) {
+		this.keziTypeList = keziTypeList;
 	}
 
 	public List<GangchuPaiZuVO> getGangchuList() {
 		return gangchuList;
 	}
 
+	public void setGangchuList(List<GangchuPaiZuVO> gangchuList) {
+		this.gangchuList = gangchuList;
+	}
+
+	public int getGang() {
+		return gang;
+	}
+
+	public void setGang(int gang) {
+		this.gang = gang;
+	}
+
 	public int getPao() {
 		return pao;
+	}
+
+	public void setPao(int pao) {
+		this.pao = pao;
+	}
+
+	public int getNiao() {
+		return niao;
+	}
+
+	public void setNiao(int niao) {
+		this.niao = niao;
 	}
 
 	public int getHushu() {
 		return hushu;
 	}
 
+	public void setHushu(int hushu) {
+		this.hushu = hushu;
+	}
+
 	public int getScore() {
 		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 }

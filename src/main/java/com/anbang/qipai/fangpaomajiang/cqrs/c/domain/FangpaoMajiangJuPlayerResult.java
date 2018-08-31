@@ -5,8 +5,10 @@ public class FangpaoMajiangJuPlayerResult {
 	private String playerId;
 	private int huCount;
 	private int caishenCount;
-	private int dapaoCount;
 	private int maxHushu;
+	private int gangCount;
+	private int paoCount;
+	private int niaoCount;
 	private int totalScore;
 
 	public void increaseHuCount() {
@@ -23,8 +25,16 @@ public class FangpaoMajiangJuPlayerResult {
 		}
 	}
 
-	public void increaseDapaoCount(int amount) {
-		dapaoCount += amount;
+	public void increaseGangCount(int amount) {
+		gangCount += amount;
+	}
+
+	public void increasePaoCount(int amount) {
+		paoCount += amount;
+	}
+
+	public void increaseNiaoCount(int amount) {
+		niaoCount += amount;
 	}
 
 	public void increaseTotalScore(int amount) {
@@ -55,20 +65,36 @@ public class FangpaoMajiangJuPlayerResult {
 		this.caishenCount = caishenCount;
 	}
 
-	public int getDapaoCount() {
-		return dapaoCount;
-	}
-
-	public void setDapaoCount(int dapaoCount) {
-		this.dapaoCount = dapaoCount;
-	}
-
 	public int getMaxHushu() {
 		return maxHushu;
 	}
 
 	public void setMaxHushu(int maxHushu) {
 		this.maxHushu = maxHushu;
+	}
+
+	public int getGangCount() {
+		return gangCount;
+	}
+
+	public void setGangCount(int gangCount) {
+		this.gangCount = gangCount;
+	}
+
+	public int getPaoCount() {
+		return paoCount;
+	}
+
+	public void setPaoCount(int paoCount) {
+		this.paoCount = paoCount;
+	}
+
+	public int getNiaoCount() {
+		return niaoCount;
+	}
+
+	public void setNiaoCount(int niaoCount) {
+		this.niaoCount = niaoCount;
 	}
 
 	public int getTotalScore() {
