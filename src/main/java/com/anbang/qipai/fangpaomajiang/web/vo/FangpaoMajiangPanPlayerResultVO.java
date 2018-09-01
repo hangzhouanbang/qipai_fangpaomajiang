@@ -41,6 +41,8 @@ public class FangpaoMajiangPanPlayerResultVO {
 
 	private int pao;// 非结算炮
 
+	private List<MajiangPai> zhuaPai;// 抓到的鸟牌
+
 	private int niao;// 非结算鸟
 
 	private int hushu;// 非结算胡分
@@ -71,6 +73,7 @@ public class FangpaoMajiangPanPlayerResultVO {
 		}
 		FangpaoMajiangNiao fangpaoMajiangNiao = fangpaoMajiangPanPlayerScore.getNiao();
 		if (fangpaoMajiangNiao != null) {
+			zhuaPai = fangpaoMajiangNiao.getZhuaPai();
 			niao = fangpaoMajiangNiao.getValue();
 		}
 		hushu = fangpaoMajiangPanPlayerScore.getHushu().getValue();
@@ -268,6 +271,14 @@ public class FangpaoMajiangPanPlayerResultVO {
 
 	public void setPao(int pao) {
 		this.pao = pao;
+	}
+
+	public List<MajiangPai> getZhuaPai() {
+		return zhuaPai;
+	}
+
+	public void setZhuaPai(List<MajiangPai> zhuaPai) {
+		this.zhuaPai = zhuaPai;
 	}
 
 	public int getNiao() {

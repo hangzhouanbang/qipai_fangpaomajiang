@@ -33,9 +33,9 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 
 		List<MajiangPlayer> huPlayers = currentPan.findAllHuPlayers();
 		FangpaoMajiangPanResult fangpaoMajiangPanResult = new FangpaoMajiangPanResult();
+		List<String> playerIdList = currentPan.sortedPlayerIdList();
+		List<FangpaoMajiangPanPlayerResult> playerResultList = new ArrayList<>();
 		if (huPlayers.size() > 1) {// 一炮多响
-			List<String> playerIdList = currentPan.sortedPlayerIdList();
-			List<FangpaoMajiangPanPlayerResult> playerResultList = new ArrayList<>();
 			// 放炮玩家输给胡家们的胡数
 			int delta = 0;
 			// 放炮玩家id
@@ -49,7 +49,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				FangpaoMajiangPanPlayerResult huPlayerResult = new FangpaoMajiangPanPlayerResult();
 				huPlayerResult.setPlayerId(huPlayer.getId());
 				huPlayerResult.setScore(huPlayerScore);
-				huPlayerScore.jiesuanHuShu(0, 1);
+				huPlayerScore.jiesuanHuShu(0, 2);
 				delta += huPlayerScore.getHushu().jiesuan();
 				huPlayerResult.setMenFeng(huPlayer.getMenFeng());
 				// 吃碰杠出去的要加到结果
@@ -74,7 +74,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						playerResult.setScore(FangpaoMajiangJiesuanCalculator.calculateBestScoreForBuhuPlayer(
 								hongzhongcaishen, zhuaniao, niaoshu, currentPan.findPlayerById(playerId)));
 						FangpaoMajiangPanPlayerScore buHuPlayerScore = playerResult.getScore();
-						buHuPlayerScore.jiesuanHuShu(-delta, 1);
+						buHuPlayerScore.jiesuanHuShu(-delta, 2);
 
 						playerResult.setMenFeng(player.getMenFeng());
 						// 吃碰杠出去的要加到结果
@@ -95,8 +95,12 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				FangGangCounter fangGangCounter = ju.getActionStatisticsListenerManager()
 						.findListener(FangGangCounter.class);
 				Map<String, Integer> playerFangGangMap = fangGangCounter.getPlayerIdFangGangShuMap();
-				int fangGangCount = playerFangGangMap.get(playerResult.getPlayerId());
-				score.jiesuanGang(playerIdList.size(), fangGangCount);
+				Integer fangGangCount = playerFangGangMap.get(playerResult.getPlayerId());
+				if (fangGangCount == null) {
+					score.jiesuanGang(playerIdList.size(), 0);
+				} else {
+					score.jiesuanGang(playerIdList.size(), fangGangCount);
+				}
 				// 结算炮
 				score.jiesuanPao();
 				// 结算鸟
@@ -121,41 +125,42 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 			fangpaoMajiangPanResult.setZimo(false);
 			fangpaoMajiangPanResult.setDianpaoPlayerId(dianPaoPlayerId);
 			return fangpaoMajiangPanResult;
-		}
-		if (huPlayers.size() == 1) {// 一人胡
+		} else if (huPlayers.size() == 1) {// 一人胡
 			MajiangPlayer huPlayer = huPlayers.get(0);
 			FangpaoMajiangHu hu = (FangpaoMajiangHu) huPlayer.getHu();
 			FangpaoMajiangPanPlayerScore huPlayerScore = hu.getScore();
 			ShoupaiPaiXing huShoupaiPaiXing = hu.getShoupaiPaiXing();
 
-			List<String> playerIdList = currentPan.sortedPlayerIdList();
-			List<FangpaoMajiangPanPlayerResult> playerResultList = new ArrayList<>();
 			if (hu.isDianpao()) {// 点炮胡
 				// 结算胡数
 				FangpaoMajiangPanPlayerResult huPlayerResult = new FangpaoMajiangPanPlayerResult();
 				huPlayerResult.setPlayerId(huPlayer.getId());
 				huPlayerResult.setScore(huPlayerScore);
-				huPlayerScore.jiesuanHuShu(0, 1);
+				huPlayerScore.jiesuanHuShu(0, 2);
+				playerResultList.add(huPlayerResult);
 				// 放炮玩家输给胡家的胡数
 				int delta = huPlayerScore.getHushu().jiesuan();
 				playerIdList.forEach((playerId) -> {
-					FangpaoMajiangPanPlayerResult playerResult = new FangpaoMajiangPanPlayerResult();
-					playerResult.setPlayerId(playerId);
 					if (playerId.equals(huPlayer.getId())) {
 						// 胡家已经计算过了
 					}
 					if (playerId.equals(hu.getDianpaoPlayerId())) {
+						FangpaoMajiangPanPlayerResult playerResult = new FangpaoMajiangPanPlayerResult();
+						playerResult.setPlayerId(playerId);
 						// 计算点炮玩家分数
 						playerResult.setScore(FangpaoMajiangJiesuanCalculator.calculateBestScoreForBuhuPlayer(
 								hongzhongcaishen, false, niaoshu, currentPan.findPlayerById(playerId)));
 						FangpaoMajiangPanPlayerScore buHuPlayerScore = playerResult.getScore();
-						buHuPlayerScore.jiesuanHuShu(-delta, 1);
+						buHuPlayerScore.jiesuanHuShu(-delta, 2);
+						playerResultList.add(playerResult);
 					} else {
+						FangpaoMajiangPanPlayerResult playerResult = new FangpaoMajiangPanPlayerResult();
+						playerResult.setPlayerId(playerId);
 						// 计算非胡玩家分数
 						playerResult.setScore(FangpaoMajiangJiesuanCalculator.calculateBestScoreForBuhuPlayer(
 								hongzhongcaishen, false, niaoshu, currentPan.findPlayerById(playerId)));
+						playerResultList.add(playerResult);
 					}
-					playerResultList.add(playerResult);
 				});
 			}
 			if (hu.isZimo()) {// 自摸胡
@@ -164,21 +169,22 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				huPlayerResult.setPlayerId(huPlayer.getId());
 				huPlayerResult.setScore(huPlayerScore);
 				huPlayerScore.jiesuanHuShu(0, playerIdList.size());
+				playerResultList.add(huPlayerResult);
 				// 其他人输给胡家的胡数
 				int delta = huPlayerScore.getHushu().jiesuan();
 				playerIdList.forEach((playerId) -> {
-					FangpaoMajiangPanPlayerResult playerResult = new FangpaoMajiangPanPlayerResult();
-					playerResult.setPlayerId(playerId);
 					if (playerId.equals(huPlayer.getId())) {
 						// 胡家已经计算过了
 					} else {
+						FangpaoMajiangPanPlayerResult playerResult = new FangpaoMajiangPanPlayerResult();
+						playerResult.setPlayerId(playerId);
 						// 计算非胡玩家分数
 						playerResult.setScore(FangpaoMajiangJiesuanCalculator.calculateBestScoreForBuhuPlayer(
 								hongzhongcaishen, false, niaoshu, currentPan.findPlayerById(playerId)));
 						FangpaoMajiangPanPlayerScore buHuPlayerScore = playerResult.getScore();
-						buHuPlayerScore.jiesuanHuShu(-delta, 0);
+						buHuPlayerScore.jiesuanHuShu(-delta, 2);
+						playerResultList.add(playerResult);
 					}
-					playerResultList.add(playerResult);
 				});
 			}
 			for (FangpaoMajiangPanPlayerResult playerResult : playerResultList) {
@@ -187,8 +193,12 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				FangGangCounter fangGangCounter = ju.getActionStatisticsListenerManager()
 						.findListener(FangGangCounter.class);
 				Map<String, Integer> playerFangGangMap = fangGangCounter.getPlayerIdFangGangShuMap();
-				int fangGangCount = playerFangGangMap.get(playerResult.getPlayerId());
-				score.jiesuanGang(playerIdList.size(), fangGangCount);
+				Integer fangGangCount = playerFangGangMap.get(playerResult.getPlayerId());
+				if (fangGangCount == null) {
+					score.jiesuanGang(playerIdList.size(), 0);
+				} else {
+					score.jiesuanGang(playerIdList.size(), fangGangCount);
+				}
 				// 结算炮
 				score.jiesuanPao();
 				// 结算鸟
@@ -232,9 +242,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 			fangpaoMajiangPanResult.setDianpaoPlayerId(hu.getDianpaoPlayerId());
 			return fangpaoMajiangPanResult;
 		} else {// 流局
-			List<String> playerIdList = currentPan.sortedPlayerIdList();
-			List<FangpaoMajiangPanPlayerResult> playerResultList = new ArrayList<>();
-
 			// 结算胡数
 			playerIdList.forEach((playerId) -> {
 				FangpaoMajiangPanPlayerResult playerResult = new FangpaoMajiangPanPlayerResult();
@@ -250,8 +257,12 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				FangGangCounter fangGangCounter = ju.getActionStatisticsListenerManager()
 						.findListener(FangGangCounter.class);
 				Map<String, Integer> playerFangGangMap = fangGangCounter.getPlayerIdFangGangShuMap();
-				int fangGangCount = playerFangGangMap.get(playerResult.getPlayerId());
-				score.jiesuanGang(playerIdList.size(), fangGangCount);
+				Integer fangGangCount = playerFangGangMap.get(playerResult.getPlayerId());
+				if (fangGangCount == null) {
+					score.jiesuanGang(playerIdList.size(), 0);
+				} else {
+					score.jiesuanGang(playerIdList.size(), fangGangCount);
+				}
 				// 结算炮
 				score.jiesuanPao();
 				// 结算鸟

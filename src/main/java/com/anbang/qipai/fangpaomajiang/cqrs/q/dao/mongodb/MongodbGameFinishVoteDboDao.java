@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dao.GameFinishVoteDboDao;
+import com.anbang.qipai.fangpaomajiang.cqrs.q.dao.mongodb.repository.GameFinishVoteDboRepository;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.GameFinishVoteDbo;
 import com.dml.mpgame.game.finish.vote.GameFinishVoteValueObject;
 
@@ -17,9 +18,12 @@ public class MongodbGameFinishVoteDboDao implements GameFinishVoteDboDao {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+	@Autowired
+	private GameFinishVoteDboRepository repository;
+
 	@Override
 	public void save(GameFinishVoteDbo gameFinishVoteDbo) {
-		mongoTemplate.save(gameFinishVoteDbo);
+		repository.save(gameFinishVoteDbo);
 	}
 
 	@Override
@@ -30,8 +34,7 @@ public class MongodbGameFinishVoteDboDao implements GameFinishVoteDboDao {
 
 	@Override
 	public GameFinishVoteDbo findByGameId(String gameId) {
-		Query query = new Query(Criteria.where("gameId").is(gameId));
-		return mongoTemplate.findOne(query, GameFinishVoteDbo.class);
+		return repository.findOneByGameId(gameId);
 	}
 
 	@Override

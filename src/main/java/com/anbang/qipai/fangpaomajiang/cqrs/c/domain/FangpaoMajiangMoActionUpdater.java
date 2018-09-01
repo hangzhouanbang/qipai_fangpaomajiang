@@ -50,6 +50,12 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 				bestHu.setZimo(true);
 				player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));
 			}
+			// 需要有“过”
+			player.checkAndGenerateGuoCandidateAction();
+			// 啥也不能干，那只能打出牌
+			if (player.getActionCandidates().isEmpty()) {
+				player.generateDaActions();
+			}
 		}
 
 	}

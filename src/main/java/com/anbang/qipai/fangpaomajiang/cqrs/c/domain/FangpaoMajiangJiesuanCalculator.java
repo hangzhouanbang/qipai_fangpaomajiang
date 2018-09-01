@@ -209,15 +209,6 @@ public class FangpaoMajiangJiesuanCalculator {
 	private static FangpaoMajiangNiao calculateNiao(boolean zhuaniao, int niaoshu) {
 		FangpaoMajiangNiao niao = new FangpaoMajiangNiao();
 		if (zhuaniao) {
-			int yiTiaoShu = 0;
-			int yiWanShu = 0;
-			int yiTongShu = 0;
-			int wuTiaoShu = 0;
-			int wuWanShu = 0;
-			int wuTongShu = 0;
-			int jiuTiaoShu = 0;
-			int jiuWanShu = 0;
-			int jiuTongShu = 0;
 			Set<MajiangPai> notPlaySet = new HashSet<>();
 			notPlaySet.add(MajiangPai.chun);
 			notPlaySet.add(MajiangPai.xia);
@@ -244,80 +235,10 @@ public class FangpaoMajiangJiesuanCalculator {
 			});
 			Random r = new Random();
 			for (int i = 0; i < niaoshu; i++) {
-				MajiangPai majiangPai = allPaiList.get(r.nextInt(allPaiList.size()));
-				if (majiangPai.equals(MajiangPai.yitiao)) {
-					if (yiTiaoShu < 4) {
-						yiTiaoShu++;
-					} else {
-						i--;
-					}
-				}
-				if (majiangPai.equals(MajiangPai.yiwan)) {
-					if (yiWanShu < 4) {
-						yiWanShu++;
-					} else {
-						i--;
-					}
-				}
-				if (majiangPai.equals(MajiangPai.yitong)) {
-					if (yiTongShu < 4) {
-						yiTongShu++;
-					} else {
-						i--;
-					}
-				}
-				if (majiangPai.equals(MajiangPai.wutiao)) {
-					if (wuTiaoShu < 4) {
-						wuTiaoShu++;
-					} else {
-						i--;
-					}
-				}
-				if (majiangPai.equals(MajiangPai.wuwan)) {
-					if (wuWanShu < 4) {
-						wuWanShu++;
-					} else {
-						i--;
-					}
-				}
-				if (majiangPai.equals(MajiangPai.wutong)) {
-					if (wuTongShu < 4) {
-						wuTongShu++;
-					} else {
-						i--;
-					}
-				}
-				if (majiangPai.equals(MajiangPai.jiutiao)) {
-					if (jiuTiaoShu < 4) {
-						jiuTiaoShu++;
-					} else {
-						i--;
-					}
-				}
-				if (majiangPai.equals(MajiangPai.jiuwan)) {
-					if (jiuWanShu < 4) {
-						jiuWanShu++;
-					} else {
-						i--;
-					}
-				}
-				if (majiangPai.equals(MajiangPai.jiutong)) {
-					if (jiuTongShu < 4) {
-						jiuTongShu++;
-					} else {
-						i--;
-					}
-				}
+				int index = r.nextInt(allPaiList.size());
+				MajiangPai majiangPai = allPaiList.remove(index);
+				niao.getZhuaPai().add(majiangPai);
 			}
-			niao.setYiTiaoShu(yiTiaoShu);
-			niao.setYiWanShu(yiWanShu);
-			niao.setYiTongShu(yiTongShu);
-			niao.setWuTiaoShu(wuTiaoShu);
-			niao.setWuWanShu(wuWanShu);
-			niao.setWuTongShu(wuTongShu);
-			niao.setJiuTiaoShu(jiuTiaoShu);
-			niao.setJiuWanShu(jiuWanShu);
-			niao.setJiuTongShu(jiuTongShu);
 		}
 		niao.calculate();
 		return niao;

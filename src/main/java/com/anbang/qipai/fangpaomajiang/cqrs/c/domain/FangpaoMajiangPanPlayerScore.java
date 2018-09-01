@@ -12,7 +12,7 @@ public class FangpaoMajiangPanPlayerScore {
 	private int value;// 可能是负数
 
 	public void jiesuanHuShu(int delta, int playerCount) {
-		jiesuanHuShu = hushu.jiesuan() * playerCount + delta;
+		jiesuanHuShu = hushu.jiesuan() * (playerCount-1) + delta;
 	}
 
 	public void jiesuanGang(int playerCount, int fangGangCount) {
