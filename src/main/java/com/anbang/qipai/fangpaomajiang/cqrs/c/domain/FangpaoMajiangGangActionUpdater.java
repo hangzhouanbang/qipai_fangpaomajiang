@@ -41,8 +41,8 @@ public class FangpaoMajiangGangActionUpdater implements MajiangPlayerGangActionU
 					break;
 				}
 
-				FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestQianggangHu(hongzhongcaishen,
-						zhuaniao, niaoshu, gangAction.getPai(), gouXingPanHu, player);
+				FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestQianggangHu(gangAction.getPai(),
+						gouXingPanHu, player);
 				if (bestHu != null) {
 					bestHu.setQianggang(true);
 					xiajia.addActionCandidate(new MajiangHuAction(xiajia.getId(), bestHu));

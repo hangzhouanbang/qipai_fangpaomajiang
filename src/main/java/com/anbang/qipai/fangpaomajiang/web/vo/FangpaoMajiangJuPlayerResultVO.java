@@ -10,10 +10,8 @@ public class FangpaoMajiangJuPlayerResultVO {
 	private String headimgurl;
 	private int huCount;
 	private int caishenCount;
-	private int gangCount;
-	private int paoCount;
-	private int niaoCount;
-	private int maxHushu;
+	private int zimoCount;
+	private int fangPaoCount;
 	private int totalScore;
 
 	public FangpaoMajiangJuPlayerResultVO(FangpaoMajiangJuPlayerResult juPlayerResult,
@@ -23,10 +21,8 @@ public class FangpaoMajiangJuPlayerResultVO {
 		headimgurl = majiangGamePlayerDbo.getHeadimgurl();
 		huCount = juPlayerResult.getHuCount();
 		caishenCount = juPlayerResult.getCaishenCount();
-		gangCount = juPlayerResult.getGangCount();
-		paoCount = juPlayerResult.getPaoCount();
-		niaoCount = juPlayerResult.getNiaoCount();
-		maxHushu = juPlayerResult.getMaxHushu();
+		zimoCount = juPlayerResult.getZimoCount();
+		fangPaoCount = juPlayerResult.getFangPaoCount();
 		totalScore = juPlayerResult.getTotalScore();
 	}
 
@@ -36,10 +32,8 @@ public class FangpaoMajiangJuPlayerResultVO {
 		headimgurl = majiangGamePlayerDbo.getHeadimgurl();
 		huCount = 0;
 		caishenCount = 0;
-		gangCount = 0;
-		paoCount = 0;
-		niaoCount = 0;
-		maxHushu = 0;
+		zimoCount = 0;
+		fangPaoCount = 0;
 		totalScore = 0;
 	}
 
@@ -83,36 +77,20 @@ public class FangpaoMajiangJuPlayerResultVO {
 		this.caishenCount = caishenCount;
 	}
 
-	public int getGangCount() {
-		return gangCount;
+	public int getZimoCount() {
+		return zimoCount;
 	}
 
-	public void setGangCount(int gangCount) {
-		this.gangCount = gangCount;
+	public void setZimoCount(int zimoCount) {
+		this.zimoCount = zimoCount;
 	}
 
-	public int getPaoCount() {
-		return paoCount;
+	public int getFangPaoCount() {
+		return fangPaoCount;
 	}
 
-	public void setPaoCount(int paoCount) {
-		this.paoCount = paoCount;
-	}
-
-	public int getNiaoCount() {
-		return niaoCount;
-	}
-
-	public void setNiaoCount(int niaoCount) {
-		this.niaoCount = niaoCount;
-	}
-
-	public int getMaxHushu() {
-		return maxHushu;
-	}
-
-	public void setMaxHushu(int maxHushu) {
-		this.maxHushu = maxHushu;
+	public void setFangPaoCount(int fangPaoCount) {
+		this.fangPaoCount = fangPaoCount;
 	}
 
 	public int getTotalScore() {

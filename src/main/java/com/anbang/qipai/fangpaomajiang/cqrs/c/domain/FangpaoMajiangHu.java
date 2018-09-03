@@ -9,7 +9,7 @@ public class FangpaoMajiangHu implements Hu {
 
 	private ShoupaiPaiXing shoupaiPaiXing;
 
-	private FangpaoMajiangPanPlayerScore score;
+	private FangpaoMajiangHufen hufen;
 
 	private boolean zimo;
 
@@ -24,14 +24,14 @@ public class FangpaoMajiangHu implements Hu {
 	public FangpaoMajiangHu() {
 	}
 
-	public FangpaoMajiangHu(ShoupaiPaiXing shoupaiPaiXing, FangpaoMajiangPanPlayerScore score) {
+	public FangpaoMajiangHu(ShoupaiPaiXing shoupaiPaiXing, FangpaoMajiangHufen hufen) {
 		this.shoupaiPaiXing = shoupaiPaiXing;
-		this.score = score;
+		this.hufen = hufen;
 		this.huxingHu = true;
 	}
 
-	public FangpaoMajiangHu(FangpaoMajiangPanPlayerScore score) {
-		this.score = score;
+	public FangpaoMajiangHu(FangpaoMajiangHufen hufen) {
+		this.hufen = hufen;
 		this.huxingHu = false;
 	}
 
@@ -43,12 +43,12 @@ public class FangpaoMajiangHu implements Hu {
 		this.shoupaiPaiXing = shoupaiPaiXing;
 	}
 
-	public FangpaoMajiangPanPlayerScore getScore() {
-		return score;
+	public FangpaoMajiangHufen getHufen() {
+		return hufen;
 	}
 
-	public void setScore(FangpaoMajiangPanPlayerScore score) {
-		this.score = score;
+	public void setHufen(FangpaoMajiangHufen hufen) {
+		this.hufen = hufen;
 	}
 
 	public boolean isZimo() {
@@ -102,5 +102,4 @@ public class FangpaoMajiangHu implements Hu {
 		// TODO Auto-generated method stub
 
 	}
-
 }

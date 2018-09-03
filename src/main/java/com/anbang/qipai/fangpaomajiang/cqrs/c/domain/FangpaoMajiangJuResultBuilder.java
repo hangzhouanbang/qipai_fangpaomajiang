@@ -30,17 +30,13 @@ public class FangpaoMajiangJuResultBuilder implements JuResultBuilder {
 						juPlayerResult.increaseHuCount();
 					}
 					juPlayerResult.increaseCaishenCount(panPlayerResult.countCaishen());
-					if (panPlayerResult.getScore().getGang() != null) {
-						juPlayerResult.increaseGangCount(panPlayerResult.getScore().getGang().getValue());
+					if (panPlayerResult.isZimoHu()) {
+						juPlayerResult.increaseZiMoCount();
 					}
-					if (panPlayerResult.getScore().getPao() != null) {
-						juPlayerResult.increasePaoCount(panPlayerResult.getScore().getPao().getValue());
+					if (fangpaoMajiangPanResult.getDianpaoPlayerId().equals(panPlayerResult.getPlayerId())) {
+						juPlayerResult.increaseFangPaoCount();
 					}
-					if (panPlayerResult.getScore().getNiao() != null) {
-						juPlayerResult.increaseNiaoCount(panPlayerResult.getScore().getNiao().getValue());
-					}
-					juPlayerResult.tryAndUpdateMaxHushu(panPlayerResult.getScore().getHushu().getValue());
-					juPlayerResult.increaseTotalScore(panPlayerResult.getTotalScore());
+					juPlayerResult.setTotalScore(panPlayerResult.getTotalScore());
 				}
 			}
 

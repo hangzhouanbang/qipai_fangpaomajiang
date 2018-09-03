@@ -1,8 +1,18 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
+import com.dml.majiang.player.MajiangPlayer;
+
 public class FangpaoMajiangPao {
 	private int hongzhongShu;
 	private int value;
+
+	public FangpaoMajiangPao() {
+
+	}
+
+	public FangpaoMajiangPao(MajiangPlayer player) {
+		hongzhongShu = player.countGuipai();
+	}
 
 	public void calculate() {
 		int pao = 0;

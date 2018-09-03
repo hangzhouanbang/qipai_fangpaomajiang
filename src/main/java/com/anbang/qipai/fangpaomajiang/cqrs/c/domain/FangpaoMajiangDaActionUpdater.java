@@ -48,7 +48,7 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 				// 先把这张牌放入计算器
 				xiajiaPlayer.getShoupaiCalculator().addPai(daAction.getPai());
 				FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestDianpaoHu(couldDihu,
-						hongzhongcaishen, zhuaniao, niaoshu, gouXingPanHu, xiajiaPlayer, daAction.getPai());
+						gouXingPanHu, xiajiaPlayer, daAction.getPai());
 				// 再把这张牌拿出计算器
 				xiajiaPlayer.getShoupaiCalculator().removePai(daAction.getPai());
 				if (bestHu != null) {

@@ -6,7 +6,7 @@ package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
  * @author lsc
  *
  */
-public class FangpaoMajiangHushu {
+public class FangpaoMajiangHufen {
 	private boolean hu;
 	private boolean zimoHu;// 每人输2分；
 	private boolean qiangganghu;// 抢杠胡：2分；

@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangGang;
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangHufen;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangNiao;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerResult;
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerScore;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPao;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGamePlayerDbo;
 import com.dml.majiang.pai.MajiangPai;
@@ -41,11 +41,11 @@ public class FangpaoMajiangPanPlayerResultVO {
 
 	private int pao;// 非结算炮
 
-	private List<MajiangPai> zhuaPai;// 抓到的鸟牌
+	private List<NiaoPaiVO> niaoPaiList = new ArrayList<>();// 抓到的鸟牌
 
 	private int niao;// 非结算鸟
 
-	private int hushu;// 非结算胡分
+	private int hufen;// 非结算胡分
 
 	/**
 	 * 这个是结算分
@@ -62,22 +62,31 @@ public class FangpaoMajiangPanPlayerResultVO {
 		}
 		hu = panPlayerResult.isHu();
 		publicPaiList = new ArrayList<>(panPlayerResult.getPublicPaiList());
-		FangpaoMajiangPanPlayerScore fangpaoMajiangPanPlayerScore = panPlayerResult.getScore();
-		FangpaoMajiangGang fangpaoMajiangGang = fangpaoMajiangPanPlayerScore.getGang();
+		FangpaoMajiangHufen fangpaoMajiangHufen = panPlayerResult.getHufen();
+		if (fangpaoMajiangHufen != null) {
+			hufen = fangpaoMajiangHufen.getValue();
+		}
+		FangpaoMajiangGang fangpaoMajiangGang = panPlayerResult.getGang();
 		if (fangpaoMajiangGang != null) {
 			gang = fangpaoMajiangGang.getValue();
 		}
-		FangpaoMajiangPao fangpaoMajiangPao = fangpaoMajiangPanPlayerScore.getPao();
+		FangpaoMajiangPao fangpaoMajiangPao = panPlayerResult.getPao();
 		if (fangpaoMajiangPao != null) {
 			pao = fangpaoMajiangPao.getValue();
 		}
-		FangpaoMajiangNiao fangpaoMajiangNiao = fangpaoMajiangPanPlayerScore.getNiao();
+		FangpaoMajiangNiao fangpaoMajiangNiao = panPlayerResult.getNiao();
 		if (fangpaoMajiangNiao != null) {
-			zhuaPai = fangpaoMajiangNiao.getZhuaPai();
-			niao = fangpaoMajiangNiao.getValue();
+			List<MajiangPai> zhuaPai = fangpaoMajiangNiao.getZhuaPai();
+			List<MajiangPai> niaoPai = fangpaoMajiangNiao.getNiaoPai();
+			for (MajiangPai pai : zhuaPai) {
+				NiaoPaiVO niaoPaiVo = new NiaoPaiVO();
+				niaoPaiVo.setPai(pai);
+				if (niaoPai.contains(pai)) {
+					niaoPaiVo.setNiaoPai(true);
+				}
+				niaoPaiList.add(niaoPaiVo);
+			}
 		}
-		hushu = fangpaoMajiangPanPlayerScore.getHushu().getValue();
-		score = fangpaoMajiangPanPlayerScore.getValue();
 		List<ChichuPaiZu> chichuPaiZuList = panPlayerResult.getChichupaiZuList();
 		for (ChichuPaiZu chichuPaiZu : chichuPaiZuList) {
 			shunziList.add(chichuPaiZu.getShunzi());
@@ -273,14 +282,6 @@ public class FangpaoMajiangPanPlayerResultVO {
 		this.pao = pao;
 	}
 
-	public List<MajiangPai> getZhuaPai() {
-		return zhuaPai;
-	}
-
-	public void setZhuaPai(List<MajiangPai> zhuaPai) {
-		this.zhuaPai = zhuaPai;
-	}
-
 	public int getNiao() {
 		return niao;
 	}
@@ -289,12 +290,12 @@ public class FangpaoMajiangPanPlayerResultVO {
 		this.niao = niao;
 	}
 
-	public int getHushu() {
-		return hushu;
+	public int getHufen() {
+		return hufen;
 	}
 
-	public void setHushu(int hushu) {
-		this.hushu = hushu;
+	public void setHufen(int hufen) {
+		this.hufen = hufen;
 	}
 
 	public int getScore() {
@@ -303,6 +304,14 @@ public class FangpaoMajiangPanPlayerResultVO {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public List<NiaoPaiVO> getNiaoPaiList() {
+		return niaoPaiList;
+	}
+
+	public void setNiaoPaiList(List<NiaoPaiVO> niaoPaiList) {
+		this.niaoPaiList = niaoPaiList;
 	}
 
 }

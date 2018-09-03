@@ -44,8 +44,8 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 					couldTianhu = true;
 				}
 			}
-			FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu, hongzhongcaishen,
-					zhuaniao, niaoshu, gouXingPanHu, player, moAction);
+			FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu, gouXingPanHu,
+					player, moAction);
 			if (bestHu != null) {
 				bestHu.setZimo(true);
 				player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));

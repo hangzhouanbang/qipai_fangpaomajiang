@@ -91,7 +91,6 @@ public class MajiangGame {
 		ju.setGuoActionUpdater(new FangpaoMajiangGuoActionUpdater());
 		ju.setHuActionProcessor(new PlayerSetHuHuActionProcessor());
 
-		ju.addActionStatisticsListener(new CaizipaiListener());
 		ju.addActionStatisticsListener(new MoGuipaiCounter());
 		ju.addActionStatisticsListener(new GangCounter());
 		ju.addActionStatisticsListener(new FangGangCounter());

@@ -17,6 +17,7 @@ public class FangpaoMajiangResultMsgService {
 	public void recordJuResult(JuResultVO juResult) {
 		CommonMO mo = new CommonMO();
 		mo.setMsg("fangpaomajiang ju result");
+		mo.setData(juResult);
 		fangpaoMajiangResultSource.fangpaoMajiangResult().send(MessageBuilder.withPayload(mo).build());
 	}
 }

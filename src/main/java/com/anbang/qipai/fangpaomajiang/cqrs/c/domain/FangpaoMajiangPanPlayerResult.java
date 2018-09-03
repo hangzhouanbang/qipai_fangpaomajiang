@@ -18,8 +18,19 @@ public class FangpaoMajiangPanPlayerResult {
 
 	private boolean hu;
 
-	private FangpaoMajiangPanPlayerScore score;
+	private boolean zimoHu;
 
+	private FangpaoMajiangHufen hufen;
+
+	private FangpaoMajiangGang gang;
+
+	private FangpaoMajiangPao pao;
+
+	private FangpaoMajiangNiao niao;
+
+	/**
+	 * 可能为负数
+	 */
 	private int totalScore;
 
 	private ShoupaiPaiXing bestShoupaiPaiXing;
@@ -77,12 +88,28 @@ public class FangpaoMajiangPanPlayerResult {
 		this.hu = hu;
 	}
 
-	public FangpaoMajiangPanPlayerScore getScore() {
-		return score;
+	public FangpaoMajiangGang getGang() {
+		return gang;
 	}
 
-	public void setScore(FangpaoMajiangPanPlayerScore score) {
-		this.score = score;
+	public void setGang(FangpaoMajiangGang gang) {
+		this.gang = gang;
+	}
+
+	public FangpaoMajiangPao getPao() {
+		return pao;
+	}
+
+	public void setPao(FangpaoMajiangPao pao) {
+		this.pao = pao;
+	}
+
+	public FangpaoMajiangNiao getNiao() {
+		return niao;
+	}
+
+	public void setNiao(FangpaoMajiangNiao niao) {
+		this.niao = niao;
 	}
 
 	public int getTotalScore() {
@@ -109,20 +136,20 @@ public class FangpaoMajiangPanPlayerResult {
 		this.shoupaiList = shoupaiList;
 	}
 
-	public Set<MajiangPai> getGuipaiTypeSet() {
-		return guipaiTypeSet;
-	}
-
-	public void setGuipaiTypeSet(Set<MajiangPai> guipaiTypeSet) {
-		this.guipaiTypeSet = guipaiTypeSet;
-	}
-
 	public List<MajiangPai> getPublicPaiList() {
 		return publicPaiList;
 	}
 
 	public void setPublicPaiList(List<MajiangPai> publicPaiList) {
 		this.publicPaiList = publicPaiList;
+	}
+
+	public Set<MajiangPai> getGuipaiTypeSet() {
+		return guipaiTypeSet;
+	}
+
+	public void setGuipaiTypeSet(Set<MajiangPai> guipaiTypeSet) {
+		this.guipaiTypeSet = guipaiTypeSet;
 	}
 
 	public List<ChichuPaiZu> getChichupaiZuList() {
@@ -147,6 +174,22 @@ public class FangpaoMajiangPanPlayerResult {
 
 	public void setGangchupaiZuList(List<GangchuPaiZu> gangchupaiZuList) {
 		this.gangchupaiZuList = gangchupaiZuList;
+	}
+
+	public FangpaoMajiangHufen getHufen() {
+		return hufen;
+	}
+
+	public void setHufen(FangpaoMajiangHufen hufen) {
+		this.hufen = hufen;
+	}
+
+	public boolean isZimoHu() {
+		return zimoHu;
+	}
+
+	public void setZimoHu(boolean zimoHu) {
+		this.zimoHu = zimoHu;
 	}
 
 }
