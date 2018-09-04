@@ -28,6 +28,8 @@ public class FangpaoMajiangPanPlayerResult {
 
 	private FangpaoMajiangNiao niao;
 
+	private int score;// 一盘的结算分
+
 	/**
 	 * 可能为负数
 	 */
@@ -190,6 +192,14 @@ public class FangpaoMajiangPanPlayerResult {
 
 	public void setZimoHu(boolean zimoHu) {
 		this.zimoHu = zimoHu;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 }

@@ -28,6 +28,9 @@ public class FangpaoMajiangHufen {
 
 	public void calculate() {
 		int hushu = 0;
+		if (hu) {
+			hushu = 1;
+		}
 		if (zimoHu) {
 			hushu = 2;
 		}
@@ -79,8 +82,8 @@ public class FangpaoMajiangHufen {
 		value = hushu;
 	}
 
-	public int jiesuan() {
-		return value;
+	public int jiesuan(int delta) {
+		return value += delta;
 	}
 
 	public boolean isQiangganghu() {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.player.MajiangPlayer;
+import com.dml.majiang.player.action.mo.GanghouBupai;
 import com.dml.majiang.player.action.mo.MajiangMoAction;
 import com.dml.majiang.player.shoupai.GuipaiDangPai;
 import com.dml.majiang.player.shoupai.PaiXing;
@@ -42,7 +43,8 @@ public class FangpaoMajiangJiesuanCalculator {
 			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangHufen hufen = calculateHufen(true, true, false, couldTianhu, false,
+				FangpaoMajiangHufen hufen = calculateHufen(true, true,
+						moAction.getReason().getName().equals(GanghouBupai.name), false, couldTianhu, false,
 						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 				if (bestHuFen == null || bestHuFen.getValue() < hufen.getValue()) {
 					bestHuFen = hufen;
@@ -72,7 +74,7 @@ public class FangpaoMajiangJiesuanCalculator {
 			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangHufen hufen = calculateHufen(true, false, true, false, false,
+				FangpaoMajiangHufen hufen = calculateHufen(true, false, false, true, false, false,
 						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 				if (bestHuFen == null || bestHuFen.getValue() < hufen.getValue()) {
 					bestHuFen = hufen;
@@ -102,7 +104,7 @@ public class FangpaoMajiangJiesuanCalculator {
 			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangHufen hufen = calculateHufen(true, false, false, false, couldDihu,
+				FangpaoMajiangHufen hufen = calculateHufen(true, false, false, false, false, couldDihu,
 						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 				if (bestHuFen == null || bestHuFen.getValue() < hufen.getValue()) {
 					bestHuFen = hufen;
@@ -126,7 +128,7 @@ public class FangpaoMajiangJiesuanCalculator {
 		ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
 		FangpaoMajiangHufen bestHuFen = null;
 		for (ShoupaiPaiXing shoupaiPaiXing : shoupaiPaiXingList) {
-			FangpaoMajiangHufen hufen = calculateHufen(false, false, false, false, false,
+			FangpaoMajiangHufen hufen = calculateHufen(false, false, false, false, false, false,
 					shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
 			if (bestHuFen == null || bestHuFen.getValue() < hufen.getValue()) {
 				bestHuFen = hufen;
@@ -135,26 +137,58 @@ public class FangpaoMajiangJiesuanCalculator {
 		return bestHuFen;
 	}
 
-	private static FangpaoMajiangHufen calculateHufen(boolean hu, boolean zimoHu, boolean qianggangHu,
-			boolean couldTianhu, boolean couldDihu, ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu,
-			ShoupaiPaiXing shoupaiPaiXing) {
-		FangpaoMajiangHufen hushu = new FangpaoMajiangHufen();
+	private static FangpaoMajiangHufen calculateHufen(boolean hu, boolean zimoHu, boolean gangkaiHu,
+			boolean qianggangHu, boolean couldTianhu, boolean couldDihu,
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu, ShoupaiPaiXing shoupaiPaiXing) {
+		FangpaoMajiangHufen hufen = new FangpaoMajiangHufen();
 		if (hu) {
-			if (zimoHu) {
-				hushu.setZimoHu(zimoHu);
+			boolean qingyise = shoupaixingWuguanJiesuancanshu.isQingyise();
+			boolean qidui = shoupaiPaiXing.getDuiziList().size() == 7;
+			boolean pengpenghu = shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0
+					&& shoupaiPaiXing.countShunzi() == 0;
+			hufen.setHu(hu);// 普通放炮胡
+			if (zimoHu) {// 自摸胡
+				hufen.setZimoHu(zimoHu);
 			}
-			if (qianggangHu) {
-				hushu.setQiangganghu(qianggangHu);
+			if (qianggangHu) {// 抢杠胡
+				hufen.setQiangganghu(qianggangHu);
 			}
-			if (couldTianhu) {
-				hushu.setTianhu(couldTianhu);
+			if (couldTianhu) {// 天胡
+				hufen.setTianhu(couldTianhu);
 			}
-			if (couldDihu) {
-				hushu.setDihu(couldDihu);
+			if (couldDihu) {// 地胡
+				hufen.setDihu(couldDihu);
+			}
+			if (gangkaiHu) {
+				hufen.setGangshangkaihua(true);
+			}
+			if (pengpenghu) {// 碰碰胡
+				hufen.setPengpenghu(true);
+			}
+			if (qidui) {// 七对胡
+				hufen.setQiduihu(true);
+				if (qingyise) {// 七对清一色
+					hufen.setQiduiqingyise(true);
+				}
+				if (gangkaiHu) {// 七对杠开
+					hufen.setQiduigangkai(true);
+					;
+				}
+				// TODO七对单张吊
+			}
+			if (qingyise) {// 清一色胡
+				hufen.setQingyise(true);
+				if (pengpenghu) {// 清一色碰碰胡
+					hufen.setQingyisepengpenghu(true);
+				}
+				if (gangkaiHu) {// 清一色杠开
+					hufen.setQingyidegangkai(true);
+				}
+				// TODO清一色单张吊
 			}
 		}
-		hushu.calculate();
-		return hushu;
+		hufen.calculate();
+		return hufen;
 	}
 
 	// 其实点炮,抢杠胡,也包含自摸的意思，也调用这个

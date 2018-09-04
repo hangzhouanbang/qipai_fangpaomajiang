@@ -17,7 +17,7 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 		MajiangPlayer player = currentPan.findPlayerById(moAction.getActionPlayerId());
 		player.clearActionCandidates();
 		int avaliablePaiLeft = currentPan.countAvaliablePai();
-		if (avaliablePaiLeft - liupai == 0) {// 没牌了
+		if (avaliablePaiLeft - liupai <= 0) {// 没牌了
 			// 当然啥也不干了
 		} else {
 			// 有手牌或刻子可以杠这个摸来的牌
@@ -30,11 +30,6 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 			// 刻子杠手牌
 			player.tryKezigangshoupaiAndGenerateCandidateAction();
 			// 胡
-			FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = (FangpaoMajiangPanResultBuilder) ju
-					.getCurrentPanResultBuilder();
-			boolean hongzhongcaishen = fangpaoMajiangPanResultBuilder.isHongzhongcaishen();
-			boolean zhuaniao = fangpaoMajiangPanResultBuilder.isZhuaniao();
-			int niaoshu = fangpaoMajiangPanResultBuilder.getNiaoshu();
 			GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
 
 			// 天胡
@@ -50,6 +45,21 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 				bestHu.setZimo(true);
 				player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));
 			}
+			// else {
+			// 非胡牌型特殊胡-三财神
+			// MoGuipaiCounter moGuipaiCounter = ju.getActionStatisticsListenerManager()
+			// .findListener(MoGuipaiCounter.class);
+			// if (moGuipaiCounter.getCount() == 3) {
+			// FangpaoMajiangHu bestHu =
+			// FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu,
+			// gouXingPanHu,
+			// player, moAction);
+			// RuianMajiangPanPlayerScore score = RuianMajiangJiesuanCalculator
+			// .calculateBestScoreForBuhuPlayer(dapao, dihu, player, baibanIsGuipai);
+			// RuianMajiangHu sancaishenHu = new RuianMajiangHu(score);
+			// player.addActionCandidate(new MajiangHuAction(player.getId(), sancaishenHu));
+			// }
+			// }
 			// 需要有“过”
 			player.checkAndGenerateGuoCandidateAction();
 			// 啥也不能干，那只能打出牌

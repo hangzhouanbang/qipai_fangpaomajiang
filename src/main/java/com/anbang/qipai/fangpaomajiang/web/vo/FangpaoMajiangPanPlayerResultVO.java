@@ -78,15 +78,19 @@ public class FangpaoMajiangPanPlayerResultVO {
 		if (fangpaoMajiangNiao != null) {
 			List<MajiangPai> zhuaPai = fangpaoMajiangNiao.getZhuaPai();
 			List<MajiangPai> niaoPai = fangpaoMajiangNiao.getNiaoPai();
-			for (MajiangPai pai : zhuaPai) {
-				NiaoPaiVO niaoPaiVo = new NiaoPaiVO();
-				niaoPaiVo.setPai(pai);
-				if (niaoPai.contains(pai)) {
-					niaoPaiVo.setNiaoPai(true);
+			if (zhuaPai != null && niaoPai != null) {
+				for (MajiangPai pai : zhuaPai) {
+					NiaoPaiVO niaoPaiVo = new NiaoPaiVO();
+					niaoPaiVo.setPai(pai);
+					if (niaoPai.contains(pai)) {
+						niaoPaiVo.setNiaoPai(true);
+					}
+					niaoPaiList.add(niaoPaiVo);
 				}
-				niaoPaiList.add(niaoPaiVo);
 			}
+			niao = fangpaoMajiangNiao.getValue();
 		}
+		score = panPlayerResult.getScore();
 		List<ChichuPaiZu> chichuPaiZuList = panPlayerResult.getChichupaiZuList();
 		for (ChichuPaiZu chichuPaiZu : chichuPaiZuList) {
 			shunziList.add(chichuPaiZu.getShunzi());

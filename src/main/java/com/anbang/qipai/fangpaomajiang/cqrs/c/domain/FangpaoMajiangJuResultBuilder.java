@@ -33,7 +33,8 @@ public class FangpaoMajiangJuResultBuilder implements JuResultBuilder {
 					if (panPlayerResult.isZimoHu()) {
 						juPlayerResult.increaseZiMoCount();
 					}
-					if (fangpaoMajiangPanResult.getDianpaoPlayerId().equals(panPlayerResult.getPlayerId())) {
+					String dianPaoPlayerId = fangpaoMajiangPanResult.getDianpaoPlayerId();
+					if (dianPaoPlayerId != null && dianPaoPlayerId.equals(panPlayerResult.getPlayerId())) {
 						juPlayerResult.increaseFangPaoCount();
 					}
 					juPlayerResult.setTotalScore(panPlayerResult.getTotalScore());

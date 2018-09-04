@@ -60,7 +60,6 @@ public class FangpaoMajiangNiao {
 				zhuaPai.add(majiangPai);
 			}
 		}
-
 	}
 
 	public void calculate() {

@@ -5,18 +5,20 @@ import com.dml.majiang.player.MajiangPlayer;
 /**
  * 手牌型无关结算参数
  * 
- * @author Neo
+ * @author lsc
  *
  */
 public class ShoupaixingWuguanJiesuancanshu {
 	private boolean allXushupaiInSameCategory;
 	private boolean hasZipai;
 	private boolean qingyise;
+	private int chichupaiZuCount;
 
 	public ShoupaixingWuguanJiesuancanshu(MajiangPlayer player) {
 		allXushupaiInSameCategory = player.allXushupaiInSameCategory();
 		hasZipai = player.hasZipai();
 		qingyise = (allXushupaiInSameCategory && !hasZipai);
+		chichupaiZuCount = player.countChichupaiZu();
 	}
 
 	public boolean isAllXushupaiInSameCategory() {
@@ -41,5 +43,13 @@ public class ShoupaixingWuguanJiesuancanshu {
 
 	public void setQingyise(boolean qingyise) {
 		this.qingyise = qingyise;
+	}
+
+	public int getChichupaiZuCount() {
+		return chichupaiZuCount;
+	}
+
+	public void setChichupaiZuCount(int chichupaiZuCount) {
+		this.chichupaiZuCount = chichupaiZuCount;
 	}
 }

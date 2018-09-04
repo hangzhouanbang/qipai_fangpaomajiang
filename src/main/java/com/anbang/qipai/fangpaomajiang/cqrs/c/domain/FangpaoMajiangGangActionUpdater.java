@@ -30,11 +30,6 @@ public class FangpaoMajiangGangActionUpdater implements MajiangPlayerGangActionU
 		if (gangAction.getGangType().equals(GangType.kezigangmo)) {
 			GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
 			MajiangPlayer currentPlayer = player;
-			FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = (FangpaoMajiangPanResultBuilder) ju
-					.getCurrentPanResultBuilder();
-			boolean hongzhongcaishen = fangpaoMajiangPanResultBuilder.isHongzhongcaishen();
-			boolean zhuaniao = fangpaoMajiangPanResultBuilder.isZhuaniao();
-			int niaoshu = fangpaoMajiangPanResultBuilder.getNiaoshu();
 			while (true) {
 				MajiangPlayer xiajia = currentPan.findXiajia(currentPlayer);
 				if (xiajia.getId().equals(player.getId())) {

@@ -33,11 +33,6 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 		xiajiaPlayer.clearActionCandidates();
 		// 下家可以吃
 		xiajiaPlayer.tryChiAndGenerateCandidateActions(daAction.getActionPlayerId(), daAction.getPai());
-		FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = (FangpaoMajiangPanResultBuilder) ju
-				.getCurrentPanResultBuilder();
-		boolean hongzhongcaishen = fangpaoMajiangPanResultBuilder.isHongzhongcaishen();
-		boolean zhuaniao = fangpaoMajiangPanResultBuilder.isZhuaniao();
-		int niaoshu = fangpaoMajiangPanResultBuilder.getNiaoshu();
 		while (true) {
 			if (!xiajiaPlayer.getId().equals(daAction.getActionPlayerId())) {
 				// 其他的可以碰杠胡

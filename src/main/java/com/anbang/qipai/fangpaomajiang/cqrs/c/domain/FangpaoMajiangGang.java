@@ -32,8 +32,8 @@ public class FangpaoMajiangGang {
 			}
 		}
 		for (int i = 0; i < erbapaiArray.length; i++) {
-			if (player.ifGangchu(yijiupaiArray[i], GangType.gangdachu)
-					|| player.ifGangchu(yijiupaiArray[i], GangType.kezigangmo)) {
+			if (player.ifGangchu(erbapaiArray[i], GangType.gangdachu)
+					|| player.ifGangchu(erbapaiArray[i], GangType.kezigangmo)) {
 				mingGangShu++;
 			}
 		}
