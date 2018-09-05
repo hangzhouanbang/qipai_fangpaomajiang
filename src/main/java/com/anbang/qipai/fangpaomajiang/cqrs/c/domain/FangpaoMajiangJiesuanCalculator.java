@@ -1,14 +1,12 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.player.MajiangPlayer;
+import com.dml.majiang.player.action.mo.GanghouBupai;
 import com.dml.majiang.player.action.mo.MajiangMoAction;
 import com.dml.majiang.player.shoupai.GuipaiDangPai;
 import com.dml.majiang.player.shoupai.PaiXing;
@@ -23,8 +21,8 @@ import com.dml.majiang.player.shoupai.gouxing.GouXingPanHu;
 public class FangpaoMajiangJiesuanCalculator {
 
 	// 自摸胡
-	public static FangpaoMajiangHu calculateBestZimoHu(boolean couldTianhu, boolean hongzhongcaishen, boolean zhuaniao,
-			int niaoshu, GouXingPanHu gouXingPanHu, MajiangPlayer player, MajiangMoAction moAction) {
+	public static FangpaoMajiangHu calculateBestZimoHu(boolean couldTianhu, GouXingPanHu gouXingPanHu,
+			MajiangPlayer player, MajiangMoAction moAction) {
 		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 
@@ -42,25 +40,26 @@ public class FangpaoMajiangJiesuanCalculator {
 			// 要选出分数最高的牌型
 			// 先计算和手牌型无关的参数
 			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
-			FangpaoMajiangPanPlayerScore bestScore = null;
+			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(hongzhongcaishen, zhuaniao,
-						niaoshu, true, true, false, couldTianhu, false, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
-				if (bestScore == null || bestScore.getValue() < score.getValue()) {
-					bestScore = score;
+				FangpaoMajiangHufen hufen = calculateHufen(true, true,
+						moAction.getReason().getName().equals(GanghouBupai.name), false, couldTianhu, false,
+						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+				if (bestHuFen == null || bestHuFen.getValue() < hufen.getValue()) {
+					bestHuFen = hufen;
 					bestHuShoupaiPaiXing = shoupaiPaiXing;
 				}
 			}
-			return new FangpaoMajiangHu(bestHuShoupaiPaiXing, bestScore);
+			return new FangpaoMajiangHu(bestHuShoupaiPaiXing, bestHuFen);
 		} else {// 不成胡
 			return null;
 		}
 	}
 
 	// 抢杠胡
-	public static FangpaoMajiangHu calculateBestQianggangHu(boolean hongzhongcaishen, boolean zhuaniao, int niaoshu,
-			MajiangPai gangPai, GouXingPanHu gouXingPanHu, MajiangPlayer player) {
+	public static FangpaoMajiangHu calculateBestQianggangHu(MajiangPai gangPai, GouXingPanHu gouXingPanHu,
+			MajiangPlayer player) {
 		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 		shoupaiCalculator.addPai(gangPai);
@@ -72,25 +71,25 @@ public class FangpaoMajiangJiesuanCalculator {
 			// 要选出分数最高的牌型
 			// 先计算和手牌型无关的参数
 			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
-			FangpaoMajiangPanPlayerScore bestScore = null;
+			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(hongzhongcaishen, zhuaniao,
-						niaoshu, true, false, true, false, true, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
-				if (bestScore == null || bestScore.getValue() < score.getValue()) {
-					bestScore = score;
+				FangpaoMajiangHufen hufen = calculateHufen(true, false, false, true, false, false,
+						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+				if (bestHuFen == null || bestHuFen.getValue() < hufen.getValue()) {
+					bestHuFen = hufen;
 					bestHuShoupaiPaiXing = shoupaiPaiXing;
 				}
 			}
-			return new FangpaoMajiangHu(bestHuShoupaiPaiXing, bestScore);
+			return new FangpaoMajiangHu(bestHuShoupaiPaiXing, bestHuFen);
 		} else {// 不成胡
 			return null;
 		}
 	}
 
 	// 点炮胡
-	public static FangpaoMajiangHu calculateBestDianpaoHu(boolean couldDihu, boolean hongzhongcaishen, boolean zhuaniao,
-			int niaoshu, GouXingPanHu gouXingPanHu, MajiangPlayer player, MajiangPai hupai) {
+	public static FangpaoMajiangHu calculateBestDianpaoHu(boolean couldDihu, GouXingPanHu gouXingPanHu,
+			MajiangPlayer player, MajiangPai hupai) {
 		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 
@@ -102,24 +101,23 @@ public class FangpaoMajiangJiesuanCalculator {
 			// 要选出分数最高的牌型
 			// 先计算和手牌型无关的参数
 			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
-			FangpaoMajiangPanPlayerScore bestScore = null;
+			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
-				FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(hongzhongcaishen, zhuaniao,
-						niaoshu, true, false, false, false, couldDihu, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
-				if (bestScore == null || bestScore.getValue() < score.getValue()) {
-					bestScore = score;
+				FangpaoMajiangHufen hufen = calculateHufen(true, false, false, false, false, couldDihu,
+						shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+				if (bestHuFen == null || bestHuFen.getValue() < hufen.getValue()) {
+					bestHuFen = hufen;
 					bestHuShoupaiPaiXing = shoupaiPaiXing;
 				}
 			}
-			return new FangpaoMajiangHu(bestHuShoupaiPaiXing, bestScore);
+			return new FangpaoMajiangHu(bestHuShoupaiPaiXing, bestHuFen);
 		} else {// 不成胡
 			return null;
 		}
 	}
 
-	public static FangpaoMajiangPanPlayerScore calculateBestScoreForBuhuPlayer(boolean hongzhongcaishen,
-			boolean zhuaniao, int niaoshu, MajiangPlayer player) {
+	public static FangpaoMajiangHufen calculateBestHuFenForBuhuPlayer(MajiangPlayer player) {
 		ShoupaiCalculator shoupaiCalculator = player.getShoupaiCalculator();
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 
@@ -128,120 +126,69 @@ public class FangpaoMajiangJiesuanCalculator {
 		// 要选出分数最高的牌型
 		// 先计算和手牌型无关的参数
 		ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
-		FangpaoMajiangPanPlayerScore bestScore = null;
+		FangpaoMajiangHufen bestHuFen = null;
 		for (ShoupaiPaiXing shoupaiPaiXing : shoupaiPaiXingList) {
-			FangpaoMajiangPanPlayerScore score = calculateScoreForShoupaiPaiXing(hongzhongcaishen, zhuaniao, niaoshu,
-					false, false, false, false, false, shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
-			if (bestScore == null || bestScore.getValue() < score.getValue()) {
-				bestScore = score;
+			FangpaoMajiangHufen hufen = calculateHufen(false, false, false, false, false, false,
+					shoupaixingWuguanJiesuancanshu, shoupaiPaiXing);
+			if (bestHuFen == null || bestHuFen.getValue() < hufen.getValue()) {
+				bestHuFen = hufen;
 			}
 		}
-		return bestScore;
+		return bestHuFen;
 	}
 
-	private static FangpaoMajiangPanPlayerScore calculateScoreForShoupaiPaiXing(boolean hongzhongcaishen,
-			boolean zhuaniao, int niaoshu, boolean hu, boolean zimoHu, boolean qianggangHu, boolean couldTianhu,
-			boolean couldDihu, ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu,
-			ShoupaiPaiXing shoupaiPaiXing) {
-		FangpaoMajiangPanPlayerScore score = new FangpaoMajiangPanPlayerScore();
-		FangpaoMajiangHushu hushu = calculateHushu(hu, zimoHu, qianggangHu, couldTianhu, couldDihu);
-		score.setHushu(hushu);
-
-		FangpaoMajiangGang gang = calculateGang(shoupaixingWuguanJiesuancanshu);
-		score.setGang(gang);
-
-		FangpaoMajiangPao pao = calculatePao(hongzhongcaishen, shoupaixingWuguanJiesuancanshu);
-		score.setPao(pao);
-
-		FangpaoMajiangNiao niao = calculateNiao(zhuaniao, niaoshu);
-		score.setNiao(niao);
-
-		return score;
-	}
-
-	private static FangpaoMajiangHushu calculateHushu(boolean hu, boolean zimoHu, boolean qianggangHu,
-			boolean couldTianhu, boolean couldDihu) {
-		FangpaoMajiangHushu hushu = new FangpaoMajiangHushu();
+	private static FangpaoMajiangHufen calculateHufen(boolean hu, boolean zimoHu, boolean gangkaiHu,
+			boolean qianggangHu, boolean couldTianhu, boolean couldDihu,
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu, ShoupaiPaiXing shoupaiPaiXing) {
+		FangpaoMajiangHufen hufen = new FangpaoMajiangHufen();
 		if (hu) {
-			if (zimoHu) {
-				hushu.setZimoHu(zimoHu);
+			boolean qingyise = shoupaixingWuguanJiesuancanshu.isQingyise();
+			boolean qidui = shoupaiPaiXing.getDuiziList().size() == 7;
+			boolean pengpenghu = shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0
+					&& shoupaiPaiXing.countShunzi() == 0;
+			hufen.setHu(hu);// 普通放炮胡
+			if (zimoHu) {// 自摸胡
+				hufen.setZimoHu(zimoHu);
 			}
-			if (qianggangHu) {
-				hushu.setQiangganghu(qianggangHu);
+			if (qianggangHu) {// 抢杠胡
+				hufen.setQiangganghu(qianggangHu);
 			}
-			if (couldTianhu) {
-				hushu.setTianhu(couldTianhu);
+			if (couldTianhu) {// 天胡
+				hufen.setTianhu(couldTianhu);
 			}
-			if (couldDihu) {
-				hushu.setDihu(couldDihu);
+			if (couldDihu) {// 地胡
+				hufen.setDihu(couldDihu);
 			}
-		}
-		hushu.calculate();
-		return hushu;
-	}
-
-	private static FangpaoMajiangGang calculateGang(ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu) {
-		FangpaoMajiangGang gang = new FangpaoMajiangGang();
-		int pengShu = shoupaixingWuguanJiesuancanshu.getYijiupengShu()
-				+ shoupaixingWuguanJiesuancanshu.getErbapengShu();
-		int mingGangShu = shoupaixingWuguanJiesuancanshu.getYijiuminggangShu()
-				+ shoupaixingWuguanJiesuancanshu.getErbaminggangShu();
-		int anGangShu = shoupaixingWuguanJiesuancanshu.getYijiuangangCount()
-				+ shoupaixingWuguanJiesuancanshu.getErbaangangCount();
-		gang.setPengShu(pengShu);
-		gang.setMingGangShu(mingGangShu);
-		gang.setAnGangShu(anGangShu);
-		gang.calculate();
-		return gang;
-	}
-
-	private static FangpaoMajiangPao calculatePao(boolean hongzhongcaishen,
-			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu) {
-		FangpaoMajiangPao pao = new FangpaoMajiangPao();
-		if (hongzhongcaishen) {
-			int hongzhongShu = shoupaixingWuguanJiesuancanshu.getCaishenShu();
-			pao.setHongzhongShu(hongzhongShu);
-		}
-		pao.calculate();
-		return pao;
-	}
-
-	private static FangpaoMajiangNiao calculateNiao(boolean zhuaniao, int niaoshu) {
-		FangpaoMajiangNiao niao = new FangpaoMajiangNiao();
-		if (zhuaniao) {
-			Set<MajiangPai> notPlaySet = new HashSet<>();
-			notPlaySet.add(MajiangPai.chun);
-			notPlaySet.add(MajiangPai.xia);
-			notPlaySet.add(MajiangPai.qiu);
-			notPlaySet.add(MajiangPai.dong);
-			notPlaySet.add(MajiangPai.mei);
-			notPlaySet.add(MajiangPai.lan);
-			notPlaySet.add(MajiangPai.zhu);
-			notPlaySet.add(MajiangPai.ju);
-			MajiangPai[] allMajiangPaiArray = MajiangPai.values();
-			List<MajiangPai> playPaiTypeList = new ArrayList<>();
-			for (int i = 0; i < allMajiangPaiArray.length; i++) {
-				MajiangPai pai = allMajiangPaiArray[i];
-				if (!notPlaySet.contains(pai)) {
-					playPaiTypeList.add(pai);
+			if (gangkaiHu) {
+				hufen.setGangshangkaihua(true);
+			}
+			if (pengpenghu) {// 碰碰胡
+				hufen.setPengpenghu(true);
+			}
+			if (qidui) {// 七对胡
+				hufen.setQiduihu(true);
+				if (qingyise) {// 七对清一色
+					hufen.setQiduiqingyise(true);
 				}
-			}
-
-			List<MajiangPai> allPaiList = new ArrayList<>();
-			playPaiTypeList.forEach((paiType) -> {
-				for (int i = 0; i < 4; i++) {
-					allPaiList.add(paiType);
+				if (gangkaiHu) {// 七对杠开
+					hufen.setQiduigangkai(true);
+					;
 				}
-			});
-			Random r = new Random();
-			for (int i = 0; i < niaoshu; i++) {
-				int index = r.nextInt(allPaiList.size());
-				MajiangPai majiangPai = allPaiList.remove(index);
-				niao.getZhuaPai().add(majiangPai);
+				// TODO七对单张吊
+			}
+			if (qingyise) {// 清一色胡
+				hufen.setQingyise(true);
+				if (pengpenghu) {// 清一色碰碰胡
+					hufen.setQingyisepengpenghu(true);
+				}
+				if (gangkaiHu) {// 清一色杠开
+					hufen.setQingyidegangkai(true);
+				}
+				// TODO清一色单张吊
 			}
 		}
-		niao.calculate();
-		return niao;
+		hufen.calculate();
+		return hufen;
 	}
 
 	// 其实点炮,抢杠胡,也包含自摸的意思，也调用这个

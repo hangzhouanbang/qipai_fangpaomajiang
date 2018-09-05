@@ -11,6 +11,8 @@ import com.anbang.qipai.fangpaomajiang.cqrs.c.service.disruptor.CoreSnapshot;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.disruptor.FileUtil;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.disruptor.ProcessCoreCommandEventHandler;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.disruptor.SnapshotJsonUtil;
+import com.dml.majiang.player.shoupai.gouxing.GouXingCalculator;
+import com.dml.majiang.player.shoupai.gouxing.GouXingCalculatorHelper;
 import com.highto.framework.ddd.Command;
 import com.highto.framework.ddd.CommonCommand;
 import com.highto.framework.ddd.SingletonEntityRepository;
@@ -63,14 +65,15 @@ public class InitProcessor {
 			e.printStackTrace();
 		}
 
-		try {
-			Class.forName("com.dml.majiang.player.shoupai.gouxing.GouXingCalculator");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		// 过滤掉一些不可能胡的构型，以节约内存
-		filterGouXingCalculator();
-
+		// try {
+		// Class.forName("com.dml.majiang.player.shoupai.gouxing.GouXingCalculator");
+		// } catch (ClassNotFoundException e) {
+		// e.printStackTrace();
+		// }
+		// // 过滤掉一些不可能胡的构型，以节约内存
+		// filterGouXingCalculator();
+		// 内存共享模式要改为从web上下文里取
+		GouXingCalculatorHelper.gouXingCalculator = new GouXingCalculator(14, 4);
 		try {
 			recover();
 		} catch (Throwable throwable) {

@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangNiao;
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerResult;
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerScore;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangActionResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.ReadyToNextPanResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.MajiangPlayCmdService;
@@ -30,7 +27,6 @@ import com.anbang.qipai.fangpaomajiang.web.vo.PanActionFrameVO;
 import com.anbang.qipai.fangpaomajiang.web.vo.PanResultVO;
 import com.anbang.qipai.fangpaomajiang.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.fangpaomajiang.websocket.QueryScope;
-import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.pan.frame.PanActionFrame;
 
 @RestController
@@ -98,67 +94,6 @@ public class MajiangController {
 		PanResultDbo panResultDbo = majiangPlayQueryService.findPanResultDbo(gameId, panNo);
 		MajiangGameDbo majiangGameDbo = majiangGameQueryService.findMajiangGameDboById(gameId);
 		data.put("panResult", new PanResultVO(panResultDbo, majiangGameDbo));
-		return vo;
-	}
-
-	/**
-	 * 抓鸟时所有玩家都可以访问该接口，当玩家疯狂点击屏幕会占用较多资源
-	 */
-	@RequestMapping(value = "/zhuaniao")
-	@ResponseBody
-	public CommonVO zhuaniao(String token, String gameId, int panNo) {
-		CommonVO vo = new CommonVO();
-		Map data = new HashMap();
-		vo.setData(data);
-		String playerId = playerAuthService.getPlayerIdByToken(token);
-		if (playerId == null) {
-			vo.setSuccess(false);
-			vo.setMsg("invalid token");
-			return vo;
-		}
-		PanResultDbo panResultDbo = majiangPlayQueryService.findPanResultDbo(gameId, panNo);
-		List<String> playerIds = new ArrayList<>();
-		String zhuaNiaoPlayerId = "";
-		List<FangpaoMajiangPanPlayerResult> playerResultList = panResultDbo.getPlayerResultList();
-		for (FangpaoMajiangPanPlayerResult fangpaoMajiangPanPlayerResult : playerResultList) {
-			playerIds.add(fangpaoMajiangPanPlayerResult.getPlayerId());
-			FangpaoMajiangPanPlayerScore score = fangpaoMajiangPanPlayerResult.getScore();
-			FangpaoMajiangNiao niao = score.getNiao();
-			List<MajiangPai> zhuaPai = niao.getZhuaPai();
-			if (zhuaPai.size() > 0) {
-				zhuaNiaoPlayerId = fangpaoMajiangPanPlayerResult.getPlayerId();
-			}
-		}
-		if (!zhuaNiaoPlayerId.equals(playerId)) {
-			vo.setSuccess(false);
-			vo.setMsg("not zhuaniao player");
-			return vo;
-		}
-		data.put("queryScopes", QueryScope.zhuaNiaoResult);
-		for (String otherPlayerId : playerIds) {
-			if (!otherPlayerId.equals(zhuaNiaoPlayerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.zhuaNiaoResult.name());
-			}
-		}
-		return vo;
-	}
-
-	@RequestMapping(value = "/zhuaniao_result")
-	@ResponseBody
-	public CommonVO zhuaniaoresult(String gameId, int panNo) {
-		CommonVO vo = new CommonVO();
-		Map data = new HashMap();
-		vo.setData(data);
-		PanResultDbo panResultDbo = majiangPlayQueryService.findPanResultDbo(gameId, panNo);
-		List<FangpaoMajiangPanPlayerResult> playerResultList = panResultDbo.getPlayerResultList();
-		for (FangpaoMajiangPanPlayerResult fangpaoMajiangPanPlayerResult : playerResultList) {
-			FangpaoMajiangPanPlayerScore score = fangpaoMajiangPanPlayerResult.getScore();
-			FangpaoMajiangNiao niao = score.getNiao();
-			List<MajiangPai> zhuaPai = niao.getZhuaPai();
-			if (zhuaPai.size() > 0) {
-				data.put("zhuaPai", zhuaPai);
-			}
-		}
 		return vo;
 	}
 

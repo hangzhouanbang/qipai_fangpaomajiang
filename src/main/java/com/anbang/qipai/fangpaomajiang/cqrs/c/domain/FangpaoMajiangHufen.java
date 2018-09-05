@@ -6,7 +6,7 @@ package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
  * @author lsc
  *
  */
-public class FangpaoMajiangHushu {
+public class FangpaoMajiangHufen {
 	private boolean hu;
 	private boolean zimoHu;// 每人输2分；
 	private boolean qiangganghu;// 抢杠胡：2分；
@@ -28,6 +28,9 @@ public class FangpaoMajiangHushu {
 
 	public void calculate() {
 		int hushu = 0;
+		if (hu) {
+			hushu = 1;
+		}
 		if (zimoHu) {
 			hushu = 2;
 		}
@@ -79,8 +82,8 @@ public class FangpaoMajiangHushu {
 		value = hushu;
 	}
 
-	public int jiesuan() {
-		return value;
+	public int jiesuan(int delta) {
+		return value += delta;
 	}
 
 	public boolean isQiangganghu() {

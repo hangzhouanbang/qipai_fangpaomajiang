@@ -1,7 +1,10 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import com.dml.majiang.pai.MajiangPai;
 
@@ -11,7 +14,56 @@ public class FangpaoMajiangNiao {
 	private int value;
 
 	public FangpaoMajiangNiao() {
-		zhuaPai = new ArrayList<>();
+
+	}
+
+	public FangpaoMajiangNiao(boolean hongzhongcaishen, boolean zhuaniao, int niaoshu) {
+		if (zhuaniao) {
+			zhuaPai = new ArrayList<>();
+			Set<MajiangPai> notPlaySet = new HashSet<>();
+			notPlaySet.add(MajiangPai.chun);
+			notPlaySet.add(MajiangPai.xia);
+			notPlaySet.add(MajiangPai.qiu);
+			notPlaySet.add(MajiangPai.dong);
+			notPlaySet.add(MajiangPai.mei);
+			notPlaySet.add(MajiangPai.lan);
+			notPlaySet.add(MajiangPai.zhu);
+			notPlaySet.add(MajiangPai.ju);
+			notPlaySet.add(MajiangPai.dongfeng);
+			notPlaySet.add(MajiangPai.nanfeng);
+			notPlaySet.add(MajiangPai.xifeng);
+			notPlaySet.add(MajiangPai.beifeng);
+			notPlaySet.add(MajiangPai.facai);
+			notPlaySet.add(MajiangPai.baiban);
+			if (!hongzhongcaishen) {
+				notPlaySet.add(MajiangPai.hongzhong);
+			}
+			MajiangPai[] allMajiangPaiArray = MajiangPai.values();
+			List<MajiangPai> playPaiTypeList = new ArrayList<>();
+			for (int i = 0; i < allMajiangPaiArray.length; i++) {
+				MajiangPai pai = allMajiangPaiArray[i];
+				if (!notPlaySet.contains(pai)) {
+					playPaiTypeList.add(pai);
+				}
+			}
+
+			List<MajiangPai> allPaiList = new ArrayList<>();
+			playPaiTypeList.forEach((paiType) -> {
+				for (int i = 0; i < 4; i++) {
+					allPaiList.add(paiType);
+				}
+			});
+			Random r = new Random();
+			for (int i = 0; i < niaoshu; i++) {
+				int index = r.nextInt(allPaiList.size());
+				MajiangPai majiangPai = allPaiList.remove(index);
+				zhuaPai.add(majiangPai);
+			}
+		}
+	}
+
+	public void calculate() {
+		int niao = 0;
 		niaoPai = new ArrayList<>();
 		niaoPai.add(MajiangPai.yitiao);
 		niaoPai.add(MajiangPai.yiwan);
@@ -22,10 +74,6 @@ public class FangpaoMajiangNiao {
 		niaoPai.add(MajiangPai.jiutiao);
 		niaoPai.add(MajiangPai.jiuwan);
 		niaoPai.add(MajiangPai.jiutong);
-	}
-
-	public void calculate() {
-		int niao = 0;
 		for (MajiangPai pai : zhuaPai) {
 			if (niaoPai.contains(pai)) {
 				niao++;

@@ -5,7 +5,7 @@ import com.dml.majiang.pan.Pan;
 import com.dml.majiang.pan.finish.CurrentPanFinishiDeterminer;
 
 /**
- * 有人胡或者打完牌就结束
+ * 有人胡，并且所有人行牌结束或者打完牌就结束
  * 
  * @author lsc
  *
@@ -16,7 +16,8 @@ public class FangpaoMajiangPanFinishiDeterminer implements CurrentPanFinishiDete
 	public boolean determineToFinishCurrentPan(Ju ju) {
 		Pan currentPan = ju.getCurrentPan();
 		boolean hu = currentPan.anyPlayerHu();
-		if (hu) {
+		// 当有人胡并且所有人行牌结束游戏结束
+		if (hu && currentPan.allPlayerHasNoActionCandidates()) {
 			return true;
 		} else {
 			int liupai = 0;

@@ -22,7 +22,7 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
-          fangpaoMajiangJuResult:
+          fangpaoMajiangResult:
             producer:
               configuration:
                 request:
@@ -38,21 +38,21 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
-        fangpaoMajiangJuResult:
-          destination: fangpaoMajiangJuResult
+        fangpaoMajiangResult:
+          destination: fangpaoMajiangResult
           contentType: application/json
           producer:
             partitionCount: 1
         members:
           destination: members
-          group: qipai_fangpaomajiang
+          group: qipai-fangpaomajiang
           consumer:
             concurrency: 1
             partitioned: false
           contentType: application/json
         fangpaoGameRoom:
           destination: fangpaoGameRoom
-          group: qipai_fangpaomajiang
+          group: qipai-fangpaomajiang
           consumer:
             concurrency: 1
             partitioned: false
