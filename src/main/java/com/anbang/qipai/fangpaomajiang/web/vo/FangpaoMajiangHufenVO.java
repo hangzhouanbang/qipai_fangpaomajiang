@@ -1,14 +1,8 @@
-package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
+package com.anbang.qipai.fangpaomajiang.web.vo;
 
-/**
- * 结算规则 自摸：所有人跟胡家结算胡牌牌型分数；杠分单独结算 放炮：其他玩家不用与胡家结算，只有放炮的人与胡家结算胡牌牌型分数；杠分单独结算
- * 
- * @author lsc
- *
- */
-public class FangpaoMajiangHufen {
-	private boolean hu;// 普通放炮胡
-	private boolean zimoHu;// 每人输2分；
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangHufen;
+
+public class FangpaoMajiangHufenVO {
 	private boolean qiangganghu;// 抢杠胡：2分；
 	private boolean qiduihu;// 七对：4分；
 	private boolean pengpenghu;// 碰碰胡：4分；
@@ -22,60 +16,61 @@ public class FangpaoMajiangHufen {
 	private boolean qingyisepengpenghu;// 清一色碰碰胡：10分
 	private boolean qingyidegangkai;// 清一色杠开：10分
 	private boolean qingyisedanzhangdiao;// 清一色单张吊：10分
-	private int value;
 
-	public void calculate() {
-		int hushu = 0;
-		if (hu) {
-			hushu = 1;
-		}
-		if (zimoHu) {
-			hushu = 2;
-		}
-		if (qiangganghu) {
-			hushu = 2;
-		}
-		if (qiduihu) {
-			hushu = 4;
-		}
-		if (pengpenghu) {
-			hushu = 4;
-		}
-		if (qingyise) {
-			hushu = 4;
-		}
-		if (gangshangkaihua) {
-			hushu = 4;
-		}
-		if (danzhangdiao) {
-			hushu = 6;
-		}
-		if (caishendiao) {
-			hushu = 8;
-		}
-		if (tianhu) {
-			hushu = 8;
-		}
-		if (dihu) {
-			hushu = 8;
-		}
-		if (qiduiqingyise) {
-			hushu = 10;
-		}
-		if (qingyisepengpenghu) {
-			hushu = 10;
-		}
-		if (qingyidegangkai) {
-			hushu = 10;
-		}
-		if (qingyisedanzhangdiao) {
-			hushu = 10;
-		}
-		value = hushu;
+	public FangpaoMajiangHufenVO() {
+
 	}
 
-	public int jiesuan(int delta) {
-		return value += delta;
+	public FangpaoMajiangHufenVO(FangpaoMajiangHufen hufen) {
+		qiangganghu = hufen.isQiangganghu();
+		if (hufen.isQiduihu()) {
+			qiangganghu = false;
+			qiduihu = hufen.isQiduihu();
+		}
+		if (hufen.isPengpenghu()) {
+			qiduihu = false;
+			pengpenghu = hufen.isPengpenghu();
+		}
+		if (hufen.isQingyise()) {
+			pengpenghu = false;
+			qingyise = hufen.isQingyise();
+		}
+		if (hufen.isGangshangkaihua()) {
+			qingyise = false;
+			gangshangkaihua = hufen.isGangshangkaihua();
+		}
+		if (hufen.isDanzhangdiao()) {
+			gangshangkaihua = false;
+			danzhangdiao = hufen.isDanzhangdiao();
+		}
+		if (hufen.isCaishendiao()) {
+			danzhangdiao = false;
+			caishendiao = hufen.isCaishendiao();
+		}
+		if (hufen.isTianhu()) {
+			caishendiao = false;
+			tianhu = hufen.isTianhu();
+		}
+		if (hufen.isDihu()) {
+			tianhu = false;
+			dihu = hufen.isDihu();
+		}
+		if (hufen.isQiduiqingyise()) {
+			dihu = false;
+			qiduiqingyise = hufen.isQiduiqingyise();
+		}
+		if (hufen.isQingyisepengpenghu()) {
+			qiduiqingyise = false;
+			qingyisepengpenghu = hufen.isQingyisepengpenghu();
+		}
+		if (hufen.isQingyidegangkai()) {
+			qingyisepengpenghu = false;
+			qingyidegangkai = hufen.isQingyidegangkai();
+		}
+		if (hufen.isQingyisedanzhangdiao()) {
+			qingyidegangkai = false;
+			qingyisedanzhangdiao = hufen.isQingyisedanzhangdiao();
+		}
 	}
 
 	public boolean isQiangganghu() {
@@ -181,29 +176,4 @@ public class FangpaoMajiangHufen {
 	public void setQingyisedanzhangdiao(boolean qingyisedanzhangdiao) {
 		this.qingyisedanzhangdiao = qingyisedanzhangdiao;
 	}
-
-	public int getValue() {
-		return value;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-	public boolean isZimoHu() {
-		return zimoHu;
-	}
-
-	public void setZimoHu(boolean zimoHu) {
-		this.zimoHu = zimoHu;
-	}
-
-	public boolean isHu() {
-		return hu;
-	}
-
-	public void setHu(boolean hu) {
-		this.hu = hu;
-	}
-
 }

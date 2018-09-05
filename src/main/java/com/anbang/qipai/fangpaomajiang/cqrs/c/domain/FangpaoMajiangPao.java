@@ -16,12 +16,12 @@ public class FangpaoMajiangPao {
 
 	public void calculate(int moGuipai) {
 		int pao = 0;
-		pao = hongzhongShu - moGuipai;
-		if (hongzhongShu == 4) {
-			pao = 8 * hongzhongShu;
+		pao = 2 * hongzhongShu - moGuipai;
+		if (pao == 4) {
+			pao = 2 * pao;
 		}
 		if (pao == -4) {
-			pao = 8 * pao;
+			pao = 2 * pao;
 		}
 		value = pao;
 	}

@@ -146,6 +146,8 @@ public class FangpaoMajiangJiesuanCalculator {
 			boolean qidui = shoupaiPaiXing.getDuiziList().size() == 7;
 			boolean pengpenghu = shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0
 					&& shoupaiPaiXing.countShunzi() == 0;
+			boolean danzhgdiao = shoupaixingWuguanJiesuancanshu.getFangruShoupaiCount() == 1
+					&& shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0;
 			hufen.setHu(hu);// 普通放炮胡
 			if (zimoHu) {// 自摸胡
 				hufen.setZimoHu(zimoHu);
@@ -159,8 +161,14 @@ public class FangpaoMajiangJiesuanCalculator {
 			if (couldDihu) {// 地胡
 				hufen.setDihu(couldDihu);
 			}
-			if (gangkaiHu) {
+			if (gangkaiHu) {// 杠上开花
 				hufen.setGangshangkaihua(true);
+			}
+			if (danzhgdiao) {
+				hufen.setDanzhangdiao(true);// 单张吊
+				if (shoupaixingWuguanJiesuancanshu.getCaishenShu() == 1) {// 财神吊
+					hufen.setCaishendiao(true);
+				}
 			}
 			if (pengpenghu) {// 碰碰胡
 				hufen.setPengpenghu(true);
@@ -170,11 +178,6 @@ public class FangpaoMajiangJiesuanCalculator {
 				if (qingyise) {// 七对清一色
 					hufen.setQiduiqingyise(true);
 				}
-				if (gangkaiHu) {// 七对杠开
-					hufen.setQiduigangkai(true);
-					;
-				}
-				// TODO七对单张吊
 			}
 			if (qingyise) {// 清一色胡
 				hufen.setQingyise(true);
@@ -184,7 +187,9 @@ public class FangpaoMajiangJiesuanCalculator {
 				if (gangkaiHu) {// 清一色杠开
 					hufen.setQingyidegangkai(true);
 				}
-				// TODO清一色单张吊
+				if (danzhgdiao) {// 清一色单张吊
+					hufen.setQingyisedanzhangdiao(true);
+				}
 			}
 		}
 		hufen.calculate();

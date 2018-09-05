@@ -47,6 +47,8 @@ public class FangpaoMajiangPanPlayerResultVO {
 
 	private int hufen;// 非结算胡分
 
+	private FangpaoMajiangHufenVO hufenVo;
+
 	/**
 	 * 这个是结算分
 	 */
@@ -64,6 +66,7 @@ public class FangpaoMajiangPanPlayerResultVO {
 		publicPaiList = new ArrayList<>(panPlayerResult.getPublicPaiList());
 		FangpaoMajiangHufen fangpaoMajiangHufen = panPlayerResult.getHufen();
 		if (fangpaoMajiangHufen != null) {
+			hufenVo = new FangpaoMajiangHufenVO(fangpaoMajiangHufen);
 			hufen = fangpaoMajiangHufen.getValue();
 		}
 		FangpaoMajiangGang fangpaoMajiangGang = panPlayerResult.getGang();
@@ -286,6 +289,14 @@ public class FangpaoMajiangPanPlayerResultVO {
 		this.pao = pao;
 	}
 
+	public List<NiaoPaiVO> getNiaoPaiList() {
+		return niaoPaiList;
+	}
+
+	public void setNiaoPaiList(List<NiaoPaiVO> niaoPaiList) {
+		this.niaoPaiList = niaoPaiList;
+	}
+
 	public int getNiao() {
 		return niao;
 	}
@@ -302,20 +313,20 @@ public class FangpaoMajiangPanPlayerResultVO {
 		this.hufen = hufen;
 	}
 
+	public FangpaoMajiangHufenVO getHufenVo() {
+		return hufenVo;
+	}
+
+	public void setHufenVo(FangpaoMajiangHufenVO hufenVo) {
+		this.hufenVo = hufenVo;
+	}
+
 	public int getScore() {
 		return score;
 	}
 
 	public void setScore(int score) {
 		this.score = score;
-	}
-
-	public List<NiaoPaiVO> getNiaoPaiList() {
-		return niaoPaiList;
-	}
-
-	public void setNiaoPaiList(List<NiaoPaiVO> niaoPaiList) {
-		this.niaoPaiList = niaoPaiList;
 	}
 
 }

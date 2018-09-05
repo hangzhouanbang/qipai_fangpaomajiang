@@ -312,6 +312,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				pao.calculate(moGuipai);
 				huPlayerResult.setPao(pao);
 				// 计算鸟分
+
 				huPlayerResult.setNiao(niao);
 				// 计算一盘结算分
 				int score = (playerIdList.size() - 1) * huPlayerResult.getHufen().getValue()
@@ -335,12 +336,12 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				huPlayerResult.setHu(true);
 				huPlayerResult.setBestShoupaiPaiXing(huShoupaiPaiXing);
 				playerResultList.add(huPlayerResult);
-				playerIdList.forEach((playerId) -> {
+				for (String playerId : playerIdList) {
 					if (playerId.equals(huPlayer.getId())) {
 						// 胡家已经计算过了
 					} else {
-						MajiangPlayer buHuPlayer = currentPan.findPlayerById(playerId);
 						FangpaoMajiangPanPlayerResult buHuPlayerResult = new FangpaoMajiangPanPlayerResult();
+						MajiangPlayer buHuPlayer = currentPan.findPlayerById(playerId);
 						buHuPlayerResult.setPlayerId(playerId);
 						// 计算非胡玩家分数
 						buHuPlayerResult
@@ -362,7 +363,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						// 计算一盘结算分
 						int score1 = -delta + buHuPlayerResult.getGang().getValue()
 								+ buHuPlayerResult.getPao().getValue() - niao.getValue();
-						huPlayerResult.setScore(score1);
+						buHuPlayerResult.setScore(score1);
 						// 计算累计总分
 						if (latestFinishedPanResult != null) {
 							buHuPlayerResult
@@ -381,7 +382,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						buHuPlayerResult.setHu(false);
 						playerResultList.add(buHuPlayerResult);
 					}
-				});
+				}
 			}
 
 			fangpaoMajiangPanResult.setPanNo(currentPan.getNo());

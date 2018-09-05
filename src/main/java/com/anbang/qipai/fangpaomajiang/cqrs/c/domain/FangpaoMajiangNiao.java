@@ -18,8 +18,8 @@ public class FangpaoMajiangNiao {
 	}
 
 	public FangpaoMajiangNiao(boolean hongzhongcaishen, boolean zhuaniao, int niaoshu) {
+		zhuaPai = new ArrayList<>();
 		if (zhuaniao) {
-			zhuaPai = new ArrayList<>();
 			Set<MajiangPai> notPlaySet = new HashSet<>();
 			notPlaySet.add(MajiangPai.chun);
 			notPlaySet.add(MajiangPai.xia);
