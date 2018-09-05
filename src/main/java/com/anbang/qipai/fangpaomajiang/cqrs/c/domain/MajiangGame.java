@@ -18,7 +18,6 @@ import com.dml.majiang.player.action.chi.PengganghuFirstChiActionProcessor;
 import com.dml.majiang.player.action.da.DachushoupaiDaActionProcessor;
 import com.dml.majiang.player.action.gang.HuFirstGangActionProcessor;
 import com.dml.majiang.player.action.guo.DoNothingGuoActionProcessor;
-import com.dml.majiang.player.action.hu.PlayerSetHuHuActionProcessor;
 import com.dml.majiang.player.action.initial.ZhuangMoPaiInitialActionUpdater;
 import com.dml.majiang.player.action.listener.comprehensive.DianpaoDihuOpportunityDetector;
 import com.dml.majiang.player.action.listener.gang.FangGangCounter;
@@ -27,7 +26,6 @@ import com.dml.majiang.player.action.listener.mo.LastMoActionPlayerRecorder;
 import com.dml.majiang.player.action.listener.mo.MoGuipaiCounter;
 import com.dml.majiang.player.action.peng.HuFirstPengActionProcessor;
 import com.dml.majiang.player.menfeng.RandomMustHasDongPlayersMenFengDeterminer;
-import com.dml.majiang.player.shoupai.gouxing.NoDanpaiOneDuiziGouXingPanHu;
 import com.dml.mpgame.game.GamePlayerOnlineState;
 import com.dml.mpgame.game.GamePlayerState;
 import com.dml.mpgame.game.GamePlayerValueObject;
@@ -62,7 +60,7 @@ public class MajiangGame {
 		ju.setFaPaiStrategy(new FangpaoMajiangFaPaiStrategy(13));
 
 		ju.setCurrentPanFinishiDeterminer(new FangpaoMajiangPanFinishiDeterminer());
-		ju.setGouXingPanHu(new NoDanpaiOneDuiziGouXingPanHu());
+		ju.setGouXingPanHu(new NoDanpaiQiDuiziGouXingPanHu());
 		ju.setCurrentPanPublicWaitingPlayerDeterminer(new WaitDaPlayerPanPublicWaitingPlayerDeterminer());
 
 		FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = new FangpaoMajiangPanResultBuilder();
@@ -89,9 +87,8 @@ public class MajiangGame {
 		ju.setGangActionUpdater(new FangpaoMajiangGangActionUpdater());
 		ju.setGuoActionProcessor(new DoNothingGuoActionProcessor());
 		ju.setGuoActionUpdater(new FangpaoMajiangGuoActionUpdater());
-		ju.setHuActionProcessor(new PlayerSetHuHuActionProcessor());
+		ju.setHuActionProcessor(new FangpaoMajiangHuActionProcessor());
 
-		ju.addActionStatisticsListener(new CaizipaiListener());
 		ju.addActionStatisticsListener(new MoGuipaiCounter());
 		ju.addActionStatisticsListener(new GangCounter());
 		ju.addActionStatisticsListener(new FangGangCounter());
@@ -122,6 +119,7 @@ public class MajiangGame {
 			playerStateMap.keySet().forEach((pid) -> playerStateMap.put(pid, MajiangGamePlayerState.finished));
 			result.setJuResult((FangpaoMajiangJuResult) ju.getJuResult());
 		}
+		result.setMajiangGame(new MajiangGameValueObject(this));
 		return result;
 	}
 
