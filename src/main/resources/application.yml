@@ -60,3 +60,7 @@ spring:
       
 server:
   port: 2002
+  
+filepath:
+  snapshotFileBasePath: /usr/local/app/qipai_fangpaomajiang/server1/snapshot
+  jFileBasePath: /usr/local/app/qipai_fangpaomajiang/server1/journal

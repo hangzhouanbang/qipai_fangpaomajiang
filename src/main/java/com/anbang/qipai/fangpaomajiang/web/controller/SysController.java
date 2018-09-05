@@ -24,7 +24,7 @@ public class SysController {
 			return vo;
 		}
 		ServletContext sc = request.getServletContext().getContext("/gxc");
-		GouXingCalculatorHelper.gouXingCalculator = (GouXingCalculator) sc.getAttribute("17_3");
+		GouXingCalculatorHelper.gouXingCalculator = (GouXingCalculator) sc.getAttribute("14_4");
 		return vo;
 	}
 
