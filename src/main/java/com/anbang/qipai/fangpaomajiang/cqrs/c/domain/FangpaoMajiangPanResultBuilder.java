@@ -20,6 +20,8 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 	private int niaoshu;
 	private boolean zhuaniao;
 	private boolean hongzhongcaishen;
+	private boolean dapao;
+	private boolean sipaofanbei;
 
 	@Override
 	public PanResult buildCurrentPanResult(Ju ju, long panFinishTime) {
@@ -69,7 +71,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				huPlayerResult.setGang(gang);
 				// 计算炮分
 				FangpaoMajiangPao pao = new FangpaoMajiangPao(huPlayer);
-				pao.calculate(moGuipai);
+				pao.calculate(moGuipai, dapao, sipaofanbei);
 				huPlayerResult.setPao(pao);
 				// 计算鸟分
 				huPlayerResult.setNiao(new FangpaoMajiangNiao());
@@ -117,7 +119,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						buHuPlayerResult.setGang(gang);
 						// 计算炮分
 						FangpaoMajiangPao pao = new FangpaoMajiangPao(buHuplayer);
-						pao.calculate(moGuipai);
+						pao.calculate(moGuipai, dapao, sipaofanbei);
 						buHuPlayerResult.setPao(pao);
 						// 计算鸟分
 						buHuPlayerResult.setNiao(niao);
@@ -176,7 +178,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				huPlayerResult.setGang(gang);
 				// 计算炮分
 				FangpaoMajiangPao pao = new FangpaoMajiangPao(huPlayer);
-				pao.calculate(moGuipai);
+				pao.calculate(moGuipai, dapao, sipaofanbei);
 				huPlayerResult.setPao(pao);
 				// 计算鸟分
 				huPlayerResult.setNiao(niao);
@@ -221,7 +223,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						buHuPlayerResult.setGang(gang1);
 						// 计算炮分
 						FangpaoMajiangPao pao1 = new FangpaoMajiangPao(huPlayer);
-						pao1.calculate(moGuipai);
+						pao1.calculate(moGuipai, dapao, sipaofanbei);
 						buHuPlayerResult.setPao(pao1);
 						// 计算鸟分
 						buHuPlayerResult.setNiao(new FangpaoMajiangNiao());
@@ -263,7 +265,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						buHuPlayerResult.setGang(gang1);
 						// 计算炮分
 						FangpaoMajiangPao pao1 = new FangpaoMajiangPao(buHuplayer);
-						pao1.calculate(moGuipai);
+						pao1.calculate(moGuipai, dapao, sipaofanbei);
 						buHuPlayerResult.setPao(pao1);
 						// 计算鸟分
 						buHuPlayerResult.setNiao(new FangpaoMajiangNiao());
@@ -309,7 +311,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				huPlayerResult.setGang(gang);
 				// 计算炮分
 				FangpaoMajiangPao pao = new FangpaoMajiangPao(huPlayer);
-				pao.calculate(moGuipai);
+				pao.calculate(moGuipai, dapao, sipaofanbei);
 				huPlayerResult.setPao(pao);
 				// 计算鸟分
 
@@ -356,7 +358,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						buHuPlayerResult.setGang(gang1);
 						// 计算炮分
 						FangpaoMajiangPao pao1 = new FangpaoMajiangPao(buHuPlayer);
-						pao1.calculate(moGuipai);
+						pao1.calculate(moGuipai, dapao, sipaofanbei);
 						buHuPlayerResult.setPao(pao1);
 						// 计算鸟分
 						buHuPlayerResult.setNiao(new FangpaoMajiangNiao());
@@ -411,7 +413,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				playerResult.setGang(gang);
 				// 计算炮分
 				FangpaoMajiangPao pao = new FangpaoMajiangPao(player);
-				pao.calculate(moGuipai);
+				pao.calculate(moGuipai, dapao, sipaofanbei);
 				playerResult.setPao(pao);
 				// 计算鸟分
 				playerResult.setNiao(new FangpaoMajiangNiao());
@@ -468,6 +470,22 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 
 	public void setHongzhongcaishen(boolean hongzhongcaishen) {
 		this.hongzhongcaishen = hongzhongcaishen;
+	}
+
+	public boolean isDapao() {
+		return dapao;
+	}
+
+	public void setDapao(boolean dapao) {
+		this.dapao = dapao;
+	}
+
+	public boolean isSipaofanbei() {
+		return sipaofanbei;
+	}
+
+	public void setSipaofanbei(boolean sipaofanbei) {
+		this.sipaofanbei = sipaofanbei;
 	}
 
 }

@@ -14,14 +14,18 @@ public class FangpaoMajiangPao {
 		hongzhongShu = player.countGuipai();
 	}
 
-	public void calculate(int moGuipai) {
+	public void calculate(int moGuipai, boolean dapao, boolean sipaofanbei) {
 		int pao = 0;
-		pao = 2 * hongzhongShu - moGuipai;
-		if (pao == 4) {
-			pao = 2 * pao;
-		}
-		if (pao == -4) {
-			pao = 2 * pao;
+		if (dapao) {
+			pao = 2 * hongzhongShu - moGuipai;
+			if (sipaofanbei) {
+				if (pao == 4) {
+					pao = 2 * pao;
+				}
+				if (pao == -4) {
+					pao = 2 * pao;
+				}
+			}
 		}
 		value = pao;
 	}

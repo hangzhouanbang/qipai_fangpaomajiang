@@ -185,7 +185,7 @@ public class FangpaoMajiangJiesuanCalculator {
 					hufen.setQingyisepengpenghu(true);
 				}
 				if (gangkaiHu) {// 清一色杠开
-					hufen.setQingyidegangkai(true);
+					hufen.setQingyisegangkai(true);
 				}
 				if (danzhgdiao) {// 清一色单张吊
 					hufen.setQingyisedanzhangdiao(true);

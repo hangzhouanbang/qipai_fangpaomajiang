@@ -22,54 +22,32 @@ public class FangpaoMajiangHufenVO {
 	}
 
 	public FangpaoMajiangHufenVO(FangpaoMajiangHufen hufen) {
-		qiangganghu = hufen.isQiangganghu();
-		if (hufen.isQiduihu()) {
-			qiangganghu = false;
-			qiduihu = hufen.isQiduihu();
-		}
-		if (hufen.isPengpenghu()) {
-			qiduihu = false;
-			pengpenghu = hufen.isPengpenghu();
-		}
-		if (hufen.isQingyise()) {
-			pengpenghu = false;
-			qingyise = hufen.isQingyise();
-		}
-		if (hufen.isGangshangkaihua()) {
-			qingyise = false;
-			gangshangkaihua = hufen.isGangshangkaihua();
-		}
-		if (hufen.isDanzhangdiao()) {
-			gangshangkaihua = false;
-			danzhangdiao = hufen.isDanzhangdiao();
-		}
-		if (hufen.isCaishendiao()) {
-			danzhangdiao = false;
-			caishendiao = hufen.isCaishendiao();
-		}
-		if (hufen.isTianhu()) {
-			caishendiao = false;
-			tianhu = hufen.isTianhu();
-		}
-		if (hufen.isDihu()) {
-			tianhu = false;
-			dihu = hufen.isDihu();
-		}
-		if (hufen.isQiduiqingyise()) {
-			dihu = false;
-			qiduiqingyise = hufen.isQiduiqingyise();
-		}
-		if (hufen.isQingyisepengpenghu()) {
-			qiduiqingyise = false;
-			qingyisepengpenghu = hufen.isQingyisepengpenghu();
-		}
-		if (hufen.isQingyidegangkai()) {
-			qingyisepengpenghu = false;
-			qingyidegangkai = hufen.isQingyidegangkai();
-		}
 		if (hufen.isQingyisedanzhangdiao()) {
-			qingyidegangkai = false;
-			qingyisedanzhangdiao = hufen.isQingyisedanzhangdiao();
+			qingyisedanzhangdiao = true;
+		} else if (hufen.isQingyisegangkai()) {
+			qingyidegangkai = true;
+		} else if (hufen.isQingyisepengpenghu()) {
+			qingyisepengpenghu = true;
+		} else if (hufen.isQiduiqingyise()) {
+			qiduiqingyise = true;
+		} else if (hufen.isDihu()) {
+			dihu = true;
+		} else if (hufen.isTianhu()) {
+			tianhu = true;
+		} else if (hufen.isCaishendiao()) {
+			caishendiao = true;
+		} else if (hufen.isDanzhangdiao()) {
+			danzhangdiao = true;
+		} else if (hufen.isGangshangkaihua()) {
+			gangshangkaihua = true;
+		} else if (hufen.isQingyise()) {
+			qingyise = true;
+		} else if (hufen.isPengpenghu()) {
+			pengpenghu = true;
+		} else if (hufen.isQiduihu()) {
+			qiduihu = true;
+		} else if (hufen.isQiangganghu()) {
+			qiangganghu = true;
 		}
 	}
 

@@ -15,6 +15,8 @@ public class MajiangGameDbo {
 	private int panshu;
 	private int renshu;
 	private boolean hongzhongcaishen;
+	private boolean dapao;
+	private boolean sipaofanbei;
 	private boolean zhuaniao;
 	private int niaoshu;
 	private MajiangGameState state;
@@ -29,6 +31,8 @@ public class MajiangGameDbo {
 		panshu = majiangGame.getPanshu();
 		renshu = majiangGame.getRenshu();
 		hongzhongcaishen = majiangGame.isHongzhongcaishen();
+		dapao = majiangGame.isDapao();
+		sipaofanbei = majiangGame.isSipaofanbei();
 		zhuaniao = majiangGame.isZhuaniao();
 		niaoshu = majiangGame.getNiaoshu();
 		state = majiangGame.getState();
@@ -132,6 +136,22 @@ public class MajiangGameDbo {
 
 	public void setLatestPanActionFrameData(byte[] latestPanActionFrameData) {
 		this.latestPanActionFrameData = latestPanActionFrameData;
+	}
+
+	public boolean isDapao() {
+		return dapao;
+	}
+
+	public void setDapao(boolean dapao) {
+		this.dapao = dapao;
+	}
+
+	public boolean isSipaofanbei() {
+		return sipaofanbei;
+	}
+
+	public void setSipaofanbei(boolean sipaofanbei) {
+		this.sipaofanbei = sipaofanbei;
 	}
 
 }

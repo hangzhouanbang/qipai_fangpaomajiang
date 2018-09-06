@@ -45,21 +45,6 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 				bestHu.setZimo(true);
 				player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));
 			}
-			// else {
-			// 非胡牌型特殊胡-三财神
-			// MoGuipaiCounter moGuipaiCounter = ju.getActionStatisticsListenerManager()
-			// .findListener(MoGuipaiCounter.class);
-			// if (moGuipaiCounter.getCount() == 3) {
-			// FangpaoMajiangHu bestHu =
-			// FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu,
-			// gouXingPanHu,
-			// player, moAction);
-			// RuianMajiangPanPlayerScore score = RuianMajiangJiesuanCalculator
-			// .calculateBestScoreForBuhuPlayer(dapao, dihu, player, baibanIsGuipai);
-			// RuianMajiangHu sancaishenHu = new RuianMajiangHu(score);
-			// player.addActionCandidate(new MajiangHuAction(player.getId(), sancaishenHu));
-			// }
-			// }
 			// 需要有“过”
 			player.checkAndGenerateGuoCandidateAction();
 			// 啥也不能干，那只能打出牌

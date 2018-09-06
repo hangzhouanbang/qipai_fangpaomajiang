@@ -60,11 +60,12 @@ public class GameController {
 	 */
 	@RequestMapping(value = "/newgame")
 	@ResponseBody
-	public CommonVO newgame(String playerId,int panshu, int renshu, boolean hongzhongcaishen,boolean zhuaniao,int niaoshu) {
+	public CommonVO newgame(String playerId, int panshu, int renshu, boolean hongzhongcaishen, boolean dapao,
+			boolean sipaofanbei, boolean zhuaniao, int niaoshu) {
 		CommonVO vo = new CommonVO();
 		String newGameId = UUID.randomUUID().toString();
-		MajiangGameValueObject majiangGameValueObject = gameCmdService.newMajiangGame(newGameId, playerId, panshu, renshu, hongzhongcaishen,
-				zhuaniao, niaoshu);
+		MajiangGameValueObject majiangGameValueObject = gameCmdService.newMajiangGame(newGameId, playerId, panshu,
+				renshu, hongzhongcaishen, dapao, sipaofanbei, zhuaniao, niaoshu);
 		majiangGameQueryService.newMajiangGame(majiangGameValueObject);
 		String token = playerAuthService.newSessionForPlayer(playerId);
 		Map data = new HashMap();

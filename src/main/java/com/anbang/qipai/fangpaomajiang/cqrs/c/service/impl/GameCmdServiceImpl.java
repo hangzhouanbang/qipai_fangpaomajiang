@@ -26,7 +26,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 
 	@Override
 	public MajiangGameValueObject newMajiangGame(String gameId, String playerId, Integer panshu, Integer renshu,
-			Boolean hongzhongcaishen, Boolean zhuaniao, Integer niaoshu) {
+			Boolean hongzhongcaishen, Boolean dapao, Boolean sipaofanbei, Boolean zhuaniao, Integer niaoshu) {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		GameValueObject gameValueObject = gameServer.playerCreateGame(gameId,
 				new FixedNumberOfPlayersGameJoinStrategy(renshu), new FixedNumberOfPlayersGameReadyStrategy(renshu),
@@ -34,7 +34,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 				new VoteAfterStartedGameFinishStrategy(playerId, new MostPlayersWinVoteCalculator()), playerId);
 		MajiangGameManager majiangGameManager = singletonEntityRepository.getEntity(MajiangGameManager.class);
 		MajiangGameValueObject majiangGameValueObject = majiangGameManager.newMajiangGame(gameValueObject, panshu,
-				renshu, hongzhongcaishen, zhuaniao, niaoshu);
+				renshu, hongzhongcaishen, dapao, sipaofanbei, zhuaniao, niaoshu);
 		return majiangGameValueObject;
 	}
 

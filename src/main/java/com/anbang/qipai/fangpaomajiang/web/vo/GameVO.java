@@ -11,6 +11,8 @@ public class GameVO {
 	private int panshu;
 	private int renshu;
 	private boolean hongzhongcaishen;
+	private boolean dapao;
+	private boolean sipaofanbei;
 	private boolean zhuaniao;
 	private int niaoshu;
 	private List<MajiangGamePlayerVO> playerList;
@@ -21,6 +23,8 @@ public class GameVO {
 		panshu = majiangGameDbo.getPanshu();
 		renshu = majiangGameDbo.getRenshu();
 		hongzhongcaishen = majiangGameDbo.isHongzhongcaishen();
+		dapao = majiangGameDbo.isDapao();
+		sipaofanbei = majiangGameDbo.isSipaofanbei();
 		zhuaniao = majiangGameDbo.isZhuaniao();
 		niaoshu = majiangGameDbo.getNiaoshu();
 		playerList = new ArrayList<>();
@@ -90,6 +94,22 @@ public class GameVO {
 
 	public void setState(MajiangGameState state) {
 		this.state = state;
+	}
+
+	public boolean isDapao() {
+		return dapao;
+	}
+
+	public void setDapao(boolean dapao) {
+		this.dapao = dapao;
+	}
+
+	public boolean isSipaofanbei() {
+		return sipaofanbei;
+	}
+
+	public void setSipaofanbei(boolean sipaofanbei) {
+		this.sipaofanbei = sipaofanbei;
 	}
 
 }

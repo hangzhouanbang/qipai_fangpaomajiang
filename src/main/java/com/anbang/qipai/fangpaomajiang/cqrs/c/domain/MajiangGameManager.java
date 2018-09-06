@@ -11,10 +11,12 @@ public class MajiangGameManager {
 	private Map<String, MajiangGame> gameIdMajiangGameMap = new HashMap<>();
 
 	public MajiangGameValueObject newMajiangGame(GameValueObject gameValueObject, int panshu, int renshu,
-			boolean hongzhongcaishen, boolean zhuaniao, int niaoshu) {
+			boolean hongzhongcaishen, boolean dapao, boolean sipaofanbei, boolean zhuaniao, int niaoshu) {
 		String gameId = gameValueObject.getId();
 		MajiangGame majiangGame = new MajiangGame();
 		majiangGame.setHongzhongcaishen(hongzhongcaishen);
+		majiangGame.setDapao(dapao);
+		majiangGame.setSipaofanbei(sipaofanbei);
 		majiangGame.setZhuaniao(zhuaniao);
 		majiangGame.setNiaoshu(niaoshu);
 		majiangGame.setPanshu(panshu);

@@ -20,7 +20,7 @@ public class FangpaoMajiangHufen {
 	private boolean dihu;// 地胡：8分；
 	private boolean qiduiqingyise;// 七对清一色：10分
 	private boolean qingyisepengpenghu;// 清一色碰碰胡：10分
-	private boolean qingyidegangkai;// 清一色杠开：10分
+	private boolean qingyisegangkai;// 清一色杠开：10分
 	private boolean qingyisedanzhangdiao;// 清一色单张吊：10分
 	private int value;
 
@@ -65,7 +65,7 @@ public class FangpaoMajiangHufen {
 		if (qingyisepengpenghu) {
 			hushu = 10;
 		}
-		if (qingyidegangkai) {
+		if (qingyisegangkai) {
 			hushu = 10;
 		}
 		if (qingyisedanzhangdiao) {
@@ -166,12 +166,12 @@ public class FangpaoMajiangHufen {
 		this.qingyisepengpenghu = qingyisepengpenghu;
 	}
 
-	public boolean isQingyidegangkai() {
-		return qingyidegangkai;
+	public boolean isQingyisegangkai() {
+		return qingyisegangkai;
 	}
 
-	public void setQingyidegangkai(boolean qingyidegangkai) {
-		this.qingyidegangkai = qingyidegangkai;
+	public void setQingyisegangkai(boolean qingyisegangkai) {
+		this.qingyisegangkai = qingyisegangkai;
 	}
 
 	public boolean isQingyisedanzhangdiao() {

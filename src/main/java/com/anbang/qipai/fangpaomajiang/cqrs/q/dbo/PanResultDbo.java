@@ -20,15 +20,15 @@ public class PanResultDbo {
 	public PanResultDbo() {
 	}
 
-	public PanResultDbo(String gameId, FangpaoMajiangPanResult ruianMajiangPanResult) {
+	public PanResultDbo(String gameId, FangpaoMajiangPanResult fangpaoMajiangPanResult) {
 		this.gameId = gameId;
-		panNo = ruianMajiangPanResult.getPanNo();
-		zhuangPlayerId = ruianMajiangPanResult.getZhuangPlayerId();
-		hu = ruianMajiangPanResult.isHu();
-		zimo = ruianMajiangPanResult.isZimo();
-		dianpaoPlayerId = ruianMajiangPanResult.getDianpaoPlayerId();
-		playerResultList = new ArrayList<>(ruianMajiangPanResult.getPlayerResultList());
-		finishTime = ruianMajiangPanResult.getPanFinishTime();
+		panNo = fangpaoMajiangPanResult.getPanNo();
+		zhuangPlayerId = fangpaoMajiangPanResult.getZhuangPlayerId();
+		hu = fangpaoMajiangPanResult.isHu();
+		zimo = fangpaoMajiangPanResult.isZimo();
+		dianpaoPlayerId = fangpaoMajiangPanResult.getDianpaoPlayerId();
+		playerResultList = new ArrayList<>(fangpaoMajiangPanResult.getPlayerResultList());
+		finishTime = fangpaoMajiangPanResult.getPanFinishTime();
 	}
 
 	public String getId() {

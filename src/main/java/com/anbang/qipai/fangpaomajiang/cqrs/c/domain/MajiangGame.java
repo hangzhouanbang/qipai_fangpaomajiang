@@ -35,6 +35,8 @@ import com.dml.mpgame.game.GameValueObject;
 public class MajiangGame {
 	private String gameId;
 	private boolean hongzhongcaishen;
+	private boolean dapao;
+	private boolean sipaofanbei;
 	private boolean zhuaniao;
 	private int niaoshu;
 	private int panshu;
@@ -65,6 +67,8 @@ public class MajiangGame {
 
 		FangpaoMajiangPanResultBuilder fangpaoMajiangPanResultBuilder = new FangpaoMajiangPanResultBuilder();
 		fangpaoMajiangPanResultBuilder.setHongzhongcaishen(hongzhongcaishen);
+		fangpaoMajiangPanResultBuilder.setDapao(dapao);
+		fangpaoMajiangPanResultBuilder.setSipaofanbei(sipaofanbei);
 		fangpaoMajiangPanResultBuilder.setZhuaniao(zhuaniao);
 		fangpaoMajiangPanResultBuilder.setNiaoshu(niaoshu);
 		ju.setCurrentPanResultBuilder(fangpaoMajiangPanResultBuilder);
@@ -278,6 +282,22 @@ public class MajiangGame {
 
 	public void setPlayeTotalScoreMap(Map<String, Integer> playeTotalScoreMap) {
 		this.playeTotalScoreMap = playeTotalScoreMap;
+	}
+
+	public boolean isDapao() {
+		return dapao;
+	}
+
+	public void setDapao(boolean dapao) {
+		this.dapao = dapao;
+	}
+
+	public boolean isSipaofanbei() {
+		return sipaofanbei;
+	}
+
+	public void setSipaofanbei(boolean sipaofanbei) {
+		this.sipaofanbei = sipaofanbei;
 	}
 
 }

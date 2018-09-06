@@ -21,18 +21,18 @@ public class JuResultVO {
 
 	public JuResultVO(JuResultDbo juResultDbo, MajiangGameDbo majiangGameDbo) {
 		gameId = juResultDbo.getGameId();
-		FangpaoMajiangJuResult ruianMajiangJuResult = juResultDbo.getJuResult();
-		dayingjiaId = ruianMajiangJuResult.getDayingjiaId();
-		datuhaoId = ruianMajiangJuResult.getDatuhaoId();
+		FangpaoMajiangJuResult fangpaoMajiangJuResult = juResultDbo.getJuResult();
+		dayingjiaId = fangpaoMajiangJuResult.getDayingjiaId();
+		datuhaoId = fangpaoMajiangJuResult.getDatuhaoId();
 		if (juResultDbo.getLastPanResult() != null) {
 			lastPanResult = new PanResultVO(juResultDbo.getLastPanResult(), majiangGameDbo);
 		}
 		finishTime = juResultDbo.getFinishTime();
 		this.panshu = majiangGameDbo.getPanshu();
-		finishedPanCount = ruianMajiangJuResult.getFinishedPanCount();
+		finishedPanCount = fangpaoMajiangJuResult.getFinishedPanCount();
 		playerResultList = new ArrayList<>();
-		if (ruianMajiangJuResult.getPlayerResultList() != null) {
-			ruianMajiangJuResult.getPlayerResultList()
+		if (fangpaoMajiangJuResult.getPlayerResultList() != null) {
+			fangpaoMajiangJuResult.getPlayerResultList()
 					.forEach((juPlayerResult) -> playerResultList.add(new FangpaoMajiangJuPlayerResultVO(juPlayerResult,
 							majiangGameDbo.findPlayer(juPlayerResult.getPlayerId()))));
 		} else {
