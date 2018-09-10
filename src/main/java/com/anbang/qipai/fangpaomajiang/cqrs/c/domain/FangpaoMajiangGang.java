@@ -5,7 +5,8 @@ import com.dml.majiang.pai.fenzu.GangType;
 import com.dml.majiang.player.MajiangPlayer;
 
 public class FangpaoMajiangGang {
-	private int mingGangShu;
+	private int zimoMingGangShu;
+	private int fangGangmingGangShu;
 	private int anGangShu;
 	private int value;
 
@@ -24,50 +25,57 @@ public class FangpaoMajiangGang {
 
 				MajiangPai.ertiao, MajiangPai.santiao, MajiangPai.sitiao, MajiangPai.wutiao, MajiangPai.liutiao,
 				MajiangPai.qitiao, MajiangPai.batiao };
-		mingGangShu = 0;
-		for (int i = 0; i < yijiupaiArray.length; i++) {
-			if (player.ifGangchu(yijiupaiArray[i], GangType.gangdachu)
-					|| player.ifGangchu(yijiupaiArray[i], GangType.kezigangmo)) {
-				mingGangShu++;
-			}
-		}
-		for (int i = 0; i < erbapaiArray.length; i++) {
-			if (player.ifGangchu(erbapaiArray[i], GangType.gangdachu)
-					|| player.ifGangchu(erbapaiArray[i], GangType.kezigangmo)) {
-				mingGangShu++;
-			}
-		}
+		zimoMingGangShu = 0;
+		fangGangmingGangShu = 0;
 		anGangShu = 0;
 		for (int i = 0; i < yijiupaiArray.length; i++) {
+			if (player.ifGangchu(yijiupaiArray[i], GangType.gangdachu)) {
+				fangGangmingGangShu++;
+			}
+			if (player.ifGangchu(yijiupaiArray[i], GangType.kezigangmo)) {
+				zimoMingGangShu++;
+			}
 			if (player.ifGangchu(yijiupaiArray[i], GangType.shoupaigangmo)
 					|| player.ifGangchu(yijiupaiArray[i], GangType.gangsigeshoupai)) {
 				anGangShu++;
 			}
 		}
-
 		for (int i = 0; i < erbapaiArray.length; i++) {
+			if (player.ifGangchu(erbapaiArray[i], GangType.gangdachu)) {
+				fangGangmingGangShu++;
+			}
+			if (player.ifGangchu(erbapaiArray[i], GangType.kezigangmo)) {
+				zimoMingGangShu++;
+			}
 			if (player.ifGangchu(erbapaiArray[i], GangType.shoupaigangmo)
 					|| player.ifGangchu(erbapaiArray[i], GangType.gangsigeshoupai)) {
 				anGangShu++;
 			}
 		}
-
 	}
 
 	public void calculate(int playerCount, int fangGangCount) {
-		value = mingGangShu * 1 + anGangShu * (playerCount - 1) * 2 - fangGangCount * 2;
+		value = (zimoMingGangShu + anGangShu) * (playerCount - 1) * 2 - fangGangCount * 2 + fangGangmingGangShu * 2;
 	}
 
 	public int jiesuan() {
 		return value;
 	}
 
-	public int getMingGangShu() {
-		return mingGangShu;
+	public int getZimoMingGangShu() {
+		return zimoMingGangShu;
 	}
 
-	public void setMingGangShu(int mingGangShu) {
-		this.mingGangShu = mingGangShu;
+	public void setZimoMingGangShu(int zimoMingGangShu) {
+		this.zimoMingGangShu = zimoMingGangShu;
+	}
+
+	public int getFangGangmingGangShu() {
+		return fangGangmingGangShu;
+	}
+
+	public void setFangGangmingGangShu(int fangGangmingGangShu) {
+		this.fangGangmingGangShu = fangGangmingGangShu;
 	}
 
 	public int getAnGangShu() {
