@@ -35,7 +35,7 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 			// 天胡
 			boolean couldTianhu = false;
 			if (currentPan.getZhuangPlayerId().equals(player.getId())) {
-				if (player.countFangruShoupai() == 0) {
+				if (player.countAllFangruShoupai() == 0) {
 					couldTianhu = true;
 				}
 			}
