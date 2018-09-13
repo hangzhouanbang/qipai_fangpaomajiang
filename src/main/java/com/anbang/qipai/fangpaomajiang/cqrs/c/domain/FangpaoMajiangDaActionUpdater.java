@@ -32,7 +32,9 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 		MajiangPlayer xiajiaPlayer = currentPan.findXiajia(daPlayer);
 		xiajiaPlayer.clearActionCandidates();
 		// 下家可以吃
-		xiajiaPlayer.tryChiAndGenerateCandidateActions(daAction.getActionPlayerId(), daAction.getPai());
+		// 放炮麻将没有吃
+		// xiajiaPlayer.tryChiAndGenerateCandidateActions(daAction.getActionPlayerId(),
+		// daAction.getPai());
 		while (true) {
 			if (!xiajiaPlayer.getId().equals(daAction.getActionPlayerId())) {
 				// 其他的可以碰杠胡
