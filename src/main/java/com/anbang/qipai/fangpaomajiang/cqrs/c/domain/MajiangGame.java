@@ -23,7 +23,6 @@ import com.dml.majiang.player.action.listener.comprehensive.DianpaoDihuOpportuni
 import com.dml.majiang.player.action.listener.gang.FangGangCounter;
 import com.dml.majiang.player.action.listener.gang.GangCounter;
 import com.dml.majiang.player.action.listener.mo.LastMoActionPlayerRecorder;
-import com.dml.majiang.player.action.listener.mo.MoGuipaiCounter;
 import com.dml.majiang.player.action.peng.HuFirstPengActionProcessor;
 import com.dml.majiang.player.menfeng.RandomMustHasDongPlayersMenFengDeterminer;
 import com.dml.mpgame.game.GamePlayerOnlineState;
@@ -93,7 +92,6 @@ public class MajiangGame {
 		ju.setGuoActionUpdater(new FangpaoMajiangGuoActionUpdater());
 		ju.setHuActionProcessor(new FangpaoMajiangHuActionProcessor());
 
-		ju.addActionStatisticsListener(new MoGuipaiCounter());
 		ju.addActionStatisticsListener(new GangCounter());
 		ju.addActionStatisticsListener(new FangGangCounter());
 		ju.addActionStatisticsListener(new LastMoActionPlayerRecorder());

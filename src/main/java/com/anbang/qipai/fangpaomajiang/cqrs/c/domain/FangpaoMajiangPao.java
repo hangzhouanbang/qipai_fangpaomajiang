@@ -4,7 +4,8 @@ import com.dml.majiang.player.MajiangPlayer;
 
 public class FangpaoMajiangPao {
 	private int hongzhongShu;
-	private int value;
+	private int totalscore;// 总得分
+	private int value;// 个人结算分
 
 	public FangpaoMajiangPao() {
 
@@ -14,24 +15,22 @@ public class FangpaoMajiangPao {
 		hongzhongShu = player.countGuipai();
 	}
 
-	public void calculate(int moGuipai, boolean dapao, boolean sipaofanbei) {
+	public void calculate(boolean dapao, boolean sipaofanbei, int playerCount) {
 		int pao = 0;
 		if (dapao) {
-			pao = 2 * hongzhongShu - moGuipai;
+			pao = hongzhongShu;
 			if (sipaofanbei) {
 				if (pao == 4) {
-					pao = 2 * pao;
-				}
-				if (pao == -4) {
 					pao = 2 * pao;
 				}
 			}
 		}
 		value = pao;
+		totalscore = pao * (playerCount - 1);
 	}
 
-	public int jiesuan() {
-		return value;
+	public int jiesuan(int delta) {
+		return totalscore += delta;
 	}
 
 	public int getHongzhongShu() {
@@ -48,5 +47,13 @@ public class FangpaoMajiangPao {
 
 	public void setValue(int value) {
 		this.value = value;
+	}
+
+	public int getTotalscore() {
+		return totalscore;
+	}
+
+	public void setTotalscore(int totalscore) {
+		this.totalscore = totalscore;
 	}
 }

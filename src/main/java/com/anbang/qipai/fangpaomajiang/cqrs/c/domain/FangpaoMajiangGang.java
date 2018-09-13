@@ -55,11 +55,12 @@ public class FangpaoMajiangGang {
 	}
 
 	public void calculate(int playerCount, int fangGangCount) {
-		value = (zimoMingGangShu + anGangShu) * (playerCount - 1) * 2 - fangGangCount * 2 + fangGangmingGangShu * 2;
+		// 未扣除别人自摸的分数
+		value = (zimoMingGangShu + anGangShu * 2) * (playerCount - 1) - fangGangCount * 2 + fangGangmingGangShu * 2;
 	}
 
-	public int jiesuan() {
-		return value;
+	public int jiesuan(int delta) {
+		return value += delta;
 	}
 
 	public int getZimoMingGangShu() {
