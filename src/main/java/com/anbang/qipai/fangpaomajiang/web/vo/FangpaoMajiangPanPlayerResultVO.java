@@ -2,13 +2,12 @@ package com.anbang.qipai.fangpaomajiang.web.vo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangGang;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangHufen;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangNiao;
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPao;
+import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.FangpaoMajiangPanPlayerResultDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGamePlayerDbo;
 import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.pai.fenzu.Shunzi;
@@ -55,29 +54,29 @@ public class FangpaoMajiangPanPlayerResultVO {
 	private int score;
 
 	public FangpaoMajiangPanPlayerResultVO(MajiangGamePlayerDbo gamePlayerDbo, String zhuangPlayerId, boolean zimo,
-			String dianpaoPlayerId, FangpaoMajiangPanPlayerResult panPlayerResult) {
+			String dianpaoPlayerId, FangpaoMajiangPanPlayerResultDbo panPlayerResult) {
 		playerId = gamePlayerDbo.getPlayerId();
 		nickname = gamePlayerDbo.getNickname();
 		headimgurl = gamePlayerDbo.getHeadimgurl();
 		if (playerId.equals(zhuangPlayerId)) {
 			zhuang = true;
 		}
-		hu = panPlayerResult.isHu();
-		publicPaiList = new ArrayList<>(panPlayerResult.getPublicPaiList());
-		FangpaoMajiangHufen fangpaoMajiangHufen = panPlayerResult.getHufen();
+		hu = panPlayerResult.getPlayer().getHu() != null;
+		publicPaiList = new ArrayList<>(panPlayerResult.getPlayer().getPublicPaiList());
+		FangpaoMajiangHufen fangpaoMajiangHufen = panPlayerResult.getPlayerResult().getHufen();
 		if (fangpaoMajiangHufen != null) {
 			hufenVo = new FangpaoMajiangHufenVO(fangpaoMajiangHufen);
 			hufen = fangpaoMajiangHufen.getValue();
 		}
-		FangpaoMajiangGang fangpaoMajiangGang = panPlayerResult.getGang();
+		FangpaoMajiangGang fangpaoMajiangGang = panPlayerResult.getPlayerResult().getGang();
 		if (fangpaoMajiangGang != null) {
 			gang = fangpaoMajiangGang.getValue();
 		}
-		FangpaoMajiangPao fangpaoMajiangPao = panPlayerResult.getPao();
+		FangpaoMajiangPao fangpaoMajiangPao = panPlayerResult.getPlayerResult().getPao();
 		if (fangpaoMajiangPao != null) {
 			pao = fangpaoMajiangPao.getValue();
 		}
-		FangpaoMajiangNiao fangpaoMajiangNiao = panPlayerResult.getNiao();
+		FangpaoMajiangNiao fangpaoMajiangNiao = panPlayerResult.getPlayerResult().getNiao();
 		if (fangpaoMajiangNiao != null) {
 			List<MajiangPai> zhuaPai = fangpaoMajiangNiao.getZhuaPai();
 			List<MajiangPai> niaoPai = fangpaoMajiangNiao.getNiaoPai();
@@ -93,25 +92,25 @@ public class FangpaoMajiangPanPlayerResultVO {
 			}
 			niao = fangpaoMajiangNiao.getValue();
 		}
-		score = panPlayerResult.getScore();
-		List<ChichuPaiZu> chichuPaiZuList = panPlayerResult.getChichupaiZuList();
+		score = panPlayerResult.getPlayerResult().getScore();
+		List<ChichuPaiZu> chichuPaiZuList = panPlayerResult.getPlayer().getChichupaiZuList();
 		for (ChichuPaiZu chichuPaiZu : chichuPaiZuList) {
 			shunziList.add(chichuPaiZu.getShunzi());
 		}
 
-		List<PengchuPaiZu> pengchupaiZuList = panPlayerResult.getPengchupaiZuList();
+		List<PengchuPaiZu> pengchupaiZuList = panPlayerResult.getPlayer().getPengchupaiZuList();
 		for (PengchuPaiZu pengchuPaiZu : pengchupaiZuList) {
 			keziTypeList.add(pengchuPaiZu.getKezi().getPaiType());
 		}
 
-		List<GangchuPaiZu> gangchupaiZuList = panPlayerResult.getGangchupaiZuList();
+		List<GangchuPaiZu> gangchupaiZuList = panPlayerResult.getPlayer().getGangchupaiZuList();
 		for (GangchuPaiZu gangchuPaiZu : gangchupaiZuList) {
 			gangchuList.add(new GangchuPaiZuVO(gangchuPaiZu));
 		}
 
 		if (hu) {
 			this.zimo = zimo;
-			ShoupaiPaiXing shoupaiPaiXing = panPlayerResult.getBestShoupaiPaiXing();
+			ShoupaiPaiXing shoupaiPaiXing = panPlayerResult.getPlayer().getHu().getShoupaiPaiXing();
 			List<ShoupaiShunziZu> shunziList = shoupaiPaiXing.getShunziList();
 			for (ShoupaiShunziZu shoupaiShunziZu : shunziList) {
 				List<ResultShoupaiVO> shoupaiList = new ArrayList<>();
@@ -154,17 +153,12 @@ public class FangpaoMajiangPanPlayerResultVO {
 					dianpao = true;
 				}
 			}
-			List<MajiangPai> shoupaiList = panPlayerResult.getShoupaiList();
-			Set<MajiangPai> guipaiTypeSet = panPlayerResult.getGuipaiTypeSet();
-			caishenList = new ArrayList<>();
+			List<MajiangPai> shoupaiList = panPlayerResult.getPlayer().getFangruShoupaiList();
+			caishenList = new ArrayList<>(panPlayerResult.getPlayer().getFangruGuipaiList());
 			List<ResultShoupaiVO> list = new ArrayList<>();
 			resultShoupaiZuList.add(list);
 			for (MajiangPai pai : shoupaiList) {
-				if (guipaiTypeSet.contains(pai)) {
-					caishenList.add(pai);
-				} else {
-					list.add(new ResultShoupaiVO(pai));
-				}
+				list.add(new ResultShoupaiVO(pai));
 			}
 		}
 	}

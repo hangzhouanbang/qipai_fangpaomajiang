@@ -26,11 +26,13 @@ public class FangpaoMajiangJuResultBuilder implements JuResultBuilder {
 						juPlayerResult.setPlayerId(panPlayerResult.getPlayerId());
 						juPlayerResultMap.put(panPlayerResult.getPlayerId(), juPlayerResult);
 					}
-					if (panPlayerResult.isHu()) {
+					if (fangpaoMajiangPanResult.ifPlayerHu(panPlayerResult.getPlayerId())) {
 						juPlayerResult.increaseHuCount();
 					}
-					juPlayerResult.increaseCaishenCount(panPlayerResult.countCaishen());
-					if (panPlayerResult.isZimoHu()) {
+					juPlayerResult.increaseCaishenCount(
+							fangpaoMajiangPanResult.playerGuipaiCount(panPlayerResult.getPlayerId()));
+					if (fangpaoMajiangPanResult.ifPlayerHu(panPlayerResult.getPlayerId())
+							&& fangpaoMajiangPanResult.isZimo()) {
 						juPlayerResult.increaseZiMoCount();
 					}
 					String dianPaoPlayerId = fangpaoMajiangPanResult.getDianpaoPlayerId();

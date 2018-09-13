@@ -3,7 +3,7 @@ package com.anbang.qipai.fangpaomajiang.web.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangPanPlayerResult;
+import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.FangpaoMajiangPanPlayerResultDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.PanResultDbo;
 
@@ -18,7 +18,7 @@ public class PanResultVO {
 	private long finishTime;
 
 	public PanResultVO(PanResultDbo dbo, MajiangGameDbo majiangGameDbo) {
-		List<FangpaoMajiangPanPlayerResult> list = dbo.getPlayerResultList();
+		List<FangpaoMajiangPanPlayerResultDbo> list = dbo.getPlayerResultList();
 		if (list != null) {
 			playerResultList = new ArrayList<>(list.size());
 			list.forEach((panPlayerResult) -> playerResultList

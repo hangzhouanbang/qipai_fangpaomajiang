@@ -2,12 +2,12 @@ package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import com.dml.majiang.ju.Ju;
 import com.dml.majiang.pan.Pan;
+import com.dml.majiang.pan.frame.PanValueObject;
 import com.dml.majiang.pan.result.CurrentPanResultBuilder;
 import com.dml.majiang.pan.result.PanResult;
 import com.dml.majiang.player.MajiangPlayer;
@@ -41,6 +41,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 
 		List<MajiangPlayer> huPlayers = currentPan.findAllHuPlayers();
 		FangpaoMajiangPanResult fangpaoMajiangPanResult = new FangpaoMajiangPanResult();
+		fangpaoMajiangPanResult.setPan(new PanValueObject(currentPan));
 		List<String> playerIdList = currentPan.sortedPlayerIdList();
 		List<FangpaoMajiangPanPlayerResult> playerResultList = new ArrayList<>();
 		// 鸟分
@@ -56,7 +57,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				FangpaoMajiangPanPlayerResult huPlayerResult = new FangpaoMajiangPanPlayerResult();
 				FangpaoMajiangHu hu = (FangpaoMajiangHu) huPlayer.getHu();
 				FangpaoMajiangHufen huPlayerHufen = hu.getHufen();
-				ShoupaiPaiXing huShoupaiPaiXing = hu.getShoupaiPaiXing();
 				dianPaoPlayerId = hu.getDianpaoPlayerId();
 				huPlayerResult.setPlayerId(huPlayer.getId());
 				huPlayerResult.setHufen(huPlayerHufen);
@@ -85,16 +85,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				} else {
 					huPlayerResult.setTotalScore(score);
 				}
-				huPlayerResult.setMenFeng(huPlayer.getMenFeng());
-				// 吃碰杠出去的要加到结果
-				huPlayerResult.setPublicPaiList(new ArrayList<>(huPlayer.getPublicPaiList()));
-				huPlayerResult.setChichupaiZuList(new ArrayList<>(huPlayer.getChichupaiZuList()));
-				huPlayerResult.setPengchupaiZuList(new ArrayList<>(huPlayer.getPengchupaiZuList()));
-				huPlayerResult.setGangchupaiZuList(new ArrayList<>(huPlayer.getGangchupaiZuList()));
-				huPlayerResult.setGuipaiTypeSet(new HashSet<>(huPlayer.getGuipaiTypeSet()));
-				huPlayerResult.setShoupaiList(new ArrayList<>(huPlayer.getFangruShoupaiList()));
-				huPlayerResult.setHu(true);
-				huPlayerResult.setBestShoupaiPaiXing(huShoupaiPaiXing);
 				playerResultList.add(huPlayerResult);
 			}
 			// 计算放炮玩家胡分
@@ -134,22 +124,11 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						} else {
 							buHuPlayerResult.setTotalScore(score);
 						}
-						buHuPlayerResult.setMenFeng(buHuplayer.getMenFeng());
-						// 吃碰杠出去的要加到结果
-						buHuPlayerResult.setPublicPaiList(new ArrayList<>(buHuplayer.getPublicPaiList()));
-						buHuPlayerResult.setChichupaiZuList(new ArrayList<>(buHuplayer.getChichupaiZuList()));
-						buHuPlayerResult.setPengchupaiZuList(new ArrayList<>(buHuplayer.getPengchupaiZuList()));
-						buHuPlayerResult.setGangchupaiZuList(new ArrayList<>(buHuplayer.getGangchupaiZuList()));
-						buHuPlayerResult.setGuipaiTypeSet(new HashSet<>(buHuplayer.getGuipaiTypeSet()));
-						buHuPlayerResult.setShoupaiList(new ArrayList<>(buHuplayer.getFangruShoupaiList()));
-						buHuPlayerResult.setHu(false);
 						playerResultList.add(buHuPlayerResult);
 					}
 				}
 			}
-			fangpaoMajiangPanResult.setPanNo(currentPan.getNo());
 			fangpaoMajiangPanResult.setPanFinishTime(panFinishTime);
-			fangpaoMajiangPanResult.setZhuangPlayerId(currentPan.getZhuangPlayerId());
 			fangpaoMajiangPanResult.setPlayerResultList(playerResultList);
 			fangpaoMajiangPanResult.setHu(true);
 			fangpaoMajiangPanResult.setZimo(false);
@@ -192,16 +171,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				} else {
 					huPlayerResult.setTotalScore(score);
 				}
-				huPlayerResult.setMenFeng(huPlayer.getMenFeng());
-				// 吃碰杠出去的要加到结果
-				huPlayerResult.setPublicPaiList(new ArrayList<>(huPlayer.getPublicPaiList()));
-				huPlayerResult.setChichupaiZuList(new ArrayList<>(huPlayer.getChichupaiZuList()));
-				huPlayerResult.setPengchupaiZuList(new ArrayList<>(huPlayer.getPengchupaiZuList()));
-				huPlayerResult.setGangchupaiZuList(new ArrayList<>(huPlayer.getGangchupaiZuList()));
-				huPlayerResult.setGuipaiTypeSet(new HashSet<>(huPlayer.getGuipaiTypeSet()));
-				huPlayerResult.setShoupaiList(new ArrayList<>(huPlayer.getFangruShoupaiList()));
-				huPlayerResult.setHu(true);
-				huPlayerResult.setBestShoupaiPaiXing(huShoupaiPaiXing);
 				playerResultList.add(huPlayerResult);
 				playerIdList.forEach((playerId) -> {
 					if (playerId.equals(huPlayer.getId())) {
@@ -238,15 +207,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						} else {
 							buHuPlayerResult.setTotalScore(score1);
 						}
-						buHuPlayerResult.setMenFeng(buHuplayer.getMenFeng());
-						// 吃碰杠出去的要加到结果
-						buHuPlayerResult.setPublicPaiList(new ArrayList<>(buHuplayer.getPublicPaiList()));
-						buHuPlayerResult.setChichupaiZuList(new ArrayList<>(buHuplayer.getChichupaiZuList()));
-						buHuPlayerResult.setPengchupaiZuList(new ArrayList<>(buHuplayer.getPengchupaiZuList()));
-						buHuPlayerResult.setGangchupaiZuList(new ArrayList<>(buHuplayer.getGangchupaiZuList()));
-						buHuPlayerResult.setGuipaiTypeSet(new HashSet<>(buHuplayer.getGuipaiTypeSet()));
-						buHuPlayerResult.setShoupaiList(new ArrayList<>(buHuplayer.getFangruShoupaiList()));
-						buHuPlayerResult.setHu(false);
 						playerResultList.add(buHuPlayerResult);
 					} else {
 						MajiangPlayer buHuplayer = currentPan.findPlayerById(playerId);
@@ -280,15 +240,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						} else {
 							buHuPlayerResult.setTotalScore(score1);
 						}
-						buHuPlayerResult.setMenFeng(buHuplayer.getMenFeng());
-						// 吃碰杠出去的要加到结果
-						buHuPlayerResult.setPublicPaiList(new ArrayList<>(buHuplayer.getPublicPaiList()));
-						buHuPlayerResult.setChichupaiZuList(new ArrayList<>(buHuplayer.getChichupaiZuList()));
-						buHuPlayerResult.setPengchupaiZuList(new ArrayList<>(buHuplayer.getPengchupaiZuList()));
-						buHuPlayerResult.setGangchupaiZuList(new ArrayList<>(buHuplayer.getGangchupaiZuList()));
-						buHuPlayerResult.setGuipaiTypeSet(new HashSet<>(buHuplayer.getGuipaiTypeSet()));
-						buHuPlayerResult.setShoupaiList(new ArrayList<>(buHuplayer.getFangruShoupaiList()));
-						buHuPlayerResult.setHu(false);
 						playerResultList.add(buHuPlayerResult);
 					}
 				});
@@ -298,7 +249,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				FangpaoMajiangPanPlayerResult huPlayerResult = new FangpaoMajiangPanPlayerResult();
 				huPlayerResult.setPlayerId(huPlayer.getId());
 				huPlayerResult.setHufen(huPlayerHufen);
-				huPlayerResult.setZimoHu(true);
 				// 其他人输给胡家的胡数
 				int delta = huPlayerHufen.getValue();
 				// 计算杠分
@@ -327,16 +277,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				} else {
 					huPlayerResult.setTotalScore(score);
 				}
-				huPlayerResult.setMenFeng(huPlayer.getMenFeng());
-				// 吃碰杠出去的要加到结果
-				huPlayerResult.setPublicPaiList(new ArrayList<>(huPlayer.getPublicPaiList()));
-				huPlayerResult.setChichupaiZuList(new ArrayList<>(huPlayer.getChichupaiZuList()));
-				huPlayerResult.setPengchupaiZuList(new ArrayList<>(huPlayer.getPengchupaiZuList()));
-				huPlayerResult.setGangchupaiZuList(new ArrayList<>(huPlayer.getGangchupaiZuList()));
-				huPlayerResult.setGuipaiTypeSet(new HashSet<>(huPlayer.getGuipaiTypeSet()));
-				huPlayerResult.setShoupaiList(new ArrayList<>(huPlayer.getFangruShoupaiList()));
-				huPlayerResult.setHu(true);
-				huPlayerResult.setBestShoupaiPaiXing(huShoupaiPaiXing);
 				playerResultList.add(huPlayerResult);
 				for (String playerId : playerIdList) {
 					if (playerId.equals(huPlayer.getId())) {
@@ -373,23 +313,12 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						} else {
 							buHuPlayerResult.setTotalScore(score1);
 						}
-						buHuPlayerResult.setMenFeng(buHuPlayer.getMenFeng());
-						// 吃碰杠出去的要加到结果
-						buHuPlayerResult.setPublicPaiList(new ArrayList<>(buHuPlayer.getPublicPaiList()));
-						buHuPlayerResult.setChichupaiZuList(new ArrayList<>(buHuPlayer.getChichupaiZuList()));
-						buHuPlayerResult.setPengchupaiZuList(new ArrayList<>(buHuPlayer.getPengchupaiZuList()));
-						buHuPlayerResult.setGangchupaiZuList(new ArrayList<>(buHuPlayer.getGangchupaiZuList()));
-						buHuPlayerResult.setGuipaiTypeSet(new HashSet<>(buHuPlayer.getGuipaiTypeSet()));
-						buHuPlayerResult.setShoupaiList(new ArrayList<>(buHuPlayer.getFangruShoupaiList()));
-						buHuPlayerResult.setHu(false);
 						playerResultList.add(buHuPlayerResult);
 					}
 				}
 			}
 
-			fangpaoMajiangPanResult.setPanNo(currentPan.getNo());
 			fangpaoMajiangPanResult.setPanFinishTime(panFinishTime);
-			fangpaoMajiangPanResult.setZhuangPlayerId(currentPan.getZhuangPlayerId());
 			fangpaoMajiangPanResult.setPlayerResultList(playerResultList);
 			fangpaoMajiangPanResult.setHu(true);
 			fangpaoMajiangPanResult.setZimo(hu.isZimo());
@@ -427,21 +356,10 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				} else {
 					playerResult.setTotalScore(score);
 				}
-				playerResult.setMenFeng(player.getMenFeng());
-				// 吃碰杠出去的要加到结果
-				playerResult.setPublicPaiList(new ArrayList<>(player.getPublicPaiList()));
-				playerResult.setChichupaiZuList(new ArrayList<>(player.getChichupaiZuList()));
-				playerResult.setPengchupaiZuList(new ArrayList<>(player.getPengchupaiZuList()));
-				playerResult.setGangchupaiZuList(new ArrayList<>(player.getGangchupaiZuList()));
-				playerResult.setGuipaiTypeSet(new HashSet<>(player.getGuipaiTypeSet()));
-				playerResult.setShoupaiList(new ArrayList<>(player.getFangruShoupaiList()));
-				playerResult.setHu(false);
 				playerResultList.add(playerResult);
 			});
 
-			fangpaoMajiangPanResult.setPanNo(currentPan.getNo());
 			fangpaoMajiangPanResult.setPanFinishTime(panFinishTime);
-			fangpaoMajiangPanResult.setZhuangPlayerId(currentPan.getZhuangPlayerId());
 			fangpaoMajiangPanResult.setPlayerResultList(playerResultList);
 			fangpaoMajiangPanResult.setHu(false);
 			return fangpaoMajiangPanResult;
