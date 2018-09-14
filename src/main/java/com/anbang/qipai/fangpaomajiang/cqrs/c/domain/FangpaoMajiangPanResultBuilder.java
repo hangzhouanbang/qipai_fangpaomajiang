@@ -70,7 +70,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				pao.calculate(dapao, sipaofanbei, playerIdList.size());
 				huPlayerResult.setPao(pao);
 				// 计算鸟分
-				huPlayerResult.setNiao(new FangpaoMajiangNiao());
+				huPlayerResult.setNiao(niao);
 				playerResultList.add(huPlayerResult);
 			}
 			// 计算放炮玩家胡分
@@ -98,7 +98,9 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						pao.calculate(dapao, sipaofanbei, playerIdList.size());
 						buHuPlayerResult.setPao(pao);
 						// 计算鸟分
-						buHuPlayerResult.setNiao(niao);
+						FangpaoMajiangNiao niaofen = new FangpaoMajiangNiao();
+						niaofen.jiesuan(-niao.getValue() * (huPlayers.size() - 1));
+						buHuPlayerResult.setNiao(niaofen);
 						playerResultList.add(buHuPlayerResult);
 					}
 				}
@@ -179,6 +181,8 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						// 计算点炮玩家分数
 						buHuPlayerResult
 								.setHufen(FangpaoMajiangJiesuanCalculator.calculateBestHuFenForBuhuPlayer(buHuplayer));
+						FangpaoMajiangHufen hufen = buHuPlayerResult.getHufen();
+						hufen.jiesuan(-delta);
 						// 计算杠分
 						Integer fangGangCount1 = playerFangGangMap.get(playerId);
 						if (fangGangCount1 == null) {
@@ -192,7 +196,9 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						pao1.calculate(dapao, sipaofanbei, playerIdList.size());
 						buHuPlayerResult.setPao(pao1);
 						// 计算鸟分
-						buHuPlayerResult.setNiao(new FangpaoMajiangNiao());
+						FangpaoMajiangNiao niaofen = new FangpaoMajiangNiao();
+						niaofen.jiesuan(-niao.getValue());
+						buHuPlayerResult.setNiao(niaofen);
 						playerResultList.add(buHuPlayerResult);
 					} else {
 						MajiangPlayer buHuplayer = currentPan.findPlayerById(playerId);
@@ -251,6 +257,8 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						// 计算非胡玩家分数
 						buHuPlayerResult
 								.setHufen(FangpaoMajiangJiesuanCalculator.calculateBestHuFenForBuhuPlayer(buHuPlayer));
+						FangpaoMajiangHufen hufen = buHuPlayerResult.getHufen();
+						hufen.jiesuan(-delta);
 						// 计算杠分
 						Integer fangGangCount1 = playerFangGangMap.get(buHuPlayer.getId());
 						if (fangGangCount1 == null) {
@@ -264,7 +272,9 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						pao1.calculate(dapao, sipaofanbei, playerIdList.size());
 						buHuPlayerResult.setPao(pao1);
 						// 计算鸟分
-						buHuPlayerResult.setNiao(new FangpaoMajiangNiao());
+						FangpaoMajiangNiao niaofen = new FangpaoMajiangNiao();
+						niaofen.jiesuan(-niao.getValue());
+						buHuPlayerResult.setNiao(niaofen);
 						playerResultList.add(buHuPlayerResult);
 					}
 				}

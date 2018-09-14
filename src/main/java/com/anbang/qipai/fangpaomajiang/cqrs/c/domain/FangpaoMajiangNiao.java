@@ -82,8 +82,8 @@ public class FangpaoMajiangNiao {
 		value = niao;
 	}
 
-	public int jiesuan() {
-		return value;
+	public int jiesuan(int delta) {
+		return value += delta;
 	}
 
 	public List<MajiangPai> getZhuaPai() {
