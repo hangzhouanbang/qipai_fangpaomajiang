@@ -1,6 +1,9 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
+import java.util.List;
+
 import com.dml.majiang.ju.Ju;
+import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.da.MajiangDaAction;
@@ -38,7 +41,10 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 		while (true) {
 			if (!xiajiaPlayer.getId().equals(daAction.getActionPlayerId())) {
 				// 其他的可以碰杠胡
-				xiajiaPlayer.tryPengAndGenerateCandidateAction(daAction.getActionPlayerId(), daAction.getPai());
+				List<MajiangPai> fangruShoupaiList = xiajiaPlayer.getFangruShoupaiList();
+				if (fangruShoupaiList.size() != 2) {
+					xiajiaPlayer.tryPengAndGenerateCandidateAction(daAction.getActionPlayerId(), daAction.getPai());
+				}
 				xiajiaPlayer.tryGangdachuAndGenerateCandidateAction(daAction.getActionPlayerId(), daAction.getPai());
 				// 点炮胡
 				GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
