@@ -25,7 +25,7 @@ public class HongzhongGuipaiDeterminer implements GuipaiDeterminer {
 		List<MajiangPai> paiTypeList = currentPan.getPaiTypeList();
 		if (paiTypeList.contains(MajiangPai.hongzhong)) {
 			MajiangPai guipaiType = MajiangPai.hongzhong;
-			currentPan.publicGuipaiAndRemoveFromList(guipaiType);
+			currentPan.getPublicGuipaiSet().add(guipaiType);
 			for (MajiangPlayer majiangPlayer : currentPan.getMajiangPlayerIdMajiangPlayerMap().values()) {
 				majiangPlayer.addGuipaiType(guipaiType);
 			}

@@ -1,6 +1,10 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
+import java.util.List;
+import java.util.Set;
+
 import com.dml.majiang.ju.Ju;
+import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.hu.MajiangHuAction;
@@ -12,45 +16,46 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 
 	@Override
 	public void updateActions(MajiangMoAction moAction, Ju ju) throws Exception {
-		int liupai = 0;
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(moAction.getActionPlayerId());
+		List<MajiangPai> fangruShoupaiList = player.getFangruShoupaiList();
+		Set<MajiangPai> guipaiTypeSet = player.getGuipaiTypeSet();
+		MajiangPai gangmoShoupai = player.getGangmoShoupai();
 		player.clearActionCandidates();
-		int avaliablePaiLeft = currentPan.countAvaliablePai();
-		if (avaliablePaiLeft - liupai <= 0) {// 没牌了
-			// 当然啥也不干了
+		// 有手牌或刻子可以杠这个摸来的牌
+		player.tryShoupaigangmoAndGenerateCandidateAction();
+		player.tryKezigangmoAndGenerateCandidateAction();
+
+		// 杠四个手牌
+		player.tryGangsigeshoupaiAndGenerateCandidateAction();
+
+		// 刻子杠手牌
+		player.tryKezigangshoupaiAndGenerateCandidateAction();
+		// 胡
+		GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
+
+		// 天胡
+		boolean couldTianhu = false;
+		if (currentPan.getZhuangPlayerId().equals(player.getId())) {
+			if (player.countAllFangruShoupai() == 0) {
+				couldTianhu = true;
+			}
+		}
+		FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu, gouXingPanHu, player,
+				moAction);
+		if (bestHu != null) {
+			bestHu.setZimo(true);
+			player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));
+		}
+		if (guipaiTypeSet.contains(gangmoShoupai) && fangruShoupaiList.size() == 0) {
+
 		} else {
-			// 有手牌或刻子可以杠这个摸来的牌
-			player.tryShoupaigangmoAndGenerateCandidateAction();
-			player.tryKezigangmoAndGenerateCandidateAction();
-
-			// 杠四个手牌
-			player.tryGangsigeshoupaiAndGenerateCandidateAction();
-
-			// 刻子杠手牌
-			player.tryKezigangshoupaiAndGenerateCandidateAction();
-			// 胡
-			GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
-
-			// 天胡
-			boolean couldTianhu = false;
-			if (currentPan.getZhuangPlayerId().equals(player.getId())) {
-				if (player.countAllFangruShoupai() == 0) {
-					couldTianhu = true;
-				}
-			}
-			FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestZimoHu(couldTianhu, gouXingPanHu,
-					player, moAction);
-			if (bestHu != null) {
-				bestHu.setZimo(true);
-				player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));
-			}
 			// 需要有“过”
 			player.checkAndGenerateGuoCandidateAction();
-			// 啥也不能干，那只能打出牌
-			if (player.getActionCandidates().isEmpty()) {
-				player.generateDaActions();
-			}
+		}
+		// 啥也不能干，那只能打出牌
+		if (player.getActionCandidates().isEmpty()) {
+			player.generateDaActions();
 		}
 
 	}

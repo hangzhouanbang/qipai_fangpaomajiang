@@ -117,8 +117,10 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					// 结算杠分
 					int zimogang1 = gang1.getZimoMingGangShu();
 					int zimogang2 = gang2.getZimoMingGangShu();
-					gang1.jiesuan(-zimogang2);
-					gang2.jiesuan(-zimogang1);
+					int angang1 = gang1.getAnGangShu();
+					int angang2 = gang2.getAnGangShu();
+					gang1.jiesuan(-zimogang2 - angang2 * 2);
+					gang2.jiesuan(-zimogang1 - angang1 * 2);
 					// 结算炮分
 					int paovalue1 = pao1.getValue();
 					int paovalue2 = pao1.getValue();
@@ -291,8 +293,10 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					// 结算杠分
 					int zimogang1 = gang1.getZimoMingGangShu();
 					int zimogang2 = gang2.getZimoMingGangShu();
-					gang1.jiesuan(-zimogang2);
-					gang2.jiesuan(-zimogang1);
+					int angang1 = gang1.getAnGangShu();
+					int angang2 = gang2.getAnGangShu();
+					gang1.jiesuan(-zimogang2 - angang2 * 2);
+					gang2.jiesuan(-zimogang1 - angang1 * 2);
 					// 结算炮分
 					int paovalue1 = pao1.getValue();
 					int paovalue2 = pao1.getValue();
@@ -354,8 +358,10 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					// 结算杠分
 					int zimogang1 = gang1.getZimoMingGangShu();
 					int zimogang2 = gang2.getZimoMingGangShu();
-					gang1.jiesuan(-zimogang2);
-					gang2.jiesuan(-zimogang1);
+					int angang1 = gang1.getAnGangShu();
+					int angang2 = gang2.getAnGangShu();
+					gang1.jiesuan(-zimogang2 - angang2 * 2);
+					gang2.jiesuan(-zimogang1 - angang1 * 2);
 					// 结算炮分
 					int paovalue1 = pao1.getValue();
 					int paovalue2 = pao1.getValue();

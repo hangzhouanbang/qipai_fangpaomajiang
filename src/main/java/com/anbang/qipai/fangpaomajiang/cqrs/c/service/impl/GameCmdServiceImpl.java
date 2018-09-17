@@ -12,6 +12,7 @@ import com.dml.majiang.pan.frame.PanActionFrame;
 import com.dml.mpgame.game.Game;
 import com.dml.mpgame.game.GameState;
 import com.dml.mpgame.game.GameValueObject;
+import com.dml.mpgame.game.finish.vote.GameFinishVote;
 import com.dml.mpgame.game.finish.vote.MostPlayersWinVoteCalculator;
 import com.dml.mpgame.game.finish.vote.VoteAfterStartedGameFinishStrategy;
 import com.dml.mpgame.game.finish.vote.VoteAfterStartedGameFinishStrategyValueObject;
@@ -134,6 +135,10 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		if (gameValueObject.getState().equals(GameState.finished)) {
 			FangpaoMajiangJuResult juResult = majiangGameManager.finishMajiangGame(game.getId());
 			finishResult.setJuResult(juResult);
+		}
+		final GameFinishVote vote = voteAfterStartedGameFinishStrategy.getVote();
+		if (vote != null && vote.getResult() != null) {
+			voteAfterStartedGameFinishStrategy.setVote(null);
 		}
 		return finishResult;
 	}
