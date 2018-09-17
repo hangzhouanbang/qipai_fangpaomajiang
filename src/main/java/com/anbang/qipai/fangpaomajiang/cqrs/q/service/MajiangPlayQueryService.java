@@ -109,6 +109,7 @@ public class MajiangPlayQueryService {
 		FangpaoMajiangPanResult fangpaoMajiangPanResult = majiangActionResult.getPanResult();
 		if (fangpaoMajiangPanResult != null) {
 			PanResultDbo panResultDbo = new PanResultDbo(gameId, fangpaoMajiangPanResult);
+			panResultDbo.setPanActionFrame(panActionFrame);
 			panResultDboDao.save(panResultDbo);
 			if (majiangActionResult.getJuResult() != null) {// 一切都结束了
 				// 要记录局结果
