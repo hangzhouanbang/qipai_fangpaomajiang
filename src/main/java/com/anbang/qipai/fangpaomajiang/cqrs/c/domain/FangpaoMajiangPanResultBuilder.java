@@ -6,16 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.dml.majiang.ju.Ju;
-import com.dml.majiang.pai.fenzu.GangType;
 import com.dml.majiang.pan.Pan;
-import com.dml.majiang.pan.frame.PanActionFrame;
 import com.dml.majiang.pan.frame.PanValueObject;
 import com.dml.majiang.pan.result.CurrentPanResultBuilder;
 import com.dml.majiang.pan.result.PanResult;
 import com.dml.majiang.player.MajiangPlayer;
-import com.dml.majiang.player.action.MajiangPlayerAction;
-import com.dml.majiang.player.action.MajiangPlayerActionType;
-import com.dml.majiang.player.action.gang.MajiangGangAction;
 import com.dml.majiang.player.action.listener.gang.FangGangCounter;
 
 public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
@@ -82,31 +77,57 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 			for (String playerId : playerIdList) {
 				for (MajiangPlayer huPlayer : huPlayers) {
 					if (!playerId.equals(huPlayer.getId())) {
-						MajiangPlayer buHuplayer = currentPan.findPlayerById(playerId);
-						FangpaoMajiangPanPlayerResult buHuPlayerResult = new FangpaoMajiangPanPlayerResult();
-						buHuPlayerResult.setPlayerId(playerId);
-						// 计算点炮玩家分数
-						buHuPlayerResult
-								.setHufen(FangpaoMajiangJiesuanCalculator.calculateBestHuFenForBuhuPlayer(buHuplayer));
-						FangpaoMajiangHufen hufen = buHuPlayerResult.getHufen();
-						hufen.jiesuan(-delta);
-						// 计算杠分
-						Integer fangGangCount = playerFangGangMap.get(playerId);
-						if (fangGangCount == null) {
-							fangGangCount = 0;
+						if (dianPaoPlayerId.equals(playerId)) {// 计算点炮玩家分数
+							MajiangPlayer buHuplayer = currentPan.findPlayerById(playerId);
+							FangpaoMajiangPanPlayerResult buHuPlayerResult = new FangpaoMajiangPanPlayerResult();
+							buHuPlayerResult.setPlayerId(playerId);
+							buHuPlayerResult.setHufen(
+									FangpaoMajiangJiesuanCalculator.calculateBestHuFenForBuhuPlayer(buHuplayer));
+							FangpaoMajiangHufen hufen = buHuPlayerResult.getHufen();
+							hufen.jiesuan(-delta);
+							// 计算杠分
+							Integer fangGangCount = playerFangGangMap.get(playerId);
+							if (fangGangCount == null) {
+								fangGangCount = 0;
+							}
+							FangpaoMajiangGang gang = new FangpaoMajiangGang(buHuplayer);
+							if (huPlayer.getHu().isQianggang()) {
+								gang.setZimoMingGangShu(gang.getZimoMingGangShu() - 1);// 被抢的杠不算杠分
+							}
+							gang.calculate(playerIdList.size(), fangGangCount);
+							buHuPlayerResult.setGang(gang);
+							// 计算炮分
+							FangpaoMajiangPao pao = new FangpaoMajiangPao(buHuplayer);
+							pao.calculate(dapao, sipaofanbei, playerIdList.size());
+							buHuPlayerResult.setPao(pao);
+							// 计算鸟分
+							FangpaoMajiangNiao niaofen = new FangpaoMajiangNiao();
+							niaofen.jiesuan(-niao.getValue() * (huPlayers.size() - 1));
+							buHuPlayerResult.setNiao(niaofen);
+							playerResultList.add(buHuPlayerResult);
+						} else {// 计算其他玩家分数
+							MajiangPlayer buHuplayer = currentPan.findPlayerById(playerId);
+							FangpaoMajiangPanPlayerResult buHuPlayerResult = new FangpaoMajiangPanPlayerResult();
+							buHuPlayerResult.setPlayerId(playerId);
+							buHuPlayerResult.setHufen(
+									FangpaoMajiangJiesuanCalculator.calculateBestHuFenForBuhuPlayer(buHuplayer));
+							// 计算杠分
+							Integer fangGangCount = playerFangGangMap.get(playerId);
+							if (fangGangCount == null) {
+								fangGangCount = 0;
+							}
+							FangpaoMajiangGang gang = new FangpaoMajiangGang(buHuplayer);
+							gang.calculate(playerIdList.size(), fangGangCount);
+							buHuPlayerResult.setGang(gang);
+							// 计算炮分
+							FangpaoMajiangPao pao = new FangpaoMajiangPao(buHuplayer);
+							pao.calculate(dapao, sipaofanbei, playerIdList.size());
+							buHuPlayerResult.setPao(pao);
+							// 计算鸟分
+							FangpaoMajiangNiao niaofen = new FangpaoMajiangNiao();
+							buHuPlayerResult.setNiao(niaofen);
+							playerResultList.add(buHuPlayerResult);
 						}
-						FangpaoMajiangGang gang = new FangpaoMajiangGang(buHuplayer);
-						gang.calculate(playerIdList.size(), fangGangCount);
-						buHuPlayerResult.setGang(gang);
-						// 计算炮分
-						FangpaoMajiangPao pao = new FangpaoMajiangPao(buHuplayer);
-						pao.calculate(dapao, sipaofanbei, playerIdList.size());
-						buHuPlayerResult.setPao(pao);
-						// 计算鸟分
-						FangpaoMajiangNiao niaofen = new FangpaoMajiangNiao();
-						niaofen.jiesuan(-niao.getValue() * (huPlayers.size() - 1));
-						buHuPlayerResult.setNiao(niaofen);
-						playerResultList.add(buHuPlayerResult);
 					}
 				}
 			}
@@ -199,7 +220,84 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						gang1.calculate(playerIdList.size(), fangGangCount1);
 						buHuPlayerResult.setGang(gang1);
 						// 计算炮分
-						FangpaoMajiangPao pao1 = new FangpaoMajiangPao(huPlayer);
+						FangpaoMajiangPao pao1 = new FangpaoMajiangPao(buHuplayer);
+						pao1.calculate(dapao, sipaofanbei, playerIdList.size());
+						buHuPlayerResult.setPao(pao1);
+						// 计算鸟分
+						FangpaoMajiangNiao niaofen = new FangpaoMajiangNiao();
+						niaofen.jiesuan(-niao.getValue());
+						buHuPlayerResult.setNiao(niaofen);
+						playerResultList.add(buHuPlayerResult);
+					} else {
+						MajiangPlayer buHuplayer = currentPan.findPlayerById(playerId);
+						FangpaoMajiangPanPlayerResult buHuPlayerResult = new FangpaoMajiangPanPlayerResult();
+						buHuPlayerResult.setPlayerId(playerId);
+						// 计算非胡玩家分数
+						buHuPlayerResult
+								.setHufen(FangpaoMajiangJiesuanCalculator.calculateBestHuFenForBuhuPlayer(buHuplayer));
+						// 计算杠分
+						Integer fangGangCount1 = playerFangGangMap.get(buHuplayer.getId());
+						if (fangGangCount1 == null) {
+							fangGangCount1 = 0;
+						}
+						FangpaoMajiangGang gang1 = new FangpaoMajiangGang(buHuplayer);
+						gang1.calculate(playerIdList.size(), fangGangCount1);
+						buHuPlayerResult.setGang(gang1);
+						// 计算炮分
+						FangpaoMajiangPao pao1 = new FangpaoMajiangPao(buHuplayer);
+						pao1.calculate(dapao, sipaofanbei, playerIdList.size());
+						buHuPlayerResult.setPao(pao1);
+						// 计算鸟分
+						buHuPlayerResult.setNiao(new FangpaoMajiangNiao());
+						playerResultList.add(buHuPlayerResult);
+					}
+				});
+			}
+			if (hu.isQianggang()) {// 抢杠胡
+				// 结算胡数
+				FangpaoMajiangPanPlayerResult huPlayerResult = new FangpaoMajiangPanPlayerResult();
+				huPlayerResult.setPlayerId(huPlayer.getId());
+				huPlayerResult.setHufen(huPlayerHufen);
+				// 放炮玩家输给胡家的胡数
+				int delta = huPlayerHufen.getValue();
+				// 计算杠分
+				Integer fangGangCount = playerFangGangMap.get(huPlayer.getId());
+				if (fangGangCount == null) {
+					fangGangCount = 0;
+				}
+				FangpaoMajiangGang gang = new FangpaoMajiangGang(huPlayer);
+				gang.calculate(playerIdList.size(), fangGangCount);
+				huPlayerResult.setGang(gang);
+				// 计算炮分
+				FangpaoMajiangPao pao = new FangpaoMajiangPao(huPlayer);
+				pao.calculate(dapao, sipaofanbei, playerIdList.size());
+				huPlayerResult.setPao(pao);
+				// 计算鸟分
+				huPlayerResult.setNiao(niao);
+				playerResultList.add(huPlayerResult);
+				playerIdList.forEach((playerId) -> {
+					if (playerId.equals(huPlayer.getId())) {
+						// 胡家已经计算过了
+					} else if (playerId.equals(hu.getDianpaoPlayerId())) {
+						MajiangPlayer buHuplayer = currentPan.findPlayerById(playerId);
+						FangpaoMajiangPanPlayerResult buHuPlayerResult = new FangpaoMajiangPanPlayerResult();
+						buHuPlayerResult.setPlayerId(playerId);
+						// 计算点炮玩家分数
+						buHuPlayerResult
+								.setHufen(FangpaoMajiangJiesuanCalculator.calculateBestHuFenForBuhuPlayer(buHuplayer));
+						FangpaoMajiangHufen hufen = buHuPlayerResult.getHufen();
+						hufen.jiesuan(-delta);
+						// 计算杠分
+						Integer fangGangCount1 = playerFangGangMap.get(playerId);
+						if (fangGangCount1 == null) {
+							fangGangCount1 = 0;
+						}
+						FangpaoMajiangGang gang1 = new FangpaoMajiangGang(buHuplayer);
+						gang1.setZimoMingGangShu(gang1.getZimoMingGangShu() - 1);// 被抢的杠不算杠分
+						gang1.calculate(playerIdList.size(), fangGangCount1);
+						buHuPlayerResult.setGang(gang1);
+						// 计算炮分
+						FangpaoMajiangPao pao1 = new FangpaoMajiangPao(buHuplayer);
 						pao1.calculate(dapao, sipaofanbei, playerIdList.size());
 						buHuPlayerResult.setPao(pao1);
 						// 计算鸟分
@@ -233,11 +331,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				});
 			}
 			if (hu.isZimo()) {// 自摸胡
-				// 是否是杠上开花
-				List<PanActionFrame> actionFrameList = currentPan.getActionFrameList();
-				PanActionFrame panActionFrame = actionFrameList.get(actionFrameList.size() - 2);
-				MajiangPlayerAction action = panActionFrame.getAction();
-
 				// 结算胡数
 				FangpaoMajiangPanPlayerResult huPlayerResult = new FangpaoMajiangPanPlayerResult();
 				huPlayerResult.setPlayerId(huPlayer.getId());
@@ -253,23 +346,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				}
 				FangpaoMajiangGang gang = new FangpaoMajiangGang(huPlayer);
 				gang.calculate(playerIdList.size(), fangGangCount);
-				if (action.getType().equals(MajiangPlayerActionType.gang)) {// 是杠上开花需要扣除最后的杠分
-					MajiangGangAction gangAction = (MajiangGangAction) action;
-					if (gangAction.getGangType().equals(GangType.gangdachu)) {// 杠打出牌
-						gang.setFangGangmingGangShu(gang.getFangGangmingGangShu() - 1);
-						gang.setValue(gang.getValue() - 2);
-					}
-					if (gangAction.getGangType().equals(GangType.gangsigeshoupai)
-							|| gangAction.getGangType().equals(GangType.shoupaigangmo)) {// 自摸暗杠
-						gang.setAnGangShu(gang.getAnGangShu() - 1);
-						gang.setValue(gang.getValue() - 2 * (playerIdList.size() - 1));
-					}
-					if (gangAction.getGangType().equals(GangType.kezigangmo)
-							|| gangAction.getGangType().equals(GangType.kezigangshoupai)) {// 自摸明杠
-						gang.setZimoMingGangShu(gang.getZimoMingGangShu() - 1);
-						gang.setValue(gang.getValue() - (playerIdList.size() - 1));
-					}
-				}
 				huPlayerResult.setGang(gang);
 				// 计算炮分
 				FangpaoMajiangPao pao = new FangpaoMajiangPao(huPlayer);
@@ -294,13 +370,6 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						Integer fangGangCount1 = playerFangGangMap.get(buHuPlayer.getId());
 						if (fangGangCount1 == null) {
 							fangGangCount1 = 0;
-						}
-						if (action.getType().equals(MajiangPlayerActionType.gang)) {// 是杠上开花需要扣除最后的杠分
-							MajiangGangAction gangAction = (MajiangGangAction) action;
-							if (gangAction.getGangType().equals(GangType.gangdachu)
-									&& playerId.equals(gangAction.getDachupaiPlayerId())) {// 杠打出牌
-								fangGangCount1--;// 放杠的那个人不算这个杠分
-							}
 						}
 						FangpaoMajiangGang gang1 = new FangpaoMajiangGang(buHuPlayer);
 						gang1.calculate(playerIdList.size(), fangGangCount1);

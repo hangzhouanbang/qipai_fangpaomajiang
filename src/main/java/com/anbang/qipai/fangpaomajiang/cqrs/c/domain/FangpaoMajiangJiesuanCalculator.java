@@ -64,7 +64,7 @@ public class FangpaoMajiangJiesuanCalculator {
 		List<MajiangPai> guipaiList = player.findGuipaiList();// TODO 也可以用统计器做
 		shoupaiCalculator.addPai(gangPai);
 		List<ShoupaiPaiXing> huPaiShoupaiPaiXingList = calculateZimoHuPaiShoupaiPaiXingList(guipaiList,
-				shoupaiCalculator, player, gouXingPanHu, player.getGangmoShoupai());
+				shoupaiCalculator, player, gouXingPanHu, gangPai);
 		shoupaiCalculator.removePai(gangPai);
 		if (!huPaiShoupaiPaiXingList.isEmpty()) {// 有胡牌型
 
@@ -146,7 +146,8 @@ public class FangpaoMajiangJiesuanCalculator {
 			boolean qidui = shoupaiPaiXing.getDuiziList().size() == 7;
 			boolean pengpenghu = shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0
 					&& shoupaiPaiXing.countShunzi() == 0;
-			boolean danzhangdiao = shoupaixingWuguanJiesuancanshu.getFangruShoupaiCount() == 1
+			boolean danzhangdiao = (shoupaixingWuguanJiesuancanshu.getFangruShoupaiCount()
+					+ shoupaixingWuguanJiesuancanshu.getCaishenShu() == 1)
 					&& shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0;
 			hufen.setHu(hu);// 普通放炮胡
 			if (zimoHu) {// 自摸胡

@@ -48,7 +48,7 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 			player.addActionCandidate(new MajiangHuAction(player.getId(), bestHu));
 		}
 		if (guipaiTypeSet.contains(gangmoShoupai) && fangruShoupaiList.size() == 0) {
-
+			// 当手上没有除鬼牌之外的牌时不能过
 		} else {
 			// 需要有“过”
 			player.checkAndGenerateGuoCandidateAction();
