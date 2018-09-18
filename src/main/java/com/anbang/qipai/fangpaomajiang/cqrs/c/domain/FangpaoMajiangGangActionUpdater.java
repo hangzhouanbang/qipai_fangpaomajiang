@@ -37,7 +37,7 @@ public class FangpaoMajiangGangActionUpdater implements MajiangPlayerGangActionU
 				}
 
 				FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestQianggangHu(gangAction.getPai(),
-						gouXingPanHu, player);
+						gouXingPanHu, xiajia);
 				if (bestHu != null) {
 					bestHu.setQianggang(true);
 					xiajia.addActionCandidate(new MajiangHuAction(xiajia.getId(), bestHu));
