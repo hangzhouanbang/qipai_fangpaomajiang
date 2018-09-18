@@ -12,6 +12,7 @@ import com.dml.majiang.pan.result.CurrentPanResultBuilder;
 import com.dml.majiang.pan.result.PanResult;
 import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.listener.gang.FangGangCounter;
+import com.dml.majiang.player.chupaizu.GangchuPaiZu;
 
 public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 
@@ -92,6 +93,8 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 							}
 							FangpaoMajiangGang gang = new FangpaoMajiangGang(buHuplayer);
 							if (huPlayer.getHu().isQianggang()) {
+								List<GangchuPaiZu> gangchupaiZuList = buHuplayer.getGangchupaiZuList();
+								gangchupaiZuList.remove(gangchupaiZuList.size() - 1);
 								gang.setZimoMingGangShu(gang.getZimoMingGangShu() - 1);// 被抢的杠不算杠分
 							}
 							gang.calculate(playerIdList.size(), fangGangCount);
