@@ -128,7 +128,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					gang2.jiesuan(-zimogang1 - angang1 * 2);
 					// 结算炮分
 					int paovalue1 = pao1.getValue();
-					int paovalue2 = pao1.getValue();
+					int paovalue2 = pao2.getValue();
 					pao1.jiesuan(-paovalue2);
 					pao2.jiesuan(-paovalue1);
 				}
@@ -241,6 +241,8 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				// 结算胡数
 				FangpaoMajiangPanPlayerResult huPlayerResult = new FangpaoMajiangPanPlayerResult();
 				huPlayerResult.setPlayerId(huPlayer.getId());
+
+				huPlayerHufen.setValue(huPlayerHufen.getValue() * (playerIdList.size() - 1));
 				huPlayerResult.setHufen(huPlayerHufen);
 				// 其他人输给胡家的胡数
 				int delta = huPlayerHufen.getValue();
@@ -333,7 +335,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					gang2.jiesuan(-zimogang1 - angang1 * 2);
 					// 结算炮分
 					int paovalue1 = pao1.getValue();
-					int paovalue2 = pao1.getValue();
+					int paovalue2 = pao2.getValue();
 					pao1.jiesuan(-paovalue2);
 					pao2.jiesuan(-paovalue1);
 				}
@@ -398,7 +400,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					gang2.jiesuan(-zimogang1 - angang1 * 2);
 					// 结算炮分
 					int paovalue1 = pao1.getValue();
-					int paovalue2 = pao1.getValue();
+					int paovalue2 = pao2.getValue();
 					pao1.jiesuan(-paovalue2);
 					pao2.jiesuan(-paovalue1);
 				}

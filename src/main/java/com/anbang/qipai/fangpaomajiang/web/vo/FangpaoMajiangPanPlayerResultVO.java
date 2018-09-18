@@ -74,7 +74,7 @@ public class FangpaoMajiangPanPlayerResultVO {
 		}
 		FangpaoMajiangPao fangpaoMajiangPao = panPlayerResult.getPlayerResult().getPao();
 		if (fangpaoMajiangPao != null) {
-			pao = fangpaoMajiangPao.getValue();
+			pao = fangpaoMajiangPao.getTotalscore();
 		}
 		FangpaoMajiangNiao fangpaoMajiangNiao = panPlayerResult.getPlayerResult().getNiao();
 		if (fangpaoMajiangNiao != null) {
