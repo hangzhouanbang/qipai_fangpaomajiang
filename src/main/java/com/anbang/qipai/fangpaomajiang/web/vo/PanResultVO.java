@@ -17,6 +17,8 @@ public class PanResultVO {
 
 	private long finishTime;
 
+	private List<NiaoPaiVO> niaoPaiList = new ArrayList<>();// 抓到的鸟牌
+
 	private int paiCount;
 
 	public PanResultVO(PanResultDbo dbo, MajiangGameDbo majiangGameDbo) {
@@ -26,6 +28,11 @@ public class PanResultVO {
 			list.forEach((panPlayerResult) -> playerResultList
 					.add(new FangpaoMajiangPanPlayerResultVO(majiangGameDbo.findPlayer(panPlayerResult.getPlayerId()),
 							dbo.getZhuangPlayerId(), dbo.isZimo(), dbo.getDianpaoPlayerId(), panPlayerResult)));
+		}
+		for (FangpaoMajiangPanPlayerResultVO playerResult : playerResultList) {
+			if (playerResult.getNiaoPaiList().size() > 0) {
+				niaoPaiList = playerResult.getNiaoPaiList();
+			}
 		}
 		hu = dbo.isHu();
 		panNo = dbo.getPanNo();
