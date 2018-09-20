@@ -28,6 +28,8 @@ import com.anbang.qipai.fangpaomajiang.web.vo.JuResultVO;
 import com.anbang.qipai.fangpaomajiang.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.fangpaomajiang.websocket.QueryScope;
 import com.dml.mpgame.game.Canceled;
+import com.dml.mpgame.game.Finished;
+import com.dml.mpgame.game.GameNotFoundException;
 import com.dml.mpgame.game.Playing;
 import com.dml.mpgame.game.extend.vote.FinishedByVote;
 
@@ -151,10 +153,21 @@ public class GameController {
 	@ResponseBody
 	public CommonVO backtogame(String playerId, String gameId) {
 		CommonVO vo = new CommonVO();
+		Map data = new HashMap();
+		vo.setData(data);
 		MajiangGameValueObject majiangGameValueObject;
 		try {
 			majiangGameValueObject = gameCmdService.backToGame(playerId, gameId);
 		} catch (Exception e) {
+			// 如果找不到game，看下是否是已经结束(正常结束和被投票)的game
+			if (e instanceof GameNotFoundException) {
+				MajiangGameDbo majiangGameDbo = majiangGameQueryService.findMajiangGameDboById(gameId);
+				if (majiangGameDbo != null && (majiangGameDbo.getState().name().equals(FinishedByVote.name)
+						|| majiangGameDbo.getState().name().equals(Finished.name))) {
+					data.put("queryScope", QueryScope.juResult);
+					return vo;
+				}
+			}
 			vo.setSuccess(false);
 			vo.setMsg(e.getClass().toString());
 			return vo;
@@ -170,9 +183,7 @@ public class GameController {
 		});
 
 		String token = playerAuthService.newSessionForPlayer(playerId);
-		Map data = new HashMap();
 		data.put("token", token);
-		vo.setData(data);
 		return vo;
 	}
 
