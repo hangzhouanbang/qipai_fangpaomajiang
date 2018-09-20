@@ -34,6 +34,8 @@ public class MajiangGameDbo {
 		sipaofanbei = majiangGame.isSipaofanbei();
 		zhuaniao = majiangGame.isZhuaniao();
 		niaoshu = majiangGame.getNiaoshu();
+		panNo = majiangGame.getPanNo();
+		state = majiangGame.getState();
 
 		players = new ArrayList<>();
 		Map<String, Integer> playeTotalScoreMap = majiangGame.getPlayeTotalScoreMap();
