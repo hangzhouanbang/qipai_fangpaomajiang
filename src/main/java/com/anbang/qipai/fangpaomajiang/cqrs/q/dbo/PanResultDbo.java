@@ -30,7 +30,7 @@ public class PanResultDbo {
 		zimo = fangpaoMajiangPanResult.isZimo();
 		dianpaoPlayerId = fangpaoMajiangPanResult.getDianpaoPlayerId();
 		playerResultList = new ArrayList<>();
-		for (FangpaoMajiangPanPlayerResult playerResult : fangpaoMajiangPanResult.getPlayerResultList()) {
+		for (FangpaoMajiangPanPlayerResult playerResult : fangpaoMajiangPanResult.getPanPlayerResultList()) {
 			FangpaoMajiangPanPlayerResultDbo dbo = new FangpaoMajiangPanPlayerResultDbo();
 			dbo.setPlayerId(playerResult.getPlayerId());
 			dbo.setPlayerResult(playerResult);

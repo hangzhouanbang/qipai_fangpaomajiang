@@ -32,7 +32,8 @@ public class FangpaoMajiangGang {
 			if (player.ifGangchu(yijiupaiArray[i], GangType.gangdachu)) {
 				fangGangmingGangShu++;
 			}
-			if (player.ifGangchu(yijiupaiArray[i], GangType.kezigangmo)) {
+			if (player.ifGangchu(yijiupaiArray[i], GangType.kezigangmo)
+					|| player.ifGangchu(yijiupaiArray[i], GangType.kezigangshoupai)) {
 				zimoMingGangShu++;
 			}
 			if (player.ifGangchu(yijiupaiArray[i], GangType.shoupaigangmo)
@@ -44,7 +45,8 @@ public class FangpaoMajiangGang {
 			if (player.ifGangchu(erbapaiArray[i], GangType.gangdachu)) {
 				fangGangmingGangShu++;
 			}
-			if (player.ifGangchu(erbapaiArray[i], GangType.kezigangmo)) {
+			if (player.ifGangchu(erbapaiArray[i], GangType.kezigangmo)
+					|| player.ifGangchu(erbapaiArray[i], GangType.kezigangshoupai)) {
 				zimoMingGangShu++;
 			}
 			if (player.ifGangchu(erbapaiArray[i], GangType.shoupaigangmo)

@@ -31,7 +31,7 @@ public class PanResultVO {
 		}
 		for (FangpaoMajiangPanPlayerResultVO playerResult : playerResultList) {
 			if (playerResult.getNiaoPaiList().size() > 0) {
-				niaoPaiList = playerResult.getNiaoPaiList();
+				setNiaoPaiList(playerResult.getNiaoPaiList());
 			}
 		}
 		hu = dbo.isHu();
@@ -62,6 +62,14 @@ public class PanResultVO {
 
 	public void setPaiCount(int paiCount) {
 		this.paiCount = paiCount;
+	}
+
+	public List<NiaoPaiVO> getNiaoPaiList() {
+		return niaoPaiList;
+	}
+
+	public void setNiaoPaiList(List<NiaoPaiVO> niaoPaiList) {
+		this.niaoPaiList = niaoPaiList;
 	}
 
 }

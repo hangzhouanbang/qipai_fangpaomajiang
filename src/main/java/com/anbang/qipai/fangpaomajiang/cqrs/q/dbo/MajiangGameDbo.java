@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGamePlayerState;
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameState;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.plan.bean.PlayerInfo;
-import com.dml.mpgame.game.GamePlayerOnlineState;
+import com.dml.mpgame.game.GamePlayerValueObject;
+import com.dml.mpgame.game.GameState;
 
 public class MajiangGameDbo {
 	private String id;// 就是gameid
@@ -19,15 +18,15 @@ public class MajiangGameDbo {
 	private boolean sipaofanbei;
 	private boolean zhuaniao;
 	private int niaoshu;
-	private MajiangGameState state;
+	private int panNo;
+	private GameState state;// 原来是 waitingStart, playing, waitingNextPan, finished
 	private List<MajiangGamePlayerDbo> players;
-	private byte[] latestPanActionFrameData;// TODO 要按规范拆分重构
 
 	public MajiangGameDbo() {
 	}
 
 	public MajiangGameDbo(MajiangGameValueObject majiangGame, Map<String, PlayerInfo> playerInfoMap) {
-		id = majiangGame.getGameId();
+		id = majiangGame.getId();
 		panshu = majiangGame.getPanshu();
 		renshu = majiangGame.getRenshu();
 		hongzhongcaishen = majiangGame.isHongzhongcaishen();
@@ -35,26 +34,24 @@ public class MajiangGameDbo {
 		sipaofanbei = majiangGame.isSipaofanbei();
 		zhuaniao = majiangGame.isZhuaniao();
 		niaoshu = majiangGame.getNiaoshu();
-		state = majiangGame.getState();
 
 		players = new ArrayList<>();
-		Map<String, MajiangGamePlayerState> playerStateMap = majiangGame.getPlayerStateMap();
-		Map<String, GamePlayerOnlineState> playerOnlineStateMap = majiangGame.getPlayerOnlineStateMap();
 		Map<String, Integer> playeTotalScoreMap = majiangGame.getPlayeTotalScoreMap();
-		majiangGame.allPlayerIds().forEach((playerId) -> {
+		for (GamePlayerValueObject playerValueObject : majiangGame.getPlayers()) {
+			String playerId = playerValueObject.getId();
 			PlayerInfo playerInfo = playerInfoMap.get(playerId);
 			MajiangGamePlayerDbo playerDbo = new MajiangGamePlayerDbo();
 			playerDbo.setHeadimgurl(playerInfo.getHeadimgurl());
 			playerDbo.setNickname(playerInfo.getNickname());
 			playerDbo.setGender(playerInfo.getGender());
-			playerDbo.setOnlineState(playerOnlineStateMap.get(playerId));
+			playerDbo.setOnlineState(playerValueObject.getOnlineState());
 			playerDbo.setPlayerId(playerId);
-			playerDbo.setState(playerStateMap.get(playerId));
+			playerDbo.setState(playerValueObject.getState());
 			if (playeTotalScoreMap.get(playerId) != null) {
 				playerDbo.setTotalScore(playeTotalScoreMap.get(playerId));
 			}
 			players.add(playerDbo);
-		});
+		}
 
 	}
 
@@ -99,6 +96,22 @@ public class MajiangGameDbo {
 		this.hongzhongcaishen = hongzhongcaishen;
 	}
 
+	public boolean isDapao() {
+		return dapao;
+	}
+
+	public void setDapao(boolean dapao) {
+		this.dapao = dapao;
+	}
+
+	public boolean isSipaofanbei() {
+		return sipaofanbei;
+	}
+
+	public void setSipaofanbei(boolean sipaofanbei) {
+		this.sipaofanbei = sipaofanbei;
+	}
+
 	public boolean isZhuaniao() {
 		return zhuaniao;
 	}
@@ -115,11 +128,19 @@ public class MajiangGameDbo {
 		this.niaoshu = niaoshu;
 	}
 
-	public MajiangGameState getState() {
+	public int getPanNo() {
+		return panNo;
+	}
+
+	public void setPanNo(int panNo) {
+		this.panNo = panNo;
+	}
+
+	public GameState getState() {
 		return state;
 	}
 
-	public void setState(MajiangGameState state) {
+	public void setState(GameState state) {
 		this.state = state;
 	}
 
@@ -129,30 +150,6 @@ public class MajiangGameDbo {
 
 	public void setPlayers(List<MajiangGamePlayerDbo> players) {
 		this.players = players;
-	}
-
-	public byte[] getLatestPanActionFrameData() {
-		return latestPanActionFrameData;
-	}
-
-	public void setLatestPanActionFrameData(byte[] latestPanActionFrameData) {
-		this.latestPanActionFrameData = latestPanActionFrameData;
-	}
-
-	public boolean isDapao() {
-		return dapao;
-	}
-
-	public void setDapao(boolean dapao) {
-		this.dapao = dapao;
-	}
-
-	public boolean isSipaofanbei() {
-		return sipaofanbei;
-	}
-
-	public void setSipaofanbei(boolean sipaofanbei) {
-		this.sipaofanbei = sipaofanbei;
 	}
 
 }

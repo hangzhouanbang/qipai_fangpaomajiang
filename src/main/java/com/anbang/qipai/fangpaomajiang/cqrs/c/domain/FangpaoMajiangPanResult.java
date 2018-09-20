@@ -12,7 +12,7 @@ public class FangpaoMajiangPanResult extends PanResult {
 
 	private String dianpaoPlayerId;
 
-	private List<FangpaoMajiangPanPlayerResult> playerResultList;
+	private List<FangpaoMajiangPanPlayerResult> panPlayerResultList;
 
 	public boolean isHu() {
 		return hu;
@@ -38,12 +38,12 @@ public class FangpaoMajiangPanResult extends PanResult {
 		this.dianpaoPlayerId = dianpaoPlayerId;
 	}
 
-	public List<FangpaoMajiangPanPlayerResult> getPlayerResultList() {
-		return playerResultList;
+	public List<FangpaoMajiangPanPlayerResult> getPanPlayerResultList() {
+		return panPlayerResultList;
 	}
 
-	public void setPlayerResultList(List<FangpaoMajiangPanPlayerResult> playerResultList) {
-		this.playerResultList = playerResultList;
+	public void setPanPlayerResultList(List<FangpaoMajiangPanPlayerResult> panPlayerResultList) {
+		this.panPlayerResultList = panPlayerResultList;
 	}
 
 }

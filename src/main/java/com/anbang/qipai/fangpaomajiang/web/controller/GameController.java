@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FinishResult;
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameState;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.ReadyForGameResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.GameCmdService;
@@ -29,6 +28,9 @@ import com.anbang.qipai.fangpaomajiang.web.vo.GameVO;
 import com.anbang.qipai.fangpaomajiang.web.vo.JuResultVO;
 import com.anbang.qipai.fangpaomajiang.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.fangpaomajiang.websocket.QueryScope;
+import com.dml.mpgame.game.Canceled;
+import com.dml.mpgame.game.Playing;
+import com.dml.mpgame.game.extend.vote.FinishedByVote;
 
 @RestController
 @RequestMapping("/game")
@@ -232,7 +234,7 @@ public class GameController {
 		for (String otherPlayerId : readyForGameResult.getMajiangGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
 				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameInfo.name());
-				if (readyForGameResult.getMajiangGame().getState().equals(MajiangGameState.playing)) {
+				if (readyForGameResult.getMajiangGame().getState().name().equals(Playing.name)) {
 					wsNotifier.notifyToQuery(otherPlayerId, QueryScope.panForMe.name());
 				}
 			}
@@ -240,7 +242,7 @@ public class GameController {
 
 		List<QueryScope> queryScopes = new ArrayList<>();
 		queryScopes.add(QueryScope.gameInfo);
-		if (readyForGameResult.getMajiangGame().getState().equals(MajiangGameState.playing)) {
+		if (readyForGameResult.getMajiangGame().getState().name().equals(Playing.name)) {
 			queryScopes.add(QueryScope.panForMe);
 		}
 		data.put("queryScopes", queryScopes);
@@ -270,7 +272,7 @@ public class GameController {
 		}
 		majiangGameQueryService.finish(finishResult);
 		MajiangGameValueObject majiangGameValueObject = finishResult.getMajiangGameValueObject();
-		String gameId = majiangGameValueObject.getGameId();
+		String gameId = majiangGameValueObject.getId();
 		JuResultDbo juResultDbo = majiangPlayQueryService.findJuResultDbo(gameId);
 		// 记录战绩
 		if (juResultDbo != null) {
@@ -279,7 +281,8 @@ public class GameController {
 			fangpaoMajiangResultMsgService.recordJuResult(juResult);
 		}
 
-		if (majiangGameValueObject.getState().equals(MajiangGameState.finished)) {
+		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)
+				|| majiangGameValueObject.getState().name().equals(Canceled.name)) {
 			gameMsgService.gameFinished(gameId);
 			data.put("queryScope", QueryScope.gameInfo);
 			// 通知其他人来查询
@@ -333,7 +336,7 @@ public class GameController {
 			vo.setMsg(e.getClass().getName());
 			return vo;
 		}
-		String gameId = finishResult.getMajiangGameValueObject().getGameId();
+		String gameId = finishResult.getMajiangGameValueObject().getId();
 		majiangGameQueryService.voteToFinish(finishResult);
 		JuResultDbo juResultDbo = majiangPlayQueryService.findJuResultDbo(gameId);
 		// 记录战绩

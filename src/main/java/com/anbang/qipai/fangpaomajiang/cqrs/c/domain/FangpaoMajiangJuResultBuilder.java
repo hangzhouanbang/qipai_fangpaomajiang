@@ -19,7 +19,7 @@ public class FangpaoMajiangJuResultBuilder implements JuResultBuilder {
 			Map<String, FangpaoMajiangJuPlayerResult> juPlayerResultMap = new HashMap<>();
 			for (PanResult panResult : ju.getFinishedPanResultList()) {
 				FangpaoMajiangPanResult fangpaoMajiangPanResult = (FangpaoMajiangPanResult) panResult;
-				for (FangpaoMajiangPanPlayerResult panPlayerResult : fangpaoMajiangPanResult.getPlayerResultList()) {
+				for (FangpaoMajiangPanPlayerResult panPlayerResult : fangpaoMajiangPanResult.getPanPlayerResultList()) {
 					FangpaoMajiangJuPlayerResult juPlayerResult = juPlayerResultMap.get(panPlayerResult.getPlayerId());
 					if (juPlayerResult == null) {
 						juPlayerResult = new FangpaoMajiangJuPlayerResult();

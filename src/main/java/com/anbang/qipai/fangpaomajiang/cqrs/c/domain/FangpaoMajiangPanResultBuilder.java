@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dml.majiang.ju.Ju;
+import com.dml.majiang.pai.fenzu.Kezi;
 import com.dml.majiang.pan.Pan;
 import com.dml.majiang.pan.frame.PanValueObject;
 import com.dml.majiang.pan.result.CurrentPanResultBuilder;
@@ -15,6 +16,7 @@ import com.dml.majiang.pan.result.PanResult;
 import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.listener.gang.FangGangCounter;
 import com.dml.majiang.player.chupaizu.GangchuPaiZu;
+import com.dml.majiang.player.chupaizu.PengchuPaiZu;
 
 public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 
@@ -30,7 +32,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 		FangpaoMajiangPanResult latestFinishedPanResult = (FangpaoMajiangPanResult) ju.findLatestFinishedPanResult();
 		Map<String, Integer> playerTotalScoreMap = new HashMap<>();
 		if (latestFinishedPanResult != null) {
-			for (FangpaoMajiangPanPlayerResult panPlayerResult : latestFinishedPanResult.getPlayerResultList()) {
+			for (FangpaoMajiangPanPlayerResult panPlayerResult : latestFinishedPanResult.getPanPlayerResultList()) {
 				playerTotalScoreMap.put(panPlayerResult.getPlayerId(), panPlayerResult.getTotalScore());
 			}
 		}
@@ -99,7 +101,10 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						FangpaoMajiangGang gang = new FangpaoMajiangGang(buHuplayer);
 						if (huPlayers.get(0).getHu().isQianggang()) {
 							List<GangchuPaiZu> gangchupaiZuList = buHuplayer.getGangchupaiZuList();
-							gangchupaiZuList.remove(gangchupaiZuList.size() - 1);
+							GangchuPaiZu gangChuPaiZu = gangchupaiZuList.remove(gangchupaiZuList.size() - 1);
+							PengchuPaiZu pengChuPaiZu = new PengchuPaiZu(
+									new Kezi(gangChuPaiZu.getGangzi().getPaiType()), null, buHuplayer.getId());
+							buHuplayer.getPengchupaiZuList().add(pengChuPaiZu);
 							gang.setZimoMingGangShu(gang.getZimoMingGangShu() - 1);// 被抢的杠不算杠分
 						}
 						gang.calculate(playerIdList.size(), fangGangCount);
@@ -175,8 +180,9 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					playerResult.setTotalScore(score);
 				}
 			});
+			fangpaoMajiangPanResult.setPan(new PanValueObject(currentPan));
 			fangpaoMajiangPanResult.setPanFinishTime(panFinishTime);
-			fangpaoMajiangPanResult.setPlayerResultList(playerResultList);
+			fangpaoMajiangPanResult.setPanPlayerResultList(playerResultList);
 			fangpaoMajiangPanResult.setHu(true);
 			fangpaoMajiangPanResult.setZimo(false);
 			fangpaoMajiangPanResult.setDianpaoPlayerId(dianPaoPlayerId);
@@ -303,6 +309,11 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						}
 						FangpaoMajiangGang gang1 = new FangpaoMajiangGang(buHuplayer);
 						gang1.setZimoMingGangShu(gang1.getZimoMingGangShu() - 1);// 被抢的杠不算杠分
+						List<GangchuPaiZu> gangchupaiZuList = buHuplayer.getGangchupaiZuList();
+						GangchuPaiZu gangChuPaiZu = gangchupaiZuList.remove(gangchupaiZuList.size() - 1);
+						PengchuPaiZu pengChuPaiZu = new PengchuPaiZu(new Kezi(gangChuPaiZu.getGangzi().getPaiType()),
+								null, buHuplayer.getId());
+						buHuplayer.getPengchupaiZuList().add(pengChuPaiZu);
 						gang1.calculate(playerIdList.size(), fangGangCount1);
 						buHuPlayerResult.setGang(gang1);
 						// 计算炮分
@@ -431,8 +442,9 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					playerResult.setTotalScore(score);
 				}
 			});
+			fangpaoMajiangPanResult.setPan(new PanValueObject(currentPan));
 			fangpaoMajiangPanResult.setPanFinishTime(panFinishTime);
-			fangpaoMajiangPanResult.setPlayerResultList(playerResultList);
+			fangpaoMajiangPanResult.setPanPlayerResultList(playerResultList);
 			fangpaoMajiangPanResult.setHu(true);
 			fangpaoMajiangPanResult.setZimo(hu.isZimo());
 			fangpaoMajiangPanResult.setDianpaoPlayerId(hu.getDianpaoPlayerId());
@@ -496,8 +508,9 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 					playerResult.setTotalScore(score);
 				}
 			});
+			fangpaoMajiangPanResult.setPan(new PanValueObject(currentPan));
 			fangpaoMajiangPanResult.setPanFinishTime(panFinishTime);
-			fangpaoMajiangPanResult.setPlayerResultList(playerResultList);
+			fangpaoMajiangPanResult.setPanPlayerResultList(playerResultList);
 			fangpaoMajiangPanResult.setHu(false);
 			return fangpaoMajiangPanResult;
 		}
