@@ -2,13 +2,12 @@ package com.anbang.qipai.fangpaomajiang.cqrs.c.service.impl;
 
 import org.springframework.stereotype.Component;
 
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FangpaoMajiangJuResult;
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FinishResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGame;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.ReadyForGameResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.GameCmdService;
 import com.dml.majiang.pan.frame.PanActionFrame;
+import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.Game;
 import com.dml.mpgame.game.GameValueObject;
 import com.dml.mpgame.game.Playing;
@@ -19,6 +18,7 @@ import com.dml.mpgame.game.extend.vote.FinishedByVote;
 import com.dml.mpgame.game.extend.vote.MostPlayersWinVoteCalculator;
 import com.dml.mpgame.game.extend.vote.VoteOption;
 import com.dml.mpgame.game.join.FixedNumberOfPlayersGameJoinStrategy;
+import com.dml.mpgame.game.player.PlayerFinished;
 import com.dml.mpgame.game.ready.FixedNumberOfPlayersGameReadyStrategy;
 import com.dml.mpgame.server.GameServer;
 
@@ -33,6 +33,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		MajiangGame newGame = new MajiangGame();
 		newGame.setPanshu(panshu);
 		newGame.setRenshu(renshu);
+		newGame.setFixedPlayerCount(renshu);
 		newGame.setHongzhongcaishen(hongzhongcaishen);
 		newGame.setDapao(dapao);
 		newGame.setSipaofanbei(sipaofanbei);
@@ -62,6 +63,9 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		Game game = gameServer.findGamePlayerPlaying(playerId);
 		gameServer.leave(playerId);
+		if (game.getState().name().equals(FinishedByVote.name)) {// 有可能离开的时候正在投票，由于离开自动投弃权最终导致游戏结束
+			gameServer.finishGame(game.getId());
+		}
 		return new MajiangGameValueObject((MajiangGame) game);
 	}
 
@@ -94,8 +98,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 	}
 
 	@Override
-	public FinishResult finish(String playerId) throws Exception {
-		FinishResult result = new FinishResult();
+	public MajiangGameValueObject finish(String playerId) throws Exception {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		MajiangGame majiangGame = (MajiangGame) gameServer.findGamePlayerPlaying(playerId);
 		// 在准备阶段不会发起投票
@@ -111,20 +114,14 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 			majiangGame.voteToFinish(playerId, VoteOption.yes);
 		}
 
-		MajiangGameValueObject majiangGameValueObject = new MajiangGameValueObject(majiangGame);
-
-		result.setMajiangGameValueObject(majiangGameValueObject);
-
-		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)) {
-			FangpaoMajiangJuResult juResult = (FangpaoMajiangJuResult) majiangGame.finishJu();
-			result.setJuResult(juResult);
+		if (majiangGame.getState().name().equals(FinishedByVote.name)) {
+			gameServer.finishGame(majiangGame.getId());
 		}
-		return result;
+		return new MajiangGameValueObject(majiangGame);
 	}
 
 	@Override
-	public FinishResult voteToFinish(String playerId, Boolean yes) throws Exception {
-		FinishResult finishResult = new FinishResult();
+	public MajiangGameValueObject voteToFinish(String playerId, Boolean yes) throws Exception {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		MajiangGame majiangGame = (MajiangGame) gameServer.findGamePlayerPlaying(playerId);
 		if (yes) {
@@ -133,14 +130,10 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 			majiangGame.voteToFinish(playerId, VoteOption.no);
 		}
 
-		MajiangGameValueObject majiangGameValueObject = new MajiangGameValueObject(majiangGame);
-		finishResult.setMajiangGameValueObject(majiangGameValueObject);
-
-		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)) {
-			FangpaoMajiangJuResult juResult = (FangpaoMajiangJuResult) majiangGame.finishJu();
-			finishResult.setJuResult(juResult);
+		if (majiangGame.getState().name().equals(FinishedByVote.name)) {
+			gameServer.finishGame(majiangGame.getId());
 		}
-		return finishResult;
+		return new MajiangGameValueObject(majiangGame);
 	}
 
 	@Override
@@ -153,8 +146,10 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 	public GameValueObject finishGameImmediately(String gameId) throws Exception {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		MajiangGame majiangGame = (MajiangGame) gameServer.findGame(gameId);
-		majiangGame.finishJu();
-		gameServer.finishGameImmediately(gameId);
+		majiangGame.finish();
+		majiangGame.setState(new Finished());
+		majiangGame.updateAllPlayersState(new PlayerFinished());
+		gameServer.finishGame(gameId);
 		return new MajiangGameValueObject(majiangGame);
 	}
 
