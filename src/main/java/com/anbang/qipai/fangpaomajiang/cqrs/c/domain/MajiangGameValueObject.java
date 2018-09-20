@@ -3,6 +3,7 @@ package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dml.majiang.ju.result.JuResult;
 import com.dml.mpgame.game.extend.fpmpv.FixedPlayersMultipanAndVotetofinishGameValueObject;
 
 public class MajiangGameValueObject extends FixedPlayersMultipanAndVotetofinishGameValueObject {
@@ -15,6 +16,7 @@ public class MajiangGameValueObject extends FixedPlayersMultipanAndVotetofinishG
 	private boolean zhuaniao;
 	private int niaoshu;
 	private Map<String, Integer> playeTotalScoreMap = new HashMap<>();
+	private JuResult juResult;
 
 	public MajiangGameValueObject(MajiangGame majiangGame) {
 		super(majiangGame);
@@ -26,6 +28,7 @@ public class MajiangGameValueObject extends FixedPlayersMultipanAndVotetofinishG
 		zhuaniao = majiangGame.isZhuaniao();
 		niaoshu = majiangGame.getNiaoshu();
 		playeTotalScoreMap.putAll(majiangGame.getPlayeTotalScoreMap());
+		juResult = majiangGame.getJu().getJuResult();
 	}
 
 	public int getPanshu() {
@@ -90,6 +93,14 @@ public class MajiangGameValueObject extends FixedPlayersMultipanAndVotetofinishG
 
 	public void setPlayeTotalScoreMap(Map<String, Integer> playeTotalScoreMap) {
 		this.playeTotalScoreMap = playeTotalScoreMap;
+	}
+
+	public JuResult getJuResult() {
+		return juResult;
+	}
+
+	public void setJuResult(JuResult juResult) {
+		this.juResult = juResult;
 	}
 
 }

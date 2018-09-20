@@ -1,6 +1,5 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.service;
 
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FinishResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.ReadyForGameResult;
 import com.dml.mpgame.game.GameValueObject;
@@ -18,9 +17,9 @@ public interface GameCmdService {
 
 	ReadyForGameResult readyForGame(String playerId, Long currentTime) throws Exception;
 
-	FinishResult finish(String playerId) throws Exception;
+	MajiangGameValueObject finish(String playerId) throws Exception;
 
-	FinishResult voteToFinish(String playerId, Boolean yes) throws Exception;
+	MajiangGameValueObject voteToFinish(String playerId, Boolean yes) throws Exception;
 
 	void bindPlayer(String playerId, String gameId);
 

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.FinishResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.ReadyForGameResult;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.service.GameCmdService;
@@ -262,16 +261,15 @@ public class GameController {
 			return vo;
 		}
 
-		FinishResult finishResult;
+		MajiangGameValueObject majiangGameValueObject;
 		try {
-			finishResult = gameCmdService.finish(playerId);
+			majiangGameValueObject = gameCmdService.finish(playerId);
 		} catch (Exception e) {
 			vo.setSuccess(false);
 			vo.setMsg(e.getClass().getName());
 			return vo;
 		}
-		majiangGameQueryService.finish(finishResult);
-		MajiangGameValueObject majiangGameValueObject = finishResult.getMajiangGameValueObject();
+		majiangGameQueryService.finish(majiangGameValueObject);
 		String gameId = majiangGameValueObject.getId();
 		JuResultDbo juResultDbo = majiangPlayQueryService.findJuResultDbo(gameId);
 		// 记录战绩
@@ -328,16 +326,16 @@ public class GameController {
 			return vo;
 		}
 
-		FinishResult finishResult;
+		MajiangGameValueObject majiangGameValueObject;
 		try {
-			finishResult = gameCmdService.voteToFinish(playerId, yes);
+			majiangGameValueObject = gameCmdService.voteToFinish(playerId, yes);
 		} catch (Exception e) {
 			vo.setSuccess(false);
 			vo.setMsg(e.getClass().getName());
 			return vo;
 		}
-		String gameId = finishResult.getMajiangGameValueObject().getId();
-		majiangGameQueryService.voteToFinish(finishResult);
+		String gameId = majiangGameValueObject.getId();
+		majiangGameQueryService.voteToFinish(majiangGameValueObject);
 		JuResultDbo juResultDbo = majiangPlayQueryService.findJuResultDbo(gameId);
 		// 记录战绩
 		if (juResultDbo != null) {
@@ -349,7 +347,7 @@ public class GameController {
 
 		data.put("queryScope", QueryScope.gameFinishVote);
 		// 通知其他人来查询投票情况
-		finishResult.getMajiangGameValueObject().allPlayerIds().forEach((otherPlayerId) -> {
+		majiangGameValueObject.allPlayerIds().forEach((otherPlayerId) -> {
 			if (!otherPlayerId.equals(playerId)) {
 				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameFinishVote.name());
 			}
