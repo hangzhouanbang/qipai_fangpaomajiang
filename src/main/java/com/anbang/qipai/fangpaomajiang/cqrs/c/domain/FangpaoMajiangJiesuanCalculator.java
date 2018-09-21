@@ -144,8 +144,8 @@ public class FangpaoMajiangJiesuanCalculator {
 		if (hu) {
 			boolean qingyise = shoupaixingWuguanJiesuancanshu.isQingyise();
 			boolean qidui = shoupaiPaiXing.getDuiziList().size() == 7;
-			boolean pengpenghu = shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0
-					&& shoupaiPaiXing.countShunzi() == 0;
+			boolean pengpenghu = shoupaiPaiXing.getDuiziList().size() == 1
+					&& shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0 && shoupaiPaiXing.countShunzi() == 0;
 			boolean danzhangdiao = (shoupaixingWuguanJiesuancanshu.getFangruShoupaiCount()
 					+ shoupaixingWuguanJiesuancanshu.getCaishenShu() == 1)
 					&& shoupaixingWuguanJiesuancanshu.getChichupaiZuCount() == 0;
