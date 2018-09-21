@@ -97,7 +97,10 @@ public class GameController {
 		// 通知其他人
 		for (String otherPlayerId : majiangGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameInfo.name());
+				QueryScope.scopesForState(majiangGameValueObject.getState(),
+						majiangGameValueObject.findPlayerState(otherPlayerId)).forEach((scope) -> {
+							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
+						});
 			}
 		}
 		String token = playerAuthService.newSessionForPlayer(playerId);
@@ -137,12 +140,14 @@ public class GameController {
 		majiangGameQueryService.leaveGame(majiangGameValueObject);
 		gameMsgService.gamePlayerLeave(majiangGameValueObject, playerId);
 		// 通知其他玩家
-
-		majiangGameValueObject.allPlayerIds().forEach((otherPlayerId) -> {
+		for (String otherPlayerId : majiangGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameInfo.name());
+				QueryScope.scopesForState(majiangGameValueObject.getState(),
+						majiangGameValueObject.findPlayerState(otherPlayerId)).forEach((scope) -> {
+							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
+						});
 			}
-		});
+		}
 		return vo;
 	}
 
@@ -176,11 +181,14 @@ public class GameController {
 		majiangGameQueryService.backToGame(playerId, majiangGameValueObject);
 
 		// 通知其他玩家
-		majiangGameValueObject.allPlayerIds().forEach((otherPlayerId) -> {
+		for (String otherPlayerId : majiangGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameInfo.name());
+				QueryScope.scopesForState(majiangGameValueObject.getState(),
+						majiangGameValueObject.findPlayerState(otherPlayerId)).forEach((scope) -> {
+							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
+						});
 			}
-		});
+		}
 
 		String token = playerAuthService.newSessionForPlayer(playerId);
 		data.put("token", token);
@@ -243,10 +251,10 @@ public class GameController {
 		// 通知其他人
 		for (String otherPlayerId : readyForGameResult.getMajiangGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameInfo.name());
-				if (readyForGameResult.getMajiangGame().getState().name().equals(Playing.name)) {
-					wsNotifier.notifyToQuery(otherPlayerId, QueryScope.panForMe.name());
-				}
+				QueryScope.scopesForState(readyForGameResult.getMajiangGame().getState(),
+						readyForGameResult.getMajiangGame().findPlayerState(otherPlayerId)).forEach((scope) -> {
+							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
+						});
 			}
 		}
 
@@ -294,30 +302,21 @@ public class GameController {
 				|| majiangGameValueObject.getState().name().equals(Canceled.name)) {
 			gameMsgService.gameFinished(gameId);
 			data.put("queryScope", QueryScope.gameInfo);
-			// 通知其他人来查询
-			majiangGameValueObject.allPlayerIds().forEach((otherPlayerId) -> {
-				if (!otherPlayerId.equals(playerId)) {
-					wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameInfo.name());
-				}
-			});
 		} else {
 			// 游戏没结束有两种可能：一种是发起了投票。还有一种是游戏没开始，解散发起人又不是房主，那就自己走人。
 			if (majiangGameValueObject.allPlayerIds().contains(playerId)) {
 				data.put("queryScope", QueryScope.gameFinishVote);
-				// 通知其他人来查询
-				majiangGameValueObject.allPlayerIds().forEach((otherPlayerId) -> {
-					if (!otherPlayerId.equals(playerId)) {
-						wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameFinishVote.name());
-					}
-				});
 			} else {
 				data.put("queryScope", null);
-				// 通知其他人来查询
-				majiangGameValueObject.allPlayerIds().forEach((otherPlayerId) -> {
-					if (!otherPlayerId.equals(playerId)) {
-						wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameInfo.name());
-					}
-				});
+			}
+		}
+		// 通知其他人来查询
+		for (String otherPlayerId : majiangGameValueObject.allPlayerIds()) {
+			if (!otherPlayerId.equals(playerId)) {
+				QueryScope.scopesForState(majiangGameValueObject.getState(),
+						majiangGameValueObject.findPlayerState(otherPlayerId)).forEach((scope) -> {
+							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
+						});
 			}
 		}
 
@@ -358,11 +357,14 @@ public class GameController {
 
 		data.put("queryScope", QueryScope.gameFinishVote);
 		// 通知其他人来查询投票情况
-		majiangGameValueObject.allPlayerIds().forEach((otherPlayerId) -> {
+		for (String otherPlayerId : majiangGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.gameFinishVote.name());
+				QueryScope.scopesForState(majiangGameValueObject.getState(),
+						majiangGameValueObject.findPlayerState(otherPlayerId)).forEach((scope) -> {
+							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
+						});
 			}
-		});
+		}
 		return vo;
 	}
 

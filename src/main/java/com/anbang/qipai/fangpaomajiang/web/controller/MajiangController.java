@@ -146,23 +146,10 @@ public class MajiangController {
 		}
 
 		if (majiangActionResult.getPanResult() == null) {// 盘没结束
-			// 通知其他人
-			for (String otherPlayerId : majiangActionResult.getMajiangGame().allPlayerIds()) {
-				if (!otherPlayerId.equals(playerId)) {
-					wsNotifier.notifyToQuery(otherPlayerId, QueryScope.panForMe.name());
-				}
-			}
-
 			data.put("queryScope", QueryScope.panForMe);
-
 		} else {// 盘结束了
 
 			if (majiangActionResult.getJuResult() != null) {// 局也结束了
-				for (String otherPlayerId : majiangActionResult.getMajiangGame().allPlayerIds()) {
-					if (!otherPlayerId.equals(playerId)) {
-						wsNotifier.notifyToQuery(otherPlayerId, QueryScope.juResult.name());
-					}
-				}
 				MajiangGameDbo majiangGameDbo = majiangGameQueryService
 						.findMajiangGameDboById(majiangActionResult.getMajiangGame().getId());
 				JuResultDbo juResultDbo = majiangPlayQueryService
@@ -173,16 +160,24 @@ public class MajiangController {
 				gameMsgService.gameFinished(majiangActionResult.getMajiangGame().getId());
 				data.put("queryScope", QueryScope.juResult);
 			} else {
-				for (String otherPlayerId : majiangActionResult.getMajiangGame().allPlayerIds()) {
-					if (!otherPlayerId.equals(playerId)) {
-						wsNotifier.notifyToQuery(otherPlayerId, QueryScope.panResult.name());
-					}
-				}
 				data.put("queryScope", QueryScope.panResult);
 			}
+
 			gameMsgService.panFinished(majiangActionResult.getMajiangGame(),
 					majiangActionResult.getPanActionFrame().getPanAfterAction());
 
+		}
+
+		// 通知其他人
+		for (String otherPlayerId : majiangActionResult.getMajiangGame().allPlayerIds()) {
+			if (!otherPlayerId.equals(playerId)) {
+				QueryScope
+						.scopesForState(majiangActionResult.getMajiangGame().getState(),
+								majiangActionResult.getMajiangGame().findPlayerState(otherPlayerId))
+						.forEach((scope) -> {
+							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
+						});
+			}
 		}
 
 		return vo;
@@ -227,7 +222,12 @@ public class MajiangController {
 		}
 		for (String otherPlayerId : readyToNextPanResult.getMajiangGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				queryScopes.forEach((scope) -> wsNotifier.notifyToQuery(otherPlayerId, scope.name()));
+				QueryScope
+						.scopesForState(readyToNextPanResult.getMajiangGame().getState(),
+								readyToNextPanResult.getMajiangGame().findPlayerState(otherPlayerId))
+						.forEach((scope) -> {
+							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
+						});
 			}
 		}
 		data.put("queryScopes", queryScopes);
