@@ -6,6 +6,7 @@ import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.chi.MajiangChiAction;
 import com.dml.majiang.player.action.chi.MajiangPlayerChiActionUpdater;
+import com.dml.majiang.player.action.chi.PengganghuFirstException;
 
 /**
  * 吃的那个人要打牌
@@ -21,7 +22,7 @@ public class FangpaoMajiangChiActionUpdater implements MajiangPlayerChiActionUpd
 				.getActionStatisticsListenerManager()
 				.findListener(FangpaoMajiangPengGangActionStatisticsListener.class);
 		if (fangpaoMajiangStatisticsListener.getPlayerActionMap().containsKey(chiAction.getActionPlayerId())) {
-
+			throw new PengganghuFirstException();
 		} else {
 			Pan currentPan = ju.getCurrentPan();
 			currentPan.clearAllPlayersActionCandidates();
