@@ -50,8 +50,6 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 				Set<MajiangPlayerActionType> actionTypesSet = xiajia.collectActionCandidatesType();
 				if (actionTypesSet.contains(MajiangPlayerActionType.hu)) {
 					playerActionMap.put(player.getId(), gangAction);
-					player.clearActionCandidates();// 玩家已经做了决定，要删除动作
-					throw new HuFirstException();
 				}
 			} else {
 				break;
@@ -79,8 +77,6 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 				Set<MajiangPlayerActionType> actionTypesSet = xiajia.collectActionCandidatesType();
 				if (actionTypesSet.contains(MajiangPlayerActionType.hu)) {
 					playerActionMap.put(player.getId(), pengAction);
-					player.clearActionCandidates();// 玩家已经做了决定，要删除动作
-					throw new HuFirstException();
 				}
 			} else {
 				break;

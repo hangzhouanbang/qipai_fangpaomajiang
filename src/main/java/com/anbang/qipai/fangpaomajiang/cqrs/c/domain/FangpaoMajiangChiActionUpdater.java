@@ -21,13 +21,14 @@ public class FangpaoMajiangChiActionUpdater implements MajiangPlayerChiActionUpd
 		FangpaoMajiangPengGangActionStatisticsListener fangpaoMajiangStatisticsListener = ju
 				.getActionStatisticsListenerManager()
 				.findListener(FangpaoMajiangPengGangActionStatisticsListener.class);
-		if (fangpaoMajiangStatisticsListener.getPlayerActionMap().containsKey(chiAction.getActionPlayerId())) {
+		Pan currentPan = ju.getCurrentPan();
+
+		MajiangPlayer player = currentPan.findPlayerById(chiAction.getActionPlayerId());
+		if (fangpaoMajiangStatisticsListener.getPlayerActionMap().containsKey(player.getId())) {
+			player.clearActionCandidates();// 玩家已经做了决定，要删除动作
 			throw new PengganghuFirstException();
 		} else {
-			Pan currentPan = ju.getCurrentPan();
 			currentPan.clearAllPlayersActionCandidates();
-
-			MajiangPlayer player = currentPan.findPlayerById(chiAction.getActionPlayerId());
 
 			if (player.getActionCandidates().isEmpty()) {
 				player.generateDaActions();

@@ -21,12 +21,13 @@ public class FangpaoMajiangPengActionUpdater implements MajiangPlayerPengActionU
 		FangpaoMajiangPengGangActionStatisticsListener fangpaoMajiangStatisticsListener = ju
 				.getActionStatisticsListenerManager()
 				.findListener(FangpaoMajiangPengGangActionStatisticsListener.class);
-		if (fangpaoMajiangStatisticsListener.getPlayerActionMap().containsKey(pengAction.getActionPlayerId())) {
+		Pan currentPan = ju.getCurrentPan();
+		MajiangPlayer player = currentPan.findPlayerById(pengAction.getActionPlayerId());
+		if (fangpaoMajiangStatisticsListener.getPlayerActionMap().containsKey(player.getId())) {
+			player.clearActionCandidates();// 玩家已经做了决定，要删除动作
 			throw new HuFirstException();
 		} else {
-			Pan currentPan = ju.getCurrentPan();
 			currentPan.clearAllPlayersActionCandidates();
-			MajiangPlayer player = currentPan.findPlayerById(pengAction.getActionPlayerId());
 
 			if (player.getActionCandidates().isEmpty()) {
 				player.generateDaActions();

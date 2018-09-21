@@ -26,12 +26,13 @@ public class FangpaoMajiangGangActionUpdater implements MajiangPlayerGangActionU
 		FangpaoMajiangPengGangActionStatisticsListener fangpaoMajiangStatisticsListener = ju
 				.getActionStatisticsListenerManager()
 				.findListener(FangpaoMajiangPengGangActionStatisticsListener.class);
-		if (fangpaoMajiangStatisticsListener.getPlayerActionMap().containsKey(gangAction.getActionPlayerId())) {
+		Pan currentPan = ju.getCurrentPan();
+		MajiangPlayer player = currentPan.findPlayerById(gangAction.getActionPlayerId());
+		if (fangpaoMajiangStatisticsListener.getPlayerActionMap().containsKey(player.getId())) {
+			player.clearActionCandidates();// 玩家已经做了决定，要删除动作
 			throw new HuFirstException();
 		} else {
-			Pan currentPan = ju.getCurrentPan();
 			currentPan.clearAllPlayersActionCandidates();
-			MajiangPlayer player = currentPan.findPlayerById(gangAction.getActionPlayerId());
 
 			// 看看是不是有其他玩家可以抢杠胡
 			boolean qiangganghu = false;
