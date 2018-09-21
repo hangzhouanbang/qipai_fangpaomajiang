@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.listener.FangpaoMajiangPengGangActionStatisticsListener;
 import com.dml.majiang.ju.Ju;
 import com.dml.majiang.pai.fenzu.Kezi;
 import com.dml.majiang.pan.Pan;
@@ -14,7 +15,6 @@ import com.dml.majiang.pan.frame.PanValueObject;
 import com.dml.majiang.pan.result.CurrentPanResultBuilder;
 import com.dml.majiang.pan.result.PanResult;
 import com.dml.majiang.player.MajiangPlayer;
-import com.dml.majiang.player.action.listener.gang.FangGangCounter;
 import com.dml.majiang.player.chupaizu.GangchuPaiZu;
 import com.dml.majiang.player.chupaizu.PengchuPaiZu;
 
@@ -37,7 +37,8 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 			}
 		}
 
-		FangGangCounter fangGangCounter = ju.getActionStatisticsListenerManager().findListener(FangGangCounter.class);
+		FangpaoMajiangPengGangActionStatisticsListener fangGangCounter = ju.getActionStatisticsListenerManager()
+				.findListener(FangpaoMajiangPengGangActionStatisticsListener.class);
 		Map<String, Integer> playerFangGangMap = fangGangCounter.getPlayerIdFangGangShuMap();
 
 		List<MajiangPlayer> huPlayers = currentPan.findAllHuPlayers();
