@@ -11,6 +11,7 @@ import com.dml.majiang.pai.MajiangPai;
 public class FangpaoMajiangNiao {
 	private List<MajiangPai> zhuaPai;
 	private List<MajiangPai> niaoPai;
+	private int totalScore;
 	private int value;
 
 	public FangpaoMajiangNiao() {
@@ -83,7 +84,7 @@ public class FangpaoMajiangNiao {
 	}
 
 	public int jiesuan(int delta) {
-		return value += delta;
+		return totalScore += delta;
 	}
 
 	public List<MajiangPai> getZhuaPai() {
@@ -100,6 +101,14 @@ public class FangpaoMajiangNiao {
 
 	public void setNiaoPai(List<MajiangPai> niaoPai) {
 		this.niaoPai = niaoPai;
+	}
+
+	public int getTotalScore() {
+		return totalScore;
+	}
+
+	public void setTotalScore(int totalScore) {
+		this.totalScore = totalScore;
 	}
 
 	public int getValue() {

@@ -115,11 +115,8 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 						pao.calculate(dapao, sipaofanbei, playerIdList.size());
 						buHuPlayerResult.setPao(pao);
 						// 计算鸟分
-						FangpaoMajiangNiao niaofen = new FangpaoMajiangNiao();
-						niaofen.setNiaoPai(niao.getNiaoPai());
-						niaofen.setZhuaPai(niao.getZhuaPai());
-						niaofen.jiesuan(niao.getValue() * huPlayers.size());
-						buHuPlayerResult.setNiao(niaofen);
+						niao.jiesuan(niao.getValue() * huPlayers.size());
+						buHuPlayerResult.setNiao(niao);
 						playerResultList.add(buHuPlayerResult);
 					} else {// 计算其他玩家分数
 						MajiangPlayer buHuplayer = currentPan.findPlayerById(playerId);
@@ -171,7 +168,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 			}
 			playerResultList.forEach((playerResult) -> {
 				// 计算当盘总分
-				int score = playerResult.getHufen().getValue() + playerResult.getNiao().getValue()
+				int score = playerResult.getHufen().getValue() + playerResult.getNiao().getTotalScore()
 						+ playerResult.getGang().getValue() + playerResult.getPao().getTotalscore();
 				playerResult.setScore(score);
 				// 计算累计总分
@@ -213,6 +210,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				pao.calculate(dapao, sipaofanbei, playerIdList.size());
 				huPlayerResult.setPao(pao);
 				// 计算鸟分
+				niao.jiesuan(niao.getValue());
 				huPlayerResult.setNiao(niao);
 				playerResultList.add(huPlayerResult);
 				playerIdList.forEach((playerId) -> {
@@ -289,6 +287,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				pao.calculate(dapao, sipaofanbei, playerIdList.size());
 				huPlayerResult.setPao(pao);
 				// 计算鸟分
+				niao.jiesuan(niao.getValue());
 				huPlayerResult.setNiao(niao);
 				playerResultList.add(huPlayerResult);
 				playerIdList.forEach((playerId) -> {
@@ -373,7 +372,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 				pao.calculate(dapao, sipaofanbei, playerIdList.size());
 				huPlayerResult.setPao(pao);
 				// 计算鸟分
-				niao.setValue(niao.getValue() * (playerIdList.size() - 1));
+				niao.jiesuan(niao.getValue() * (playerIdList.size() - 1));
 				huPlayerResult.setNiao(niao);
 				playerResultList.add(huPlayerResult);
 				for (String playerId : playerIdList) {
@@ -433,7 +432,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 			}
 			playerResultList.forEach((playerResult) -> {
 				// 计算当盘总分
-				int score = playerResult.getHufen().getValue() + playerResult.getNiao().getValue()
+				int score = playerResult.getHufen().getValue() + playerResult.getNiao().getTotalScore()
 						+ playerResult.getGang().getValue() + playerResult.getPao().getTotalscore();
 				playerResult.setScore(score);
 				// 计算累计总分
@@ -499,7 +498,7 @@ public class FangpaoMajiangPanResultBuilder implements CurrentPanResultBuilder {
 			}
 			playerResultList.forEach((playerResult) -> {
 				// 计算当盘总分
-				int score = playerResult.getHufen().getValue() + playerResult.getNiao().getValue()
+				int score = playerResult.getHufen().getValue() + playerResult.getNiao().getTotalScore()
 						+ playerResult.getGang().getValue() + playerResult.getPao().getTotalscore();
 				playerResult.setScore(score);
 				// 计算累计总分
