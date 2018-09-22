@@ -50,6 +50,8 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 				Set<MajiangPlayerActionType> actionTypesSet = xiajia.collectActionCandidatesType();
 				if (actionTypesSet.contains(MajiangPlayerActionType.hu)) {
 					playerActionMap.put(player.getId(), gangAction);
+					player.clearActionCandidates();// 玩家已经做了决定，要删除动作
+					throw new HuFirstException();
 				}
 			} else {
 				break;
@@ -77,6 +79,8 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 				Set<MajiangPlayerActionType> actionTypesSet = xiajia.collectActionCandidatesType();
 				if (actionTypesSet.contains(MajiangPlayerActionType.hu)) {
 					playerActionMap.put(player.getId(), pengAction);
+					player.clearActionCandidates();// 玩家已经做了决定，要删除动作
+					throw new HuFirstException();
 				}
 			} else {
 				break;
@@ -90,9 +94,7 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 			return null;
 		}
 		for (MajiangPlayerAction action : playerActionMap.values()) {
-			if (action.getType().equals(MajiangPlayerActionType.hu)) {
-				return action;
-			} else if (action.getType().equals(MajiangPlayerActionType.gang)) {
+			if (action.getType().equals(MajiangPlayerActionType.gang)) {
 				return action;
 			} else if (action.getType().equals(MajiangPlayerActionType.peng)) {
 				return action;

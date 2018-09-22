@@ -6,7 +6,6 @@ import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.chi.MajiangChiAction;
 import com.dml.majiang.player.action.chi.MajiangPlayerChiActionUpdater;
-import com.dml.majiang.player.action.chi.PengganghuFirstException;
 
 /**
  * 吃的那个人要打牌
@@ -24,15 +23,10 @@ public class FangpaoMajiangChiActionUpdater implements MajiangPlayerChiActionUpd
 		Pan currentPan = ju.getCurrentPan();
 
 		MajiangPlayer player = currentPan.findPlayerById(chiAction.getActionPlayerId());
-		if (fangpaoMajiangStatisticsListener.getPlayerActionMap().containsKey(player.getId())) {
-			player.clearActionCandidates();// 玩家已经做了决定，要删除动作
-			throw new PengganghuFirstException();
-		} else {
-			currentPan.clearAllPlayersActionCandidates();
+		currentPan.clearAllPlayersActionCandidates();
 
-			if (player.getActionCandidates().isEmpty()) {
-				player.generateDaActions();
-			}
+		if (player.getActionCandidates().isEmpty()) {
+			player.generateDaActions();
 		}
 	}
 
