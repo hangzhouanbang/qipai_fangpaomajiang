@@ -18,10 +18,10 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 	public void updateActions(MajiangMoAction moAction, Ju ju) throws Exception {
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(moAction.getActionPlayerId());
+		currentPan.clearAllPlayersActionCandidates();
 		List<MajiangPai> fangruShoupaiList = player.getFangruShoupaiList();
 		Set<MajiangPai> guipaiTypeSet = player.getGuipaiTypeSet();
 		MajiangPai gangmoShoupai = player.getGangmoShoupai();
-		player.clearActionCandidates();
 		// 有手牌或刻子可以杠这个摸来的牌
 		player.tryShoupaigangmoAndGenerateCandidateAction();
 		player.tryKezigangmoAndGenerateCandidateAction();
