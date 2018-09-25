@@ -2,13 +2,11 @@ package com.anbang.qipai.fangpaomajiang.cqrs.c.domain.listener;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import com.dml.majiang.ju.Ju;
 import com.dml.majiang.pai.fenzu.GangType;
 import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
-import com.dml.majiang.player.action.HuFirstException;
 import com.dml.majiang.player.action.MajiangPlayerAction;
 import com.dml.majiang.player.action.MajiangPlayerActionType;
 import com.dml.majiang.player.action.gang.MajiangGangAction;
@@ -44,27 +42,17 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 	public void update(MajiangGangAction gangAction, Ju ju) throws Exception {
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(gangAction.getActionPlayerId());
-		MajiangPlayer xiajia = currentPan.findXiajia(player);
-		while (true) {
-			if (!xiajia.getId().equals(player.getId())) {
-				Set<MajiangPlayerActionType> actionTypesSet = xiajia.collectActionCandidatesType();
-				if (actionTypesSet.contains(MajiangPlayerActionType.hu)) {
-					playerActionMap.put(player.getId(), gangAction);
-					player.clearActionCandidates();// 玩家已经做了决定，要删除动作
-					throw new HuFirstException();
+		if (gangAction.isDisabledByHigherPriorityAction()) {// 如果被阻塞
+			playerActionMap.put(player.getId(), gangAction);// 记录下被阻塞的动作
+		} else {
+			if (gangAction.getGangType().equals(GangType.gangdachu)) {
+				String dachupaiPlayerId = gangAction.getDachupaiPlayerId();
+				if (playerIdFangGangShuMap.containsKey(dachupaiPlayerId)) {
+					Integer count = playerIdFangGangShuMap.get(dachupaiPlayerId) + 1;
+					playerIdFangGangShuMap.put(dachupaiPlayerId, count);
+				} else {
+					playerIdFangGangShuMap.put(dachupaiPlayerId, 1);
 				}
-			} else {
-				break;
-			}
-			xiajia = currentPan.findXiajia(xiajia);
-		}
-		if (gangAction.getGangType().equals(GangType.gangdachu)) {
-			String dachupaiPlayerId = gangAction.getDachupaiPlayerId();
-			if (playerIdFangGangShuMap.containsKey(dachupaiPlayerId)) {
-				Integer count = playerIdFangGangShuMap.get(dachupaiPlayerId) + 1;
-				playerIdFangGangShuMap.put(dachupaiPlayerId, count);
-			} else {
-				playerIdFangGangShuMap.put(dachupaiPlayerId, 1);
 			}
 		}
 	}
@@ -73,19 +61,8 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 	public void update(MajiangPengAction pengAction, Ju ju) throws Exception {
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(pengAction.getActionPlayerId());
-		MajiangPlayer xiajia = currentPan.findXiajia(player);
-		while (true) {
-			if (!xiajia.getId().equals(player.getId())) {
-				Set<MajiangPlayerActionType> actionTypesSet = xiajia.collectActionCandidatesType();
-				if (actionTypesSet.contains(MajiangPlayerActionType.hu)) {
-					playerActionMap.put(player.getId(), pengAction);
-					player.clearActionCandidates();// 玩家已经做了决定，要删除动作
-					throw new HuFirstException();
-				}
-			} else {
-				break;
-			}
-			xiajia = currentPan.findXiajia(xiajia);
+		if (pengAction.isDisabledByHigherPriorityAction()) {// 如果被阻塞
+			playerActionMap.put(player.getId(), pengAction);// 记录下被阻塞的动作
 		}
 	}
 

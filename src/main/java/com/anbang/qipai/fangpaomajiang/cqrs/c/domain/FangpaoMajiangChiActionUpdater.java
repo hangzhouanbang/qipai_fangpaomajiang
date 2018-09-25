@@ -1,6 +1,5 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
-import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.listener.FangpaoMajiangPengGangActionStatisticsListener;
 import com.dml.majiang.ju.Ju;
 import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
@@ -17,12 +16,9 @@ public class FangpaoMajiangChiActionUpdater implements MajiangPlayerChiActionUpd
 
 	@Override
 	public void updateActions(MajiangChiAction chiAction, Ju ju) throws Exception {
-		FangpaoMajiangPengGangActionStatisticsListener fangpaoMajiangStatisticsListener = ju
-				.getActionStatisticsListenerManager()
-				.findListener(FangpaoMajiangPengGangActionStatisticsListener.class);
 		Pan currentPan = ju.getCurrentPan();
-
 		MajiangPlayer player = currentPan.findPlayerById(chiAction.getActionPlayerId());
+
 		currentPan.clearAllPlayersActionCandidates();
 
 		if (player.getActionCandidates().isEmpty()) {
