@@ -20,12 +20,11 @@ public class FangpaoMajiangPengActionUpdater implements MajiangPlayerPengActionU
 	public void updateActions(MajiangPengAction pengAction, Ju ju) throws Exception {
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(pengAction.getActionPlayerId());
+		FangpaoMajiangPengGangActionStatisticsListener pengGangRecordListener = ju.getActionStatisticsListenerManager()
+				.findListener(FangpaoMajiangPengGangActionStatisticsListener.class);
 		if (pengAction.isDisabledByHigherPriorityAction()) {// 如果动作被阻塞
 			player.clearActionCandidates();// 玩家已经做了决定，要删除动作
 			if (currentPan.allPlayerHasNoActionCandidates() && !currentPan.anyPlayerHu()) {// 所有玩家行牌结束，并且没人胡
-				FangpaoMajiangPengGangActionStatisticsListener pengGangRecordListener = ju
-						.getActionStatisticsListenerManager()
-						.findListener(FangpaoMajiangPengGangActionStatisticsListener.class);
 				MajiangPlayerAction finallyDoneAction = pengGangRecordListener.findPlayerFinallyDoneAction();// 找出最终应该执行的动作
 				if (finallyDoneAction != null) {
 					MajiangPlayer actionPlayer = currentPan.findPlayerById(finallyDoneAction.getActionPlayerId());
@@ -41,6 +40,8 @@ public class FangpaoMajiangPengActionUpdater implements MajiangPlayerPengActionU
 			}
 		} else {
 			currentPan.clearAllPlayersActionCandidates();
+			pengGangRecordListener.updateForNextLun();// 清空动作缓存
+
 			if (player.getActionCandidates().isEmpty()) {
 				player.generateDaActions();
 			}
