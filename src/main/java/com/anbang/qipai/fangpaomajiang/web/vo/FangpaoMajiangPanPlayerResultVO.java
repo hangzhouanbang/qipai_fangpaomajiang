@@ -90,7 +90,7 @@ public class FangpaoMajiangPanPlayerResultVO {
 					niaoPaiList.add(niaoPaiVo);
 				}
 			}
-			niao = fangpaoMajiangNiao.getValue();
+			niao = fangpaoMajiangNiao.getTotalScore();
 		}
 		score = panPlayerResult.getPlayerResult().getScore();
 		List<ChichuPaiZu> chichuPaiZuList = panPlayerResult.getPlayer().getChichupaiZuList();
