@@ -22,7 +22,7 @@ import com.dml.majiang.player.shoupai.gouxing.GouXingPanHu;
 public class FangpaoMajiangGangActionUpdater implements MajiangPlayerGangActionUpdater {
 
 	@Override
-	public void updateActions(MajiangGangAction gangAction, Ju ju) throws Exception {
+	public void updateActions(MajiangGangAction gangAction, Ju ju) {
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(gangAction.getActionPlayerId());
 		FangpaoMajiangPengGangActionStatisticsListener pengGangRecordListener = ju.getActionStatisticsListenerManager()

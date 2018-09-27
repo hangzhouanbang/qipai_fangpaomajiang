@@ -39,7 +39,7 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 	}
 
 	@Override
-	public void update(MajiangGangAction gangAction, Ju ju) throws Exception {
+	public void update(MajiangGangAction gangAction, Ju ju) {
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(gangAction.getActionPlayerId());
 		if (gangAction.isDisabledByHigherPriorityAction()) {// 如果被阻塞
@@ -58,7 +58,7 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 	}
 
 	@Override
-	public void update(MajiangPengAction pengAction, Ju ju) throws Exception {
+	public void update(MajiangPengAction pengAction, Ju ju) {
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(pengAction.getActionPlayerId());
 		if (pengAction.isDisabledByHigherPriorityAction()) {// 如果被阻塞

@@ -15,7 +15,7 @@ import com.dml.majiang.player.action.chi.MajiangPlayerChiActionUpdater;
 public class FangpaoMajiangChiActionUpdater implements MajiangPlayerChiActionUpdater {
 
 	@Override
-	public void updateActions(MajiangChiAction chiAction, Ju ju) throws Exception {
+	public void updateActions(MajiangChiAction chiAction, Ju ju) {
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer player = currentPan.findPlayerById(chiAction.getActionPlayerId());
 

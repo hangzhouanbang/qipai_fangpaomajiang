@@ -20,7 +20,7 @@ public class FangpaoMajiangLastMoActionPlayerRecorder implements MajiangPlayerMo
 	}
 
 	@Override
-	public void update(MajiangMoAction moAction, Ju ju) throws Exception {
+	public void update(MajiangMoAction moAction, Ju ju) {
 		setLastMoActionPlayerId(moAction.getActionPlayerId());
 	}
 
