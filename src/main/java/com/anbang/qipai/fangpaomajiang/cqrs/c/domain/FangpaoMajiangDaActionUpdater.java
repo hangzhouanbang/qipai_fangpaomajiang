@@ -57,8 +57,9 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 					GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
 					// 先把这张牌放入计算器
 					xiajiaPlayer.getShoupaiCalculator().addPai(daAction.getPai());
-					FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestDianpaoHu(couldDihu,
-							gouXingPanHu, xiajiaPlayer, daAction.getPai());
+					FangpaoMajiangHu bestHu = FangpaoMajiangJiesuanCalculator.calculateBestDianpaoHu(
+							couldDihu && !currentPan.getZhuangPlayerId().equals(xiajiaPlayer.getId()), gouXingPanHu,
+							xiajiaPlayer, daAction.getPai());
 					// 再把这张牌拿出计算器
 					xiajiaPlayer.getShoupaiCalculator().removePai(daAction.getPai());
 					if (bestHu != null) {
