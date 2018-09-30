@@ -12,7 +12,7 @@ public class FangpaoMajiangMoActionProcessor implements MajiangPlayerMoActionPro
 		Pan currentPan = ju.getCurrentPan();
 
 		currentPan.playerMoPai(action.getActionPlayerId());
-		currentPan.setActivePaiCursor(null);
+		// currentPan.setActivePaiCursor(null);
 
 		// MajiangPlayer player = currentPan.findPlayerById(action.getActionPlayerId());
 		// List<MajiangPai> fangruShoupaiList = player.getFangruShoupaiList();
