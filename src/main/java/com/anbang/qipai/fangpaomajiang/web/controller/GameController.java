@@ -145,6 +145,7 @@ public class GameController {
 				List<QueryScope> scopes = QueryScope.scopesForState(majiangGameValueObject.getState(),
 						majiangGameValueObject.findPlayerState(otherPlayerId));
 				scopes.remove(QueryScope.panResult);
+				scopes.remove(QueryScope.gameFinishVote);
 				scopes.forEach((scope) -> {
 					wsNotifier.notifyToQuery(otherPlayerId, scope.name());
 				});
@@ -188,6 +189,7 @@ public class GameController {
 				List<QueryScope> scopes = QueryScope.scopesForState(majiangGameValueObject.getState(),
 						majiangGameValueObject.findPlayerState(otherPlayerId));
 				scopes.remove(QueryScope.panResult);
+				scopes.remove(QueryScope.gameFinishVote);
 				scopes.forEach((scope) -> {
 					wsNotifier.notifyToQuery(otherPlayerId, scope.name());
 				});
@@ -231,6 +233,7 @@ public class GameController {
 				List<QueryScope> scopes = QueryScope.scopesForState(majiangGameValueObject.getState(),
 						majiangGameValueObject.findPlayerState(otherPlayerId));
 				scopes.remove(QueryScope.panResult);
+				scopes.remove(QueryScope.gameFinishVote);
 				scopes.forEach((scope) -> {
 					wsNotifier.notifyToQuery(otherPlayerId, scope.name());
 				});
