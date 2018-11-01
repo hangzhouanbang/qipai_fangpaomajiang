@@ -26,15 +26,11 @@ public class FangpaoMajiangPengActionUpdater implements MajiangPlayerPengActionU
 			player.clearActionCandidates();// 玩家已经做了决定，要删除动作
 			if (currentPan.allPlayerHasNoActionCandidates() && !currentPan.anyPlayerHu()) {// 所有玩家行牌结束，并且没人胡
 				MajiangPlayerAction finallyDoneAction = pengGangRecordListener.findPlayerFinallyDoneAction();// 找出最终应该执行的动作
-				if (finallyDoneAction != null) {
-					MajiangPlayer actionPlayer = currentPan.findPlayerById(finallyDoneAction.getActionPlayerId());
-					if (finallyDoneAction instanceof MajiangPengAction) {// 如果是碰，也只能是碰
-						MajiangPengAction action = (MajiangPengAction) finallyDoneAction;
-						actionPlayer.addActionCandidate(new MajiangPengAction(action.getActionPlayerId(),
-								action.getDachupaiPlayerId(), action.getPai()));
-					}
-				} else {
-
+				MajiangPlayer actionPlayer = currentPan.findPlayerById(finallyDoneAction.getActionPlayerId());
+				if (finallyDoneAction instanceof MajiangPengAction) {// 如果是碰，也只能是碰
+					MajiangPengAction action = (MajiangPengAction) finallyDoneAction;
+					actionPlayer.addActionCandidate(new MajiangPengAction(action.getActionPlayerId(),
+							action.getDachupaiPlayerId(), action.getPai()));
 				}
 				pengGangRecordListener.updateForNextLun();// 清空动作缓存
 			}
