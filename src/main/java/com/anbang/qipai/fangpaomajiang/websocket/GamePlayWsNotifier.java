@@ -84,22 +84,34 @@ public class GamePlayWsNotifier {
 			String payLoad = gson.toJson(mo);
 			String sessionId = playerIdSessionIdMap.get(playerId);
 			if (sessionId == null) {
-				// TODO 测试代码
-				System.out.println("玩家" + playerId + "没有被绑定");
 				return;
 			}
 			WebSocketSession session = idSessionMap.get(sessionId);
 			if (session != null) {
-				// TODO 测试代码
-				System.out.println("通知发送开始{" + session.isOpen() + "}：<" + playerId + "> " + payLoad + " ("
-						+ System.currentTimeMillis() + ")");
 				sendMessage(session, payLoad);
-				System.out.println("通知发送结束{" + session.isOpen() + "}：<" + playerId + "> " + payLoad + " ("
-						+ System.currentTimeMillis() + ")");
 			} else {
-				// TODO 测试代码
-				System.out.println("通知发送失败（session is null）：<" + playerId + "> " + payLoad + " ("
-						+ System.currentTimeMillis() + ")");
+			}
+		});
+	}
+
+	public void notifyToListenWisecrack(String playerId, String ordinal, String speakerId) {
+		executorService.submit(() -> {
+			CommonMO mo = new CommonMO();
+			mo.setMsg("wisecrack");
+			Map data = new HashMap();
+			data.put("ordinal", ordinal);
+			data.put("speakerId", speakerId);
+			mo.setData(data);
+			String payLoad = gson.toJson(mo);
+			String sessionId = playerIdSessionIdMap.get(playerId);
+			if (sessionId == null) {
+				return;
+			}
+			WebSocketSession session = idSessionMap.get(sessionId);
+			if (session != null) {
+				sendMessage(session, payLoad);
+			} else {
+
 			}
 		});
 	}

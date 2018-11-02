@@ -19,6 +19,8 @@ import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.PanResultDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.service.MajiangGameQueryService;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.service.MajiangPlayQueryService;
+import com.anbang.qipai.fangpaomajiang.msg.msjobj.MajiangHistoricalJuResult;
+import com.anbang.qipai.fangpaomajiang.msg.msjobj.MajiangHistoricalPanResult;
 import com.anbang.qipai.fangpaomajiang.msg.service.FangpaoMajiangGameMsgService;
 import com.anbang.qipai.fangpaomajiang.msg.service.FangpaoMajiangResultMsgService;
 import com.anbang.qipai.fangpaomajiang.web.vo.CommonVO;
@@ -130,6 +132,8 @@ public class MajiangController {
 	public CommonVO action(String token, int id) {
 		CommonVO vo = new CommonVO();
 		Map data = new HashMap();
+		List<String> queryScopes = new ArrayList<>();
+		data.put("queryScopes", queryScopes);
 		vo.setData(data);
 		String playerId = playerAuthService.getPlayerIdByToken(token);
 		if (playerId == null) {
@@ -155,23 +159,26 @@ public class MajiangController {
 		}
 
 		if (majiangActionResult.getPanResult() == null) {// 盘没结束
-			data.put("queryScope", QueryScope.panForMe);
+			queryScopes.add(QueryScope.panForMe.name());
 		} else {// 盘结束了
-
+			String gameId = majiangActionResult.getMajiangGame().getId();
+			MajiangGameDbo majiangGameDbo = majiangGameQueryService.findMajiangGameDboById(gameId);
 			if (majiangActionResult.getJuResult() != null) {// 局也结束了
-				MajiangGameDbo majiangGameDbo = majiangGameQueryService
-						.findMajiangGameDboById(majiangActionResult.getMajiangGame().getId());
-				JuResultDbo juResultDbo = majiangPlayQueryService
-						.findJuResultDbo(majiangActionResult.getMajiangGame().getId());
-				JuResultVO juResult = new JuResultVO(juResultDbo, majiangGameDbo);
+
+				JuResultDbo juResultDbo = majiangPlayQueryService.findJuResultDbo(gameId);
+				MajiangHistoricalJuResult juResult = new MajiangHistoricalJuResult(juResultDbo, majiangGameDbo);
 				fangpaoMajiangResultMsgService.recordJuResult(juResult);
 
-				gameMsgService.gameFinished(majiangActionResult.getMajiangGame().getId());
-				data.put("queryScope", QueryScope.juResult);
+				gameMsgService.gameFinished(gameId);
+				queryScopes.add(QueryScope.juResult.name());
 			} else {
-				data.put("queryScope", QueryScope.panResult);
+				queryScopes.add(QueryScope.panResult.name());
+				queryScopes.add(QueryScope.gameInfo.name());
 			}
-
+			PanResultDbo panResultDbo = majiangPlayQueryService.findPanResultDbo(gameId,
+					majiangActionResult.getPanResult().getPan().getNo());
+			MajiangHistoricalPanResult panResult = new MajiangHistoricalPanResult(panResultDbo, majiangGameDbo);
+			fangpaoMajiangResultMsgService.recordPanResult(panResult);
 			gameMsgService.panFinished(majiangActionResult.getMajiangGame(),
 					majiangActionResult.getPanActionFrame().getPanAfterAction());
 
