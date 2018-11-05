@@ -19,6 +19,7 @@ import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.GameFinishVoteDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.JuResultDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGameDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.MajiangGamePlayerDbo;
+import com.anbang.qipai.fangpaomajiang.cqrs.q.dbo.PanActionFrameDbo;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.service.MajiangGameQueryService;
 import com.anbang.qipai.fangpaomajiang.cqrs.q.service.MajiangPlayQueryService;
 import com.anbang.qipai.fangpaomajiang.msg.msjobj.MajiangHistoricalJuResult;
@@ -32,7 +33,6 @@ import com.anbang.qipai.fangpaomajiang.web.vo.GameVO;
 import com.anbang.qipai.fangpaomajiang.web.vo.PanActionFrameVO;
 import com.anbang.qipai.fangpaomajiang.websocket.GamePlayWsNotifier;
 import com.anbang.qipai.fangpaomajiang.websocket.QueryScope;
-import com.dml.majiang.pan.frame.PanActionFrame;
 import com.dml.mpgame.game.Canceled;
 import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.GameNotFoundException;
@@ -500,13 +500,20 @@ public class GameController {
 
 	@RequestMapping(value = "/playback")
 	@ResponseBody
-	public CommonVO playback(String gameId, int panNo, int actionNo) {
+	public CommonVO playback(String gameId, int panNo) {
 		CommonVO vo = new CommonVO();
 		Map data = new HashMap();
 		vo.setData(data);
-		PanActionFrame panActionFrame = majiangPlayQueryService.findPanActionFrameDboForBackPlay(gameId, panNo,
-				actionNo);
-		data.put("panActionFrame", new PanActionFrameVO(panActionFrame));
+		List<PanActionFrameDbo> frameList = majiangPlayQueryService.findPanActionFrameDboForBackPlay(gameId, panNo);
+		List<PanActionFrameVO> frameVOList = new ArrayList<>();
+		for (PanActionFrameDbo frame : frameList) {
+			frameVOList.add(new PanActionFrameVO(frame.getPanActionFrame()));
+		}
+		MajiangGameDbo majiangGameDbo = majiangGameQueryService.findMajiangGameDboById(gameId);
+		majiangGameDbo.setPanNo(panNo);
+		GameVO gameVO = new GameVO(majiangGameDbo);
+		data.put("game", gameVO);
+		data.put("framelist", frameVOList);
 		return vo;
 	}
 }
