@@ -516,4 +516,25 @@ public class GameController {
 		data.put("framelist", frameVOList);
 		return vo;
 	}
+
+	@RequestMapping(value = "/speak")
+	@ResponseBody
+	public CommonVO speak(String token, String gameId) {
+		CommonVO vo = new CommonVO();
+		String playerId = playerAuthService.getPlayerIdByToken(token);
+		if (playerId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		MajiangGameDbo majiangGameDbo = majiangGameQueryService.findMajiangGameDboById(gameId);
+		List<MajiangGamePlayerDbo> playerList = majiangGameDbo.getPlayers();
+		for (MajiangGamePlayerDbo player : playerList) {
+			if (!player.getPlayerId().equals(playerId)) {
+				wsNotifier.notifyToListenSpeak(player.getPlayerId(), playerId);
+			}
+		}
+		vo.setSuccess(true);
+		return vo;
+	}
 }

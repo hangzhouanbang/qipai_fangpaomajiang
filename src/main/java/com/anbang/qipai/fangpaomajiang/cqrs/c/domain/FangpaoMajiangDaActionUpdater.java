@@ -45,14 +45,13 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 		Set<String> canNotHuPlayers = guoHuBuHuStatisticsListener.getCanNotHuPlayers();
 		while (true) {
 			if (!xiajiaPlayer.getId().equals(daAction.getActionPlayerId())) {
+				// 其他的可以碰杠胡
+				List<MajiangPai> fangruShoupaiList = xiajiaPlayer.getFangruShoupaiList();
+				if (fangruShoupaiList.size() != 2) {
+					xiajiaPlayer.tryPengAndGenerateCandidateAction(daAction.getActionPlayerId(), daAction.getPai());
+				}
+				xiajiaPlayer.tryGangdachuAndGenerateCandidateAction(daAction.getActionPlayerId(), daAction.getPai());
 				if (!canNotHuPlayers.contains(xiajiaPlayer.getId())) {
-					// 其他的可以碰杠胡
-					List<MajiangPai> fangruShoupaiList = xiajiaPlayer.getFangruShoupaiList();
-					if (fangruShoupaiList.size() != 2) {
-						xiajiaPlayer.tryPengAndGenerateCandidateAction(daAction.getActionPlayerId(), daAction.getPai());
-					}
-					xiajiaPlayer.tryGangdachuAndGenerateCandidateAction(daAction.getActionPlayerId(),
-							daAction.getPai());
 					// 点炮胡
 					GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
 					// 先把这张牌放入计算器
