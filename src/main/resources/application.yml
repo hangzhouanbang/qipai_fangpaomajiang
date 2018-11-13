@@ -3,14 +3,16 @@ spring:
     default-domain: qipai_fangpaomajiang
   data:
     mongodb:
-      uri: mongodb://localhost:27017/qipai_fangpaomajiang
-      
+      #uri: mongodb://localhost:27017/qipai_fangpaomajiang
+     
   cloud:
     stream:
       kafka:
         binder:
-          brokers: localhost:9092
-          zk-nodes: localhost:2181
+          #brokers: localhost:9092
+          #zk-nodes: localhost:2181
+          brokers: 172.16.21.51:9092
+          zk-nodes: 172.16.21.51:2181
           minPartitionCount: 1
           autoCreateTopics: true
           autoAddPartitions: false
