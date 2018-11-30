@@ -62,6 +62,11 @@ public class FangpaoMajiangGuoActionUpdater implements MajiangPlayerGuoActionUpd
 				MajiangPlayer gangPlayer = currentPan.findPlayerById(action.getActionPlayerId());
 				gangPlayer.addActionCandidate(new MajiangMoAction(gangPlayer.getId(), new LundaoMopai()));
 			}
+		} else if (action.getType().equals(MajiangPlayerActionType.peng)) {// 过的是我碰之后的杠
+			// 那要我打牌
+			if (player.getActionCandidates().isEmpty()) {
+				player.generateDaActions();
+			}
 		} else {
 
 		}
