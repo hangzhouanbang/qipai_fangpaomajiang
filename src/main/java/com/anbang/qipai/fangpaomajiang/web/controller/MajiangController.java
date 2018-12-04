@@ -187,12 +187,9 @@ public class MajiangController {
 		// 通知其他人
 		for (String otherPlayerId : majiangActionResult.getMajiangGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				QueryScope
-						.scopesForState(majiangActionResult.getMajiangGame().getState(),
-								majiangActionResult.getMajiangGame().findPlayerState(otherPlayerId))
-						.forEach((scope) -> {
-							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-						});
+				wsNotifier.notifyToQuery(otherPlayerId,
+						QueryScope.scopesForState(majiangActionResult.getMajiangGame().getState(),
+								majiangActionResult.getMajiangGame().findPlayerState(otherPlayerId)));
 			}
 		}
 
@@ -242,9 +239,7 @@ public class MajiangController {
 				List<QueryScope> scopes = QueryScope.scopesForState(readyToNextPanResult.getMajiangGame().getState(),
 						readyToNextPanResult.getMajiangGame().findPlayerState(otherPlayerId));
 				scopes.remove(QueryScope.panResult);
-				scopes.forEach((scope) -> {
-					wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-				});
+				wsNotifier.notifyToQuery(otherPlayerId, scopes);
 			}
 		}
 		data.put("queryScopes", queryScopes);

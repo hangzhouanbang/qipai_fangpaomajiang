@@ -2,11 +2,15 @@ package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.listener.FangpaoMajiangPengGangActionStatisticsListener;
 import com.dml.majiang.ju.Ju;
+import com.dml.majiang.pai.MajiangPai;
+import com.dml.majiang.pai.fenzu.GangType;
 import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.MajiangPlayerAction;
+import com.dml.majiang.player.action.gang.MajiangGangAction;
 import com.dml.majiang.player.action.peng.MajiangPengAction;
 import com.dml.majiang.player.action.peng.MajiangPlayerPengActionUpdater;
+import com.dml.majiang.player.chupaizu.PengchuPaiZu;
 
 /**
  * 碰的那个人要打牌
@@ -38,7 +42,15 @@ public class FangpaoMajiangPengActionUpdater implements MajiangPlayerPengActionU
 			currentPan.clearAllPlayersActionCandidates();
 			pengGangRecordListener.updateForNextLun();// 清空动作缓存
 			// 刻子杠手牌
-			player.tryKezigangshoupaiAndGenerateCandidateAction();
+			for (PengchuPaiZu pengchuPaiZu : player.getPengchupaiZuList()) {
+				for (MajiangPai fangruShoupai : player.getFangruShoupaiList()) {
+					if (pengchuPaiZu.getKezi().getPaiType().equals(fangruShoupai)) {
+						player.addActionCandidate(new MajiangGangAction(pengAction.getActionPlayerId(),
+								pengAction.getDachupaiPlayerId(), fangruShoupai, GangType.kezigangshoupai));
+						break;
+					}
+				}
+			}
 
 			// 需要有“过”
 			player.checkAndGenerateGuoCandidateAction();

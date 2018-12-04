@@ -119,10 +119,8 @@ public class GameController {
 		// 通知其他人
 		for (String otherPlayerId : majiangGameValueObject.allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				QueryScope.scopesForState(majiangGameValueObject.getState(),
-						majiangGameValueObject.findPlayerState(otherPlayerId)).forEach((scope) -> {
-							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-						});
+				wsNotifier.notifyToQuery(otherPlayerId, QueryScope.scopesForState(majiangGameValueObject.getState(),
+						majiangGameValueObject.findPlayerState(otherPlayerId)));
 			}
 		}
 		String token = playerAuthService.newSessionForPlayer(playerId);
@@ -171,9 +169,7 @@ public class GameController {
 						|| majiangGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
 					scopes.remove(QueryScope.gameFinishVote);
 				}
-				scopes.forEach((scope) -> {
-					wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-				});
+				wsNotifier.notifyToQuery(otherPlayerId, scopes);
 			}
 		}
 		return vo;
@@ -218,9 +214,7 @@ public class GameController {
 						|| majiangGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
 					scopes.remove(QueryScope.gameFinishVote);
 				}
-				scopes.forEach((scope) -> {
-					wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-				});
+				wsNotifier.notifyToQuery(otherPlayerId, scopes);
 			}
 		}
 		return vo;
@@ -265,9 +259,7 @@ public class GameController {
 						|| majiangGameValueObject.getState().name().equals(VoteNotPassWhenWaitingNextPan.name)) {
 					scopes.remove(QueryScope.gameFinishVote);
 				}
-				scopes.forEach((scope) -> {
-					wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-				});
+				wsNotifier.notifyToQuery(otherPlayerId, scopes);
 			}
 		}
 
@@ -332,10 +324,9 @@ public class GameController {
 		// 通知其他人
 		for (String otherPlayerId : readyForGameResult.getMajiangGame().allPlayerIds()) {
 			if (!otherPlayerId.equals(playerId)) {
-				QueryScope.scopesForState(readyForGameResult.getMajiangGame().getState(),
-						readyForGameResult.getMajiangGame().findPlayerState(otherPlayerId)).forEach((scope) -> {
-							wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-						});
+				wsNotifier.notifyToQuery(otherPlayerId,
+						QueryScope.scopesForState(readyForGameResult.getMajiangGame().getState(),
+								readyForGameResult.getMajiangGame().findPlayerState(otherPlayerId)));
 			}
 		}
 
@@ -399,9 +390,7 @@ public class GameController {
 					List<QueryScope> scopes = QueryScope.scopesForState(majiangGameValueObject.getState(),
 							majiangGameValueObject.findPlayerState(otherPlayerId));
 					scopes.remove(QueryScope.panResult);
-					scopes.forEach((scope) -> {
-						wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-					});
+					wsNotifier.notifyToQuery(otherPlayerId, scopes);
 				}
 			}
 		}
@@ -453,9 +442,7 @@ public class GameController {
 					List<QueryScope> scopes = QueryScope.scopesForState(majiangGameValueObject.getState(),
 							majiangGameValueObject.findPlayerState(otherPlayerId));
 					scopes.remove(QueryScope.panResult);
-					scopes.forEach((scope) -> {
-						wsNotifier.notifyToQuery(otherPlayerId, scope.name());
-					});
+					wsNotifier.notifyToQuery(otherPlayerId, scopes);
 				}
 			}
 		}
@@ -537,7 +524,7 @@ public class GameController {
 
 	@RequestMapping(value = "/speak")
 	@ResponseBody
-	public CommonVO speak(String token, String gameId) {
+	public CommonVO speak(String token, String gameId, String wordId) {
 		CommonVO vo = new CommonVO();
 		String playerId = playerAuthService.getPlayerIdByToken(token);
 		if (playerId == null) {
@@ -549,7 +536,7 @@ public class GameController {
 		List<MajiangGamePlayerDbo> playerList = majiangGameDbo.getPlayers();
 		for (MajiangGamePlayerDbo player : playerList) {
 			if (!player.getPlayerId().equals(playerId)) {
-				wsNotifier.notifyToListenSpeak(player.getPlayerId(), playerId);
+				wsNotifier.notifyToListenSpeak(player.getPlayerId(), wordId, playerId);
 			}
 		}
 		vo.setSuccess(true);
