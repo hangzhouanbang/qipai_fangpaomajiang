@@ -53,6 +53,16 @@ public class FangpaoMajiangPengGangActionStatisticsListener
 				} else {
 					playerIdFangGangShuMap.put(dachupaiPlayerId, 1);
 				}
+			} else if (gangAction.getGangType().equals(GangType.kezigangshoupai)) {
+				String dachupaiPlayerId = gangAction.getDachupaiPlayerId();
+				if (dachupaiPlayerId != null) {
+					if (playerIdFangGangShuMap.containsKey(dachupaiPlayerId)) {
+						Integer count = playerIdFangGangShuMap.get(dachupaiPlayerId) + 1;
+						playerIdFangGangShuMap.put(dachupaiPlayerId, count);
+					} else {
+						playerIdFangGangShuMap.put(dachupaiPlayerId, 1);
+					}
+				}
 			}
 		}
 	}
