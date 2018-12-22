@@ -30,8 +30,9 @@ public class GameFinishVoteVO {
 		playerIdVoteOptionMap = vote.getPlayerIdVoteOptionMap();
 		result = vote.getResult();
 		startTime = vote.getStartTime();
-		remainTime = System.currentTimeMillis() - startTime > 15000 ? 0
-				: 15000 - (System.currentTimeMillis() - startTime);
+		long endTime = vote.getEndTime();
+		long currentTime = System.currentTimeMillis();
+		remainTime = currentTime > endTime ? 0 : endTime - currentTime;
 	}
 
 	public String getSponsorId() {
