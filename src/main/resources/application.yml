@@ -3,16 +3,14 @@ spring:
     default-domain: qipai_fangpaomajiang
   data:
     mongodb:
-      #uri: mongodb://localhost:27017/qipai_fangpaomajiang
+      uri: mongodb://localhost:27017/qipai_fangpaomajiang
         
   cloud:
     stream:
       kafka:
         binder:
-          #brokers: localhost:9092
-          #zk-nodes: localhost:2181
-          brokers: 172.16.21.51:9092
-          zk-nodes: 172.16.21.51:2181
+          brokers: localhost:9092
+          zk-nodes: localhost:2181
           minPartitionCount: 1
           autoCreateTopics: true
           autoAddPartitions: false
@@ -38,6 +36,16 @@ spring:
                 batch:
                   size: 16384
           memberGoldsAccounting:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          wisecrack:
             producer:
               configuration:
                 request:
@@ -84,6 +92,11 @@ spring:
             concurrency: 1
             partitioned: false
           contentType: application/json
+        wisecrack:
+          destination: wisecrack
+          contentType: application/json
+          producer:
+            partitionCount: 1
       
 server:
   port: 2002
