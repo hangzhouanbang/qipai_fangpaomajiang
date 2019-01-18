@@ -4,7 +4,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/qipai_fangpaomajiang
-        
+       
   cloud:
     stream:
       kafka:
@@ -100,6 +100,10 @@ spring:
       
 server:
   port: 2002
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
   
 filepath:
   snapshotFileBasePath: /data/app/qipai_fangpaomajiang/server1/snapshot
