@@ -4,7 +4,7 @@ spring:
   data:
     mongodb:
       #uri: mongodb://localhost:27017/qipai_fangpaomajiang
-       
+
   cloud:
     stream:
       kafka:

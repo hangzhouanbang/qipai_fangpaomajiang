@@ -17,6 +17,8 @@ public interface GameCmdService {
 
 	ReadyForGameResult readyForGame(String playerId, Long currentTime) throws Exception;
 
+	ReadyForGameResult cancelReadyForGame(String playerId, Long currentTime) throws Exception;
+
 	MajiangGameValueObject finish(String playerId, Long currentTime) throws Exception;
 
 	MajiangGameValueObject voteToFinish(String playerId, Boolean yes) throws Exception;

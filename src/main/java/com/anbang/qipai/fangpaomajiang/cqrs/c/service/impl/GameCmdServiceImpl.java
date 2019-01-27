@@ -193,4 +193,13 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		return new MajiangGameValueObject(majiangGame);
 	}
 
+	@Override
+	public ReadyForGameResult cancelReadyForGame(String playerId, Long currentTime) throws Exception {
+		ReadyForGameResult result = new ReadyForGameResult();
+		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
+		MajiangGameValueObject majiangGameValueObject = gameServer.cancelReady(playerId, currentTime);
+		result.setMajiangGame(majiangGameValueObject);
+
+		return result;
+	}
 }
