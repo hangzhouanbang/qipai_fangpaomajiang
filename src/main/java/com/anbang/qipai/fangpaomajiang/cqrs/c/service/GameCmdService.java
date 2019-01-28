@@ -9,6 +9,9 @@ public interface GameCmdService {
 	MajiangGameValueObject newMajiangGame(String gameId, String playerId, Integer panshu, Integer renshu,
 			Boolean hongzhongcaishen, Boolean dapao, Boolean sipaofanbei, Boolean zhuaniao, Integer niaoshu);
 
+	MajiangGameValueObject newMajiangGameForXiuxianchang(String gameId, String playerId, Integer panshu, Integer renshu,
+			Boolean hongzhongcaishen, Boolean dapao, Boolean sipaofanbei, Boolean zhuaniao, Integer niaoshu);
+
 	MajiangGameValueObject joinGame(String playerId, String gameId) throws Exception;
 
 	MajiangGameValueObject leaveGame(String playerId) throws Exception;
