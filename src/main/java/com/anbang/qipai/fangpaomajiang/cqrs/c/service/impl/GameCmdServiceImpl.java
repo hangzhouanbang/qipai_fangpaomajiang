@@ -66,7 +66,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 	}
 
 	@Override
-	public MajiangGameValueObject newMajiangGameForXiuxianchang(String gameId, String playerId, Integer panshu,
+	public MajiangGameValueObject newMajiangGameLeaveAndQuit(String gameId, String playerId, Integer panshu,
 			Integer renshu, Boolean hongzhongcaishen, Boolean dapao, Boolean sipaofanbei, Boolean zhuaniao,
 			Integer niaoshu) {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
@@ -87,10 +87,10 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 		newGame.setReadyStrategy(new FixedNumberOfPlayersGameReadyStrategy(renshu));
 
 		newGame.setLeaveByOfflineStrategyAfterStart(new OfflineGameLeaveStrategy());
-		newGame.setLeaveByOfflineStrategyBeforeStart(new OfflineAndNotReadyGameLeaveStrategy());
+		newGame.setLeaveByOfflineStrategyBeforeStart(new PlayerGameLeaveStrategy());
 
 		newGame.setLeaveByHangupStrategyAfterStart(new OfflineGameLeaveStrategy());
-		newGame.setLeaveByHangupStrategyBeforeStart(new OfflineAndNotReadyGameLeaveStrategy());
+		newGame.setLeaveByHangupStrategyBeforeStart(new PlayerGameLeaveStrategy());
 
 		newGame.setLeaveByPlayerStrategyAfterStart(new OfflineGameLeaveStrategy());
 		newGame.setLeaveByPlayerStrategyBeforeStart(new PlayerGameLeaveStrategy());
