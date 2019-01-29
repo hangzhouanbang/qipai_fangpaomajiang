@@ -191,9 +191,10 @@ public class GameController {
 			MajiangHistoricalJuResult juResult = new MajiangHistoricalJuResult(juResultDbo, majiangGameDbo);
 			fangpaoMajiangResultMsgService.recordJuResult(juResult);
 		}
-		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)
-				|| majiangGameValueObject.getState().name().equals(Canceled.name)) {
+		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)) {
 			gameMsgService.gameFinished(gameId);
+		} else if (majiangGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameCanceled(gameId, playerId);
 		} else {
 			gameMsgService.gamePlayerLeave(majiangGameValueObject, playerId);
 		}
@@ -249,9 +250,10 @@ public class GameController {
 			MajiangHistoricalJuResult juResult = new MajiangHistoricalJuResult(juResultDbo, majiangGameDbo);
 			fangpaoMajiangResultMsgService.recordJuResult(juResult);
 		}
-		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)
-				|| majiangGameValueObject.getState().name().equals(Canceled.name)) {
+		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)) {
 			gameMsgService.gameFinished(gameId);
+		} else if (majiangGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameCanceled(gameId, playerId);
 		} else {
 			gameMsgService.gamePlayerLeave(majiangGameValueObject, playerId);
 		}
@@ -475,9 +477,11 @@ public class GameController {
 			fangpaoMajiangResultMsgService.recordJuResult(juResult);
 		}
 
-		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)
-				|| majiangGameValueObject.getState().name().equals(Canceled.name)) {
+		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)) {
 			gameMsgService.gameFinished(gameId);
+			data.put("queryScope", QueryScope.gameInfo);
+		} else if (majiangGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameCanceled(gameId, playerId);
 			data.put("queryScope", QueryScope.gameInfo);
 		} else {
 			// 游戏没结束有两种可能：一种是发起了投票。还有一种是游戏没开始，解散发起人又不是房主，那就自己走人。
@@ -533,9 +537,10 @@ public class GameController {
 			MajiangHistoricalJuResult juResult = new MajiangHistoricalJuResult(juResultDbo, majiangGameDbo);
 			fangpaoMajiangResultMsgService.recordJuResult(juResult);
 		}
-		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)
-				|| majiangGameValueObject.getState().name().equals(Canceled.name)) {
+		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)) {
 			gameMsgService.gameFinished(gameId);
+		} else if (majiangGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameCanceled(gameId, playerId);
 		}
 
 		data.put("queryScope", QueryScope.gameFinishVote);
@@ -587,9 +592,10 @@ public class GameController {
 			MajiangHistoricalJuResult juResult = new MajiangHistoricalJuResult(juResultDbo, majiangGameDbo);
 			fangpaoMajiangResultMsgService.recordJuResult(juResult);
 		}
-		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)
-				|| majiangGameValueObject.getState().name().equals(Canceled.name)) {
+		if (majiangGameValueObject.getState().name().equals(FinishedByVote.name)) {
 			gameMsgService.gameFinished(gameId);
+		} else if (majiangGameValueObject.getState().name().equals(Canceled.name)) {
+			gameMsgService.gameCanceled(gameId, playerId);
 		}
 
 		data.put("queryScope", QueryScope.gameFinishVote);
