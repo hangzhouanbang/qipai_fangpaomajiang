@@ -8,6 +8,7 @@ import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.pan.Pan;
 import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.hu.MajiangHuAction;
+import com.dml.majiang.player.action.listener.comprehensive.TianHuAndDihuOpportunityDetector;
 import com.dml.majiang.player.action.mo.MajiangMoAction;
 import com.dml.majiang.player.action.mo.MajiangPlayerMoActionUpdater;
 import com.dml.majiang.player.shoupai.gouxing.GouXingPanHu;
@@ -35,9 +36,11 @@ public class FangpaoMajiangMoActionUpdater implements MajiangPlayerMoActionUpdat
 		GouXingPanHu gouXingPanHu = ju.getGouXingPanHu();
 
 		// 天胡
+		TianHuAndDihuOpportunityDetector tianHuAndDihuOpportunityDetector = ju.getActionStatisticsListenerManager()
+				.findListener(TianHuAndDihuOpportunityDetector.class);
 		boolean couldTianhu = false;
 		if (currentPan.getZhuangPlayerId().equals(player.getId())) {
-			if (player.countAllFangruShoupai() == 0) {
+			if (tianHuAndDihuOpportunityDetector.ifTianhuOpportunity()) {
 				couldTianhu = true;
 			}
 		}

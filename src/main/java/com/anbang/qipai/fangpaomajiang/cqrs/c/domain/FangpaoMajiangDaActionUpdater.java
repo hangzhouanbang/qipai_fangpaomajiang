@@ -10,7 +10,7 @@ import com.dml.majiang.player.MajiangPlayer;
 import com.dml.majiang.player.action.da.MajiangDaAction;
 import com.dml.majiang.player.action.da.MajiangPlayerDaActionUpdater;
 import com.dml.majiang.player.action.hu.MajiangHuAction;
-import com.dml.majiang.player.action.listener.comprehensive.DianpaoDihuOpportunityDetector;
+import com.dml.majiang.player.action.listener.comprehensive.TianHuAndDihuOpportunityDetector;
 import com.dml.majiang.player.action.listener.comprehensive.GuoHuBuHuStatisticsListener;
 import com.dml.majiang.player.action.mo.LundaoMopai;
 import com.dml.majiang.player.action.mo.MajiangMoAction;
@@ -29,8 +29,8 @@ public class FangpaoMajiangDaActionUpdater implements MajiangPlayerDaActionUpdat
 		Pan currentPan = ju.getCurrentPan();
 		MajiangPlayer daPlayer = currentPan.findPlayerById(daAction.getActionPlayerId());
 		// 是否可以地胡
-		DianpaoDihuOpportunityDetector dianpaoDihuOpportunityDetector = ju.getActionStatisticsListenerManager()
-				.findListener(DianpaoDihuOpportunityDetector.class);
+		TianHuAndDihuOpportunityDetector dianpaoDihuOpportunityDetector = ju.getActionStatisticsListenerManager()
+				.findListener(TianHuAndDihuOpportunityDetector.class);
 		boolean couldDihu = dianpaoDihuOpportunityDetector.ifDihuOpportunity();
 		daPlayer.clearActionCandidates();
 
