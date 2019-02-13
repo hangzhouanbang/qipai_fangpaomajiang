@@ -1,5 +1,7 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
+import java.util.List;
+
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.listener.FangpaoMajiangPengGangActionStatisticsListener;
 import com.dml.majiang.ju.Ju;
 import com.dml.majiang.pai.MajiangPai;
@@ -42,13 +44,13 @@ public class FangpaoMajiangPengActionUpdater implements MajiangPlayerPengActionU
 			currentPan.clearAllPlayersActionCandidates();
 			pengGangRecordListener.updateForNextLun();// 清空动作缓存
 			// 刻子杠手牌
-			for (PengchuPaiZu pengchuPaiZu : player.getPengchupaiZuList()) {
-				for (MajiangPai fangruShoupai : player.getFangruShoupaiList()) {
-					if (pengchuPaiZu.getKezi().getPaiType().equals(fangruShoupai)) {
-						player.addActionCandidate(new MajiangGangAction(pengAction.getActionPlayerId(),
-								pengAction.getDachupaiPlayerId(), fangruShoupai, GangType.kezigangshoupai));
-						break;
-					}
+			List<PengchuPaiZu> pengchupaiZuList = player.getPengchupaiZuList();
+			PengchuPaiZu pengchuPaiZu = pengchupaiZuList.get(pengchupaiZuList.size() - 1);
+			for (MajiangPai fangruShoupai : player.getFangruShoupaiList()) {
+				if (pengchuPaiZu.getKezi().getPaiType().equals(fangruShoupai)) {
+					player.addActionCandidate(new MajiangGangAction(pengAction.getActionPlayerId(),
+							pengAction.getDachupaiPlayerId(), fangruShoupai, GangType.kezigangshoupai));
+					break;
 				}
 			}
 
