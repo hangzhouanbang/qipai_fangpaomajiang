@@ -16,8 +16,8 @@ import com.dml.majiang.player.action.gang.HuFirstBuGangActionProcessor;
 import com.dml.majiang.player.action.guo.DoNothingGuoActionProcessor;
 import com.dml.majiang.player.action.hu.PlayerHuAndClearAllActionHuActionUpdater;
 import com.dml.majiang.player.action.initial.ZhuangMoPaiInitialActionUpdater;
-import com.dml.majiang.player.action.listener.comprehensive.TianHuAndDihuOpportunityDetector;
 import com.dml.majiang.player.action.listener.comprehensive.GuoHuBuHuStatisticsListener;
+import com.dml.majiang.player.action.listener.comprehensive.TianHuAndDihuOpportunityDetector;
 import com.dml.majiang.player.action.peng.HuFirstBuPengActionProcessor;
 import com.dml.majiang.player.menfeng.RandomMustHasDongPlayersMenFengDeterminer;
 import com.dml.mpgame.game.Finished;
@@ -95,8 +95,8 @@ public class MajiangGame extends FixedPlayersMultipanAndVotetofinishGame {
 		return ju.getCurrentPan().findLatestActionFrame();
 	}
 
-	public MajiangActionResult action(String playerId, int actionId, long actionTime) throws Exception {
-		PanActionFrame panActionFrame = ju.action(playerId, actionId, actionTime);
+	public MajiangActionResult action(String playerId, int actionId, int actionNo, long actionTime) throws Exception {
+		PanActionFrame panActionFrame = ju.action(playerId, actionId, actionNo, actionTime);
 		MajiangActionResult result = new MajiangActionResult();
 		result.setPanActionFrame(panActionFrame);
 		if (state.name().equals(VoteNotPassWhenPlaying.name)) {
