@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.anbang.qipai.fangpaomajiang.cqrs.c.service.GameCmdService;
+import com.anbang.qipai.fangpaomajiang.websocket.WatchQueryScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +61,9 @@ public class MajiangController {
 
 	@Autowired
 	private FangpaoMajiangGameMsgService gameMsgService;
+
+	@Autowired
+	private GameCmdService gameCmdService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -152,6 +159,7 @@ public class MajiangController {
 		}
 
 		MajiangActionResult majiangActionResult;
+		String endFlag = "query";
 		try {
 			majiangActionResult = majiangPlayCmdService.action(playerId, id, actionNo, System.currentTimeMillis());
 		} catch (Exception e) {
@@ -189,9 +197,11 @@ public class MajiangController {
 
 				gameMsgService.gameFinished(gameId);
 				queryScopes.add(QueryScope.juResult.name());
+				endFlag = WatchQueryScope.watchEnd.name();
 			} else {
 				queryScopes.add(QueryScope.panResult.name());
 				queryScopes.add(QueryScope.gameInfo.name());
+				endFlag = WatchQueryScope.panResult.name();
 			}
 			PanResultDbo panResultDbo = majiangPlayQueryService.findPanResultDbo(gameId,
 					majiangActionResult.getPanResult().getPan().getNo());
@@ -215,6 +225,8 @@ public class MajiangController {
 				"action," + "startTime:" + startTime + "," + "gameId:" + majiangActionResult.getMajiangGame().getId()
 						+ "," + "playerId:" + playerId + "," + "id:" + id + "," + "success:" + vo.isSuccess() + ",msg:"
 						+ vo.getMsg() + "," + "endTime:" + endTime + "," + "use:" + (endTime - startTime) + "ms");
+
+		hintWatcher(majiangActionResult.getMajiangGame().getId(), endFlag);
 		return vo;
 	}
 
@@ -268,4 +280,17 @@ public class MajiangController {
 		return vo;
 	}
 
+	/**
+	 * 通知观战者
+	 */
+	private void hintWatcher (String gameId, String flag) {
+		Map<String ,Object> map = gameCmdService.getwatch(gameId);
+		if (!CollectionUtils.isEmpty(map)) {
+			List<String> playerIds = map.entrySet().stream().map(e -> e.getKey()).collect(Collectors.toList());
+			wsNotifier.notifyToWatchQuery(playerIds, flag);
+			if (WatchQueryScope.watchEnd.name().equals(flag)) {
+				gameCmdService.recycleWatch(gameId);
+			}
+		}
+	}
 }
