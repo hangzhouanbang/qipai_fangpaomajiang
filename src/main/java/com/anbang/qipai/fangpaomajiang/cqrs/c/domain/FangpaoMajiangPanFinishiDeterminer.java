@@ -23,7 +23,7 @@ public class FangpaoMajiangPanFinishiDeterminer implements CurrentPanFinishiDete
 			int liupai = 0;
 			int avaliablePaiLeft = currentPan.countAvaliablePai();
 
-			if (avaliablePaiLeft <= liupai) {
+			if (avaliablePaiLeft < liupai) {
 				return true;
 			} else {
 				return false;
