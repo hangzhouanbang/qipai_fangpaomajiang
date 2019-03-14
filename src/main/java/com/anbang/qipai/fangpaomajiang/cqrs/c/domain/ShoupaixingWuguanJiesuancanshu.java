@@ -1,5 +1,6 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
+import com.dml.majiang.pai.MajiangPai;
 import com.dml.majiang.player.MajiangPlayer;
 
 /**
@@ -16,8 +17,8 @@ public class ShoupaixingWuguanJiesuancanshu {
 	private int chichupaiZuCount;
 	private int fangruShoupaiCount;
 
-	public ShoupaixingWuguanJiesuancanshu(MajiangPlayer player) {
-		allXushupaiInSameCategory = player.allXushupaiInSameCategory();
+	public ShoupaixingWuguanJiesuancanshu(MajiangPlayer player, MajiangPai huPai) {
+		allXushupaiInSameCategory = player.allXushupaiInSameCategory(huPai);
 		hasZipai = player.hasZipai();
 		qingyise = (allXushupaiInSameCategory && !hasZipai);
 		caishenShu = player.countGuipai();

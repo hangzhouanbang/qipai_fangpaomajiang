@@ -39,7 +39,8 @@ public class FangpaoMajiangJiesuanCalculator {
 
 			// 要选出分数最高的牌型
 			// 先计算和手牌型无关的参数
-			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player,
+					null);
 			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
@@ -70,7 +71,8 @@ public class FangpaoMajiangJiesuanCalculator {
 
 			// 要选出分数最高的牌型
 			// 先计算和手牌型无关的参数
-			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player,
+					gangPai);
 			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
@@ -100,7 +102,8 @@ public class FangpaoMajiangJiesuanCalculator {
 
 			// 要选出分数最高的牌型
 			// 先计算和手牌型无关的参数
-			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
+			ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player,
+					hupai);
 			FangpaoMajiangHufen bestHuFen = null;
 			ShoupaiPaiXing bestHuShoupaiPaiXing = null;
 			for (ShoupaiPaiXing shoupaiPaiXing : huPaiShoupaiPaiXingList) {
@@ -125,7 +128,8 @@ public class FangpaoMajiangJiesuanCalculator {
 
 		// 要选出分数最高的牌型
 		// 先计算和手牌型无关的参数
-		ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player);
+		ShoupaixingWuguanJiesuancanshu shoupaixingWuguanJiesuancanshu = new ShoupaixingWuguanJiesuancanshu(player,
+				null);
 		FangpaoMajiangHufen bestHuFen = null;
 		for (ShoupaiPaiXing shoupaiPaiXing : shoupaiPaiXingList) {
 			FangpaoMajiangHufen hufen = calculateHufen(false, false, false, false, false, false,
