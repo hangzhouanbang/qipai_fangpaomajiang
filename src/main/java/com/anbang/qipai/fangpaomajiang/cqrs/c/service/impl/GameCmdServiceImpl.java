@@ -1,6 +1,7 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.service.impl;
 
-import com.dml.mpgame.game.watch.WatcherMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGame;
@@ -10,7 +11,6 @@ import com.anbang.qipai.fangpaomajiang.cqrs.c.service.GameCmdService;
 import com.dml.majiang.pan.frame.PanActionFrame;
 import com.dml.mpgame.game.Finished;
 import com.dml.mpgame.game.Game;
-import com.dml.mpgame.game.GameValueObject;
 import com.dml.mpgame.game.Playing;
 import com.dml.mpgame.game.WaitingStart;
 import com.dml.mpgame.game.extend.fpmpv.back.OnlineGameBackStrategy;
@@ -26,9 +26,8 @@ import com.dml.mpgame.game.leave.PlayerGameLeaveStrategy;
 import com.dml.mpgame.game.leave.PlayerLeaveCancelGameGameLeaveStrategy;
 import com.dml.mpgame.game.player.PlayerFinished;
 import com.dml.mpgame.game.ready.FixedNumberOfPlayersGameReadyStrategy;
+import com.dml.mpgame.game.watch.WatcherMap;
 import com.dml.mpgame.server.GameServer;
-
-import java.util.Map;
 
 @Component
 public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService {
@@ -213,7 +212,7 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 	}
 
 	@Override
-	public GameValueObject finishGameImmediately(String gameId) throws Exception {
+	public MajiangGameValueObject finishGameImmediately(String gameId) throws Exception {
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		MajiangGame majiangGame = (MajiangGame) gameServer.findGame(gameId);
 		majiangGame.finish();
@@ -246,9 +245,10 @@ public class GameCmdServiceImpl extends CmdServiceBase implements GameCmdService
 	}
 
 	@Override
-	public MajiangGameValueObject joinWatch(String playerId, String nickName, String headimgurl, String gameId) throws Exception {
+	public MajiangGameValueObject joinWatch(String playerId, String nickName, String headimgurl, String gameId)
+			throws Exception {
 		WatcherMap watcherMap = singletonEntityRepository.getEntity(WatcherMap.class);
-		watcherMap.join(playerId, nickName,headimgurl, gameId);
+		watcherMap.join(playerId, nickName, headimgurl, gameId);
 		GameServer gameServer = singletonEntityRepository.getEntity(GameServer.class);
 		MajiangGameValueObject majiangGameValueObject = gameServer.getInfo(playerId, gameId);
 		return majiangGameValueObject;

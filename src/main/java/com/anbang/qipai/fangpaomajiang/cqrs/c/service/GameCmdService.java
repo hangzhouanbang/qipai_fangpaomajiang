@@ -1,10 +1,9 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.service;
 
+import java.util.Map;
+
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.MajiangGameValueObject;
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.ReadyForGameResult;
-import com.dml.mpgame.game.GameValueObject;
-
-import java.util.Map;
 
 public interface GameCmdService {
 
@@ -32,17 +31,18 @@ public interface GameCmdService {
 
 	void bindPlayer(String playerId, String gameId);
 
-	GameValueObject finishGameImmediately(String gameId) throws Exception;
+	MajiangGameValueObject finishGameImmediately(String gameId) throws Exception;
 
 	MajiangGameValueObject leaveGameByOffline(String playerId) throws Exception;
 
 	MajiangGameValueObject leaveGameByHangup(String playerId) throws Exception;
 
-	MajiangGameValueObject joinWatch (String playerId, String nickName, String headimgurl, String gameId) throws Exception;
+	MajiangGameValueObject joinWatch(String playerId, String nickName, String headimgurl, String gameId)
+			throws Exception;
 
-	MajiangGameValueObject leaveWatch (String playerId, String gameId) throws Exception;
+	MajiangGameValueObject leaveWatch(String playerId, String gameId) throws Exception;
 
-	Map getwatch (String gameId);
+	Map getwatch(String gameId);
 
 	void recycleWatch(String gameId);
 }
