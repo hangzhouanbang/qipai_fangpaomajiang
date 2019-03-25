@@ -29,7 +29,7 @@ public interface GameCmdService {
 
 	MajiangGameValueObject voteToFinishByTimeOver(String playerId, Long currentTime) throws Exception;
 
-	void bindPlayer(String playerId, String gameId);
+	void bindPlayer(String playerId, String gameId) throws Exception;
 
 	MajiangGameValueObject finishGameImmediately(String gameId) throws Exception;
 
