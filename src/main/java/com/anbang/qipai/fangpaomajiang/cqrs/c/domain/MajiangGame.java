@@ -1,7 +1,9 @@
 package com.anbang.qipai.fangpaomajiang.cqrs.c.domain;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.anbang.qipai.fangpaomajiang.cqrs.c.domain.listener.FangpaoMajiangPengGangActionStatisticsListener;
 import com.dml.majiang.ju.Ju;
@@ -38,6 +40,12 @@ public class MajiangGame extends FixedPlayersMultipanAndVotetofinishGame {
 	private int renshu;
 	private Ju ju;
 	private Map<String, Integer> playeTotalScoreMap = new HashMap<>();
+	private Set<String> xipaiPlayerIds = new HashSet<>();
+
+	public MajiangGameValueObject xipai(String playerId) {
+		xipaiPlayerIds.add(playerId);
+		return new MajiangGameValueObject(this);
+	}
 
 	public PanActionFrame createJuAndStartFirstPan(long currentTime) throws Exception {
 		ju = new Ju();
@@ -101,6 +109,9 @@ public class MajiangGame extends FixedPlayersMultipanAndVotetofinishGame {
 		result.setPanActionFrame(panActionFrame);
 		if (state.name().equals(VoteNotPassWhenPlaying.name)) {
 			state = new Playing();
+		}
+		if (!xipaiPlayerIds.isEmpty()) {
+			xipaiPlayerIds.clear();
 		}
 		checkAndFinishPan();
 
@@ -175,6 +186,7 @@ public class MajiangGame extends FixedPlayersMultipanAndVotetofinishGame {
 
 	@Override
 	public void start(long currentTime) throws Exception {
+		xipaiPlayerIds.clear();
 		state = new Playing();
 		updateAllPlayersState(new PlayerPlaying());
 	}

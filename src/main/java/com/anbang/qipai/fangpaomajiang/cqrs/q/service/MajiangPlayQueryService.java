@@ -158,6 +158,13 @@ public class MajiangPlayQueryService {
 		}
 	}
 
+	public void xipai(MajiangGameValueObject majiangGame) {
+		Map<String, PlayerInfo> playerInfoMap = new HashMap<>();
+		majiangGame.allPlayerIds().forEach((pid) -> playerInfoMap.put(pid, playerInfoDao.findById(pid)));
+		MajiangGameDbo majiangGameDbo = new MajiangGameDbo(majiangGame, playerInfoMap);
+		majiangGameDboDao.save(majiangGameDbo);
+	}
+
 	public List<PanActionFrameDbo> findPanActionFrameDboForBackPlay(String gameId, int panNo) {
 		return panActionFrameDboDao.findByGameIdAndPanNo(gameId, panNo);
 	}
