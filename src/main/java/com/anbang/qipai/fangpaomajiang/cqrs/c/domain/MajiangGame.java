@@ -268,4 +268,12 @@ public class MajiangGame extends FixedPlayersMultipanAndVotetofinishGame {
 		this.playeTotalScoreMap = playeTotalScoreMap;
 	}
 
+	public Set<String> getXipaiPlayerIds() {
+		return xipaiPlayerIds;
+	}
+
+	public void setXipaiPlayerIds(Set<String> xipaiPlayerIds) {
+		this.xipaiPlayerIds = xipaiPlayerIds;
+	}
+
 }
