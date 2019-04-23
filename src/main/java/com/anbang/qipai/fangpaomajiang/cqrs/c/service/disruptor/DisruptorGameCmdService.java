@@ -301,4 +301,25 @@ public class DisruptorGameCmdService extends DisruptorCmdServiceBase implements 
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public MajiangGameValueObject newMajiangGamePlayerLeaveAndQuit(String gameId, String playerId, Integer panshu,
+			Integer renshu, Boolean hongzhongcaishen, Boolean dapao, Boolean sipaofanbei, Boolean zhuaniao,
+			Integer niaoshu) {
+		CommonCommand cmd = new CommonCommand(GameCmdServiceImpl.class.getName(), "newMajiangGamePlayerLeaveAndQuit",
+				gameId, playerId, panshu, renshu, hongzhongcaishen, dapao, sipaofanbei, zhuaniao, niaoshu);
+		DeferredResult<MajiangGameValueObject> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd,
+				() -> {
+					MajiangGameValueObject majiangGameValueObject = gameCmdServiceImpl.newMajiangGamePlayerLeaveAndQuit(
+							cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter(),
+							cmd.getParameter(), cmd.getParameter(), cmd.getParameter(), cmd.getParameter(),
+							cmd.getParameter());
+					return majiangGameValueObject;
+				});
+		try {
+			return result.getResult();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

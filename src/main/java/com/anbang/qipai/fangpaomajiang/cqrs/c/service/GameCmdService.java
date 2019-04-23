@@ -13,6 +13,10 @@ public interface GameCmdService {
 	MajiangGameValueObject newMajiangGameLeaveAndQuit(String gameId, String playerId, Integer panshu, Integer renshu,
 			Boolean hongzhongcaishen, Boolean dapao, Boolean sipaofanbei, Boolean zhuaniao, Integer niaoshu);
 
+	MajiangGameValueObject newMajiangGamePlayerLeaveAndQuit(String gameId, String playerId, Integer panshu,
+			Integer renshu, Boolean hongzhongcaishen, Boolean dapao, Boolean sipaofanbei, Boolean zhuaniao,
+			Integer niaoshu);
+
 	MajiangGameValueObject joinGame(String playerId, String gameId) throws Exception;
 
 	MajiangGameValueObject leaveGame(String playerId) throws Exception;
